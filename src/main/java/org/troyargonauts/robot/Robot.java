@@ -39,7 +39,7 @@ public class Robot extends TimedRobot {
         LiveWindow.disableAllTelemetry();
         LiveWindow.setEnabled(false);
 
-        DataLogManager.start("/media/sda1/logs");
+//        DataLogManager.start("/media/sda1/logs");
 
         new RobotContainer();
 

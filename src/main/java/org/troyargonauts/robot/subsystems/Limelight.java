@@ -5,6 +5,8 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static org.troyargonauts.robot.Robot.limelight;
+import org.troyargonauts.robot.Constants;
+
 
 
 
@@ -38,8 +40,8 @@ public class Limelight extends SubsystemBase {
      * Creates an instance of the Limelight subsystem and sets the initial LED mode to ON and the camera mode to VISION.
      */
     public Limelight() {
-        limelight.setLedMode(Limelight.LightMode.ON);
-        limelight.setCameraMode(Limelight.CameraMode.VISION);
+//        limelight.setLedMode(Limelight.LightMode.ON);
+//        limelight.setCameraMode(Limelight.CameraMode.VISION);
     }
 
 
