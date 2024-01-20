@@ -22,6 +22,8 @@ public class RobotContainer {
     public static final Gamepad driver = new AutoGamepad(Constants.Controllers.DRIVER);
     public static final Gamepad operator = new AutoGamepad(Constants.Controllers.OPERATOR);
 
+    private LED leds = new LED(24);
+
     public RobotContainer() {
         // Configure the button bindings
         configureBindings();
@@ -53,6 +55,20 @@ public class RobotContainer {
 //                new InstantCommand(() -> Robot.getDrivetrain().getDualSpeedTransmission().disableAutomaticShifting())
 //                        .andThen(new InstantCommand(() -> getDriver().setRumble(1.0, 0.5)))
 //        );
+
+        operator.getBottomButton().whileTrue(
+                new RunCommand(
+                        () -> {
+                            leds.rainbow(141);
+                        }, leds
+                )
+        ).whileFalse(
+                new RunCommand(
+                        () -> {
+                            leds.fire(141);
+                        }, leds
+                )
+        );
     }
 
     public static Gamepad getDriver() {
