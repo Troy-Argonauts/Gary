@@ -31,6 +31,8 @@ public class Robot extends TimedRobot {
     private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
     private Command autonomousCommand;
 
+    public static Limelight limelight;
+
 
     @Override
     public void robotInit() {
@@ -45,6 +47,8 @@ public class Robot extends TimedRobot {
 
         SmartDashboard.putData("Autonomous modes", chooser);
         chooser.addOption("Nothing", new WaitCommand(15));
+
+        limelight = new Limelight();
     }
 
     @Override
