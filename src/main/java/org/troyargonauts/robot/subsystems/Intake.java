@@ -15,8 +15,7 @@ public class Intake extends SubsystemBase {
     private TalonFX motor1;
     private DigitalInput noteSensor;
     public double motor1Encoder;
-    public double motor2Encoder;
-    public double motor3Encoder;
+
 
 
 
@@ -30,8 +29,7 @@ public class Intake extends SubsystemBase {
         noteSensor = new DigitalInput(2);
 
         SmartDashboard.putNumber("motor1SetPoint", 0);
-        SmartDashboard.putNumber("motor2SetPoint", 0);
-        SmartDashboard.putNumber("motor3SetPoint", 0);
+
     }
 
     @Override
@@ -60,11 +58,8 @@ public class Intake extends SubsystemBase {
 
 
     }
-    public void setRawPower(int motorID, double speed) {
-
-        if (motorID == 1) {
-            motor1.set(speed);
-        }
+    public void setRawPower( double speed) {
+        motor1.set(speed);
     }
     enum state{
         IN,
@@ -77,15 +72,15 @@ public class Intake extends SubsystemBase {
 
         switch (noteState){
             case IN:
-                setRawPower(1,-0.3);
+                setRawPower(-0.3);
                 break;
 
             case OFF:
-                setRawPower(1,0);
+                setRawPower(0);
                 break;
 
             case OUT:
-                setRawPower(1,0.3);
+                setRawPower(0.3);
                 break;
         }
 
