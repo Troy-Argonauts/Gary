@@ -1,13 +1,14 @@
-package org.troyargonauts.robot.subsystems;
+package org.troyargonauts.common.logs;
 
 import java.io.File;
 
-import com.ctre.phoenix.sensors.Pigeon2;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import java.io.FileWriter;
 import java.io.IOException;
+
+import com.ctre.phoenix6.hardware.Pigeon2;
 
 public class DataLogging extends SubsystemBase {
     private File logFile;
