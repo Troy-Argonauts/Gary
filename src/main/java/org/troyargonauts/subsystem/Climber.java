@@ -1,6 +1,6 @@
 package org.troyargonauts.subsystem;
 import com.ctre.phoenix6.hardware.TalonFX;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
@@ -10,6 +10,8 @@ public class Climber extends SubsystemBase {
 
     public Climber() {
         climberMotor = new TalonFX(13);
+
+        climberMotor.setNeutralMode(NeutralModeValue.Brake);
     }
 
     public void setRawPower()
@@ -25,13 +27,11 @@ public class Climber extends SubsystemBase {
     {
         switch(state) {
             case UP:
-                climberMotor.set
+                climberMotor.set(0.5);
             case DOWN:
-
-            case INPLACE:
-
-            case OFF
-
+                climberMotor.set(-0.5);
+            case OFF:
+                climberMotor.set(0);
         }
     }
 }
