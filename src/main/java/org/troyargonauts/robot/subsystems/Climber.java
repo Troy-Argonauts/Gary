@@ -17,9 +17,9 @@ public class Climber extends SubsystemBase{
     }
     public void setClimberMotor(MotorStates states){
         switch (states) {
-            case OFF: TalonFX.set(0);
-            case DOWN: TalonFX.set(-0.75);
-            case UP: TalonFX.set(0.75)
+            case OFF: climberMotor.set(0);
+            case DOWN: climberMotor.set(-0.75);
+            case UP: climberMotor.set(0.75);
 
         }
     }
