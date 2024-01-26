@@ -21,7 +21,7 @@ public class Climber extends SubsystemBase {
 
     public enum MotorStates
     {
-        UP, DOWN, INPLACE, OFF;
+        UP, DOWN, INPLACE, OFF
     }
     public void setState(MotorStates state)
     {
