@@ -30,6 +30,11 @@ public class Shooter extends SubsystemBase {
     }
 
 
+    double motor1P = 0.3;
+    double motor1I = 0.1;
+    double motor1D = 0;
+    double motor1Target = 0;
+
     public Shooter(int talon){
         motor1 = new TalonFX(9);
         motor2 = new TalonFX(10);
@@ -41,6 +46,10 @@ public class Shooter extends SubsystemBase {
         } else if (motorID == 10){
             motor2Target = target;
         }
+    }
+
+    public boolean isPidFinished(int motorID){
+        
     }
 
 
