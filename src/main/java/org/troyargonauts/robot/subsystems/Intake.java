@@ -1,52 +1,21 @@
 package org.troyargonauts.robot.subsystems;
 
-import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import org.troyargonauts.common.motors.MotorCreation;
-import org.troyargonauts.common.motors.wrappers.LazyCANSparkMax;
-import org.troyargonauts.robot.Constants;
 
 public class Intake extends SubsystemBase {
-    private TalonFX motor1;
+    private TalonFX motor;
     private DigitalInput noteSensor;
-    public double motor1Encoder;
-
-
-
-
-    double motor1Target = 0.0;
-    final VelocityVoltage velocityVoltage = new VelocityVoltage(0).withSlot(0);
-
-
 
     public Intake() {
-        motor1 = new TalonFX(1);
+        motor = new TalonFX(1);
         noteSensor = new DigitalInput(2);
 
         SmartDashboard.putNumber("motor1SetPoint", 0);
 
     }
-
-    @Override
-    public void periodic() {
-
-        motor1Encoder = motor1.getVelocity().getValueAsDouble();
-//        motor3Encoder = motor3.getVelocity().getValueAsDouble();
-
-        motor1Target = SmartDashboard.getNumber("motor1SetPoint",0);
-
-        SmartDashboard.putNumber("Motor1Error", (motor1Target - motor1.getVelocity().getValueAsDouble()) * 60);
-
-        SmartDashboard.putNumber("Motor1RPM", (motor1.getVelocity().getValueAsDouble()) * 60);
-    }
-
-
-
 
     public boolean isNoteReady() {
         if (noteSensor.get()) {
@@ -56,19 +25,25 @@ public class Intake extends SubsystemBase {
             return false;
         }
 
+    }
 
+    @Override
+    public void periodic() {
+        SmartDashboard.putBoolean("Note_Readiness",isNoteReady());
     }
+
     public void setRawPower( double speed) {
-        motor1.set(speed);
+        motor.set(speed);
     }
-    enum state{
+
+    enum MotorState{
         IN,
         OFF,
         OUT
     }
-   state noteState;
 
-    public void setState(){
+
+    public void setState(MotorState noteState){
 
         switch (noteState){
             case IN:
@@ -83,7 +58,6 @@ public class Intake extends SubsystemBase {
                 setRawPower(0.3);
                 break;
         }
-
 
     }
 
