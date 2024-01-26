@@ -47,10 +47,20 @@ public class Shooter extends SubsystemBase {
             motor2Target = target;
         }
     }
-
+    
     public boolean isPidFinished(int motorID){
-        
+        if(motorID == 1){
+            return (Math.abs((motor1Target - motor1.getVelocity().getValueAsDouble()) ) <= 5);
+        }else if (motorID == 2){
+            return (Math.abs((motor2Target -  motor2.getVelocity().getValueAsDouble()) ) <= 5);
+        }else {
+            return false;
+        }
     }
 
+    public void resetEncoders() {
+        motor1.setPosition(0);
+        motor2.setPosition(0);
+    }
 
 }
