@@ -1,4 +1,4 @@
-package org.troyargonauts.subsystem;
+package org.troyargonauts.subsystems;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -21,17 +21,20 @@ public class Climber extends SubsystemBase {
 
     public enum MotorStates
     {
-        UP, DOWN, INPLACE, OFF
+        UP, DOWN, OFF
     }
     public void setState(MotorStates state)
     {
         switch(state) {
             case UP:
                 climberMotor.set(0.5);
+                break;
             case DOWN:
                 climberMotor.set(-0.5);
+                break;
             case OFF:
                 climberMotor.set(0);
+                break;
         }
     }
 }
