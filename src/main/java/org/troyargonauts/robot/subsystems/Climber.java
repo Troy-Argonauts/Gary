@@ -18,6 +18,7 @@ public class Climber extends SubsystemBase{
     public void setClimberMotor(MotorStates states){
         switch (states) {
             case OFF: climberMotor.set(0);
+            break;
             case DOWN: climberMotor.set(-0.75);
             case UP: climberMotor.set(0.75);
 
