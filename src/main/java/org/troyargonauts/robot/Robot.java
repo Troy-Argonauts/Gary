@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import org.troyargonauts.robot.subsystems.Climber;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -30,6 +31,8 @@ public class Robot extends TimedRobot {
     private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
     private Command autonomousCommand;
 
+    private Climber climber;
+
 
     @Override
     public void robotInit() {
@@ -39,6 +42,7 @@ public class Robot extends TimedRobot {
         DataLogManager.start("/media/sda1/logs");
 
         new RobotContainer();
+        climber = new Climber();
 
         CameraServer.startAutomaticCapture().setFPS(14);
 
@@ -74,6 +78,15 @@ public class Robot extends TimedRobot {
     public void testInit() {
         // Cancels all running commands at the start of test mode.
         CommandScheduler.getInstance().cancelAll();
+    }
+
+    public static Climber getClimber()
+    {
+        if(climber == null)
+        {
+            climber = new Climber();
+        }
+        return climber;
     }
 
 }
