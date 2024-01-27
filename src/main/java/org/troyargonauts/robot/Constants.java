@@ -16,5 +16,6 @@ public final class Constants {
         double CLIMBER_MOTOR_OFF_SPEED = 0.0;
         double CLIMBER_MOTOR_ON_SPEED = 0.75;
         int CLIMBER_MOTOR_PORT = 13;
+        String CLIMBER_SUBSYSTEM_NAME = "roborio";
     }
 }
