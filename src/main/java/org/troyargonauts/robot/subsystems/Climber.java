@@ -38,6 +38,7 @@ public class Climber extends SubsystemBase {
 
     /**
      * Sets power to the motorController for each state (OFF has no power, DOWN and UP have a power value of 0.75 in their respective directions).
+     * @param states: pulls the state from MotorStates.
      */
 
     public void setClimberMotor(MotorStates states){
