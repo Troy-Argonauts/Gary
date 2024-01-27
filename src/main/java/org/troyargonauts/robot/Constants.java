@@ -13,8 +13,8 @@ public final class Constants {
 
     public interface Shooter {
 
-        public TOP_MOTOR_ID = 1;
-        public BOTTOM_MOTOR_ID = 2;
+        public int TOP_MOTOR_ID = 1;
+        public int BOTTOM_MOTOR_ID = 2;
 
         public double MOTOR_1_ENCODER = 0;
         public double MOTOR_2_ENCODER = 0;
@@ -28,5 +28,7 @@ public final class Constants {
         double MOTOR_3_P = 0;
         double MOTOR_3_I = 0;
         double MOTOR_3_D = 0;
+
+        String SHOOTER_CANBUS_NAME = "roborio";
     }
 }
