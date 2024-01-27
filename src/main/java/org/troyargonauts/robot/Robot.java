@@ -31,6 +31,7 @@ public class Robot extends TimedRobot {
     private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
     private Command autonomousCommand;
 
+    private static Intake intake;
 
     @Override
     public void robotInit() {
@@ -75,6 +76,11 @@ public class Robot extends TimedRobot {
     public void testInit() {
         // Cancels all running commands at the start of test mode.
         CommandScheduler.getInstance().cancelAll();
+    }
+
+    public static Intake getIntake() {
+        if (intake == null) intake= new Intake();
+        return intake;
     }
 
 }

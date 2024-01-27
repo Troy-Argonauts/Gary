@@ -5,6 +5,12 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+/**
+ * Class representing Intake system
+ *
+ * @author firearcher2012, SavageCabbage360
+ */
+
 public class Intake extends SubsystemBase {
     private TalonFX motor;
     private DigitalInput noteSensor;
@@ -32,17 +38,25 @@ public class Intake extends SubsystemBase {
         SmartDashboard.putBoolean("Note_Readiness",isNoteReady());
     }
 
+
+    /**
+     * Sets power of intake
+     * @param speed determines speed of motor.
+     */
     public void setRawPower( double speed) {
         motor.set(speed);
     }
 
-    enum MotorState{
+    public enum MotorState{
         IN,
         OFF,
         OUT
     }
 
-
+    /**
+     * Sets the state of the intake
+     * @param State determines whether the Intake is going In, Out, or Off
+     */
     public void setState(MotorState State){
 
         switch (State){

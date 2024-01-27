@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import org.troyargonauts.common.input.Gamepad;
 import org.troyargonauts.common.input.gamepads.AutoGamepad;
+import org.troyargonauts.robot.subsystems.Intake;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -53,6 +54,16 @@ public class RobotContainer {
 //                new InstantCommand(() -> Robot.getDrivetrain().getDualSpeedTransmission().disableAutomaticShifting())
 //                        .andThen(new InstantCommand(() -> getDriver().setRumble(1.0, 0.5)))
 //        );
+        operator.getRightBumper().whileTrue(
+                new InstantCommand(() -> Robot.getIntake().setState(Intake.MotorState.IN))
+        ).whileFalse(
+                new InstantCommand(() -> Robot.getIntake().setState(Intake.MotorState.OFF))
+        );
+        operator.getLeftBumper().whileTrue(
+                new InstantCommand(() -> Robot.getIntake().setState(Intake.MotorState.OUT))
+        ).whileFalse(
+                new InstantCommand(() -> Robot.getIntake().setState(Intake.MotorState.OFF))
+        );
     }
 
     public static Gamepad getDriver() {
