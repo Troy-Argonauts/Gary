@@ -59,11 +59,6 @@ public class RobotContainer {
         ).whileFalse(
                 new InstantCommand(() -> Robot.getClimber().setClimberMotor(Climber.MotorStates.OFF))
         );
-        driver.getDPadDown().whileTrue(
-                new InstantCommand(() -> Robot.getClimber().setClimberMotor(Climber.MotorStates.DOWN))
-        ).whileFalse(
-                new InstantCommand(() -> Robot.getClimber().setClimberMotor(Climber.MotorStates.OFF))
-        );
     }
 
     public static Gamepad getDriver() {

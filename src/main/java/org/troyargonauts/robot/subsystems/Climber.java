@@ -33,7 +33,7 @@ public class Climber extends SubsystemBase {
      */
 
     public enum MotorStates {
-        UP, DOWN, OFF;
+        UP, OFF;
     }
 
     /**
@@ -44,8 +44,6 @@ public class Climber extends SubsystemBase {
     public void setClimberMotor(MotorStates states){
         switch (states) {
             case OFF: climberMotor.set(0);
-            break;
-            case DOWN: climberMotor.set(-0.75);
             break;
             case UP: climberMotor.set(0.75);
             break;
