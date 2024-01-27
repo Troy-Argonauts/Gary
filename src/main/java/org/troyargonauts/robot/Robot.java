@@ -31,7 +31,7 @@ public class Robot extends TimedRobot {
     private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
     private Command autonomousCommand;
 
-    private Climber climber;
+    private static Climber climber;
 
 
     @Override
@@ -42,6 +42,7 @@ public class Robot extends TimedRobot {
         DataLogManager.start("/media/sda1/logs");
 
         new RobotContainer();
+
         climber = new Climber();
 
         CameraServer.startAutomaticCapture().setFPS(14);
