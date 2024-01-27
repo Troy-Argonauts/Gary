@@ -43,9 +43,9 @@ public class Intake extends SubsystemBase {
     }
 
 
-    public void setState(MotorState noteState){
+    public void setState(MotorState State){
 
-        switch (noteState){
+        switch (State){
             case IN:
                 setRawPower(-0.3);
                 break;
