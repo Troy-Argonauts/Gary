@@ -30,6 +30,7 @@ public class Robot extends TimedRobot {
     private final SendableChooser<Command> chooser = new SendableChooser<>();
     private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
     private Command autonomousCommand;
+    private static Arm arm;
 
 
     @Override
@@ -45,6 +46,8 @@ public class Robot extends TimedRobot {
 
         SmartDashboard.putData("Autonomous modes", chooser);
         chooser.addOption("Nothing", new WaitCommand(15));
+
+        arm = new Arm();
     }
 
     @Override
@@ -75,6 +78,13 @@ public class Robot extends TimedRobot {
     public void testInit() {
         // Cancels all running commands at the start of test mode.
         CommandScheduler.getInstance().cancelAll();
+    }
+
+    public static Arm getArm(){
+        if (arm == null){
+            arm = new Arm();
+        }
+        return arm;
     }
 
 }

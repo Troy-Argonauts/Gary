@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import org.troyargonauts.common.input.Gamepad;
 import org.troyargonauts.common.input.gamepads.AutoGamepad;
+import org.troyargonauts.common.math.OMath;
+import org.troyargonauts.common.streams.IStream;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -31,6 +33,35 @@ public class RobotContainer {
      * Use this method to define your controller->command mappings.
      */
     private void configureBindings() {
+
+        Robot.getArm().setDefaultCommand(
+                new RunCommand(
+                        () -> {
+                            double speed =  IStream.create(operator::getRightY)
+                                    .filtered(x -> OMath.deadband(x, Constants.Arm.DEADBAND))
+                                    .get();
+                            Robot.getArm().run(speed);
+                        }
+                )
+        );
+
+        operator.getBottomButton().whileTrue(
+                new InstantCommand(() -> Robot.getArm().run(10))
+                        .andThen(new InstantCommand(() -> getOperator().setRumble(1.0, 0.5)))
+        );
+
+        operator.getRightButton().whileTrue(
+                new InstantCommand(() -> Robot.getArm().run(10))
+                        .andThen(new InstantCommand(() -> getOperator().setRumble(1.0, 0.5)))
+        );
+
+        operator.getLeftButton().whileTrue(
+                new InstantCommand(() -> Robot.getArm().run(10))
+                        .andThen(new InstantCommand(() -> getOperator().setRumble(1.0, 0.5)))
+        );
+//                new InstantCommand(() -> Robot.getDrivetrain().getDualSpeedTransmission().disableAutomaticShifting())
+//                        .andThen(new InstantCommand(() -> getDriver().setRumble(1.0, 0.5)))
+//        );
         //Example Joystick Input Command
         //Pulled for Troy-Argonauts/Butters
 //            Robot.getDrivetrain().setDefaultCommand(
