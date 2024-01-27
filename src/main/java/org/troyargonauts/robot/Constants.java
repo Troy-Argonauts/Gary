@@ -10,4 +10,11 @@ public final class Constants {
         int DRIVER = 0;
         int OPERATOR = 1;
     }
+
+    public interface Climber
+    {
+        double CLIMBER_MOTOR_OFF_SPEED = 0.0;
+        double CLIMBER_MOTOR_ON_SPEED = 0.75;
+        int CLIMBER_MOTOR_PORT = 13;
+    }
 }

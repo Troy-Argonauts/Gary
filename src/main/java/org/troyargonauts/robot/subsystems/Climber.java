@@ -5,6 +5,8 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import static org.troyargonauts.robot.Constants.Climber.*;
+
 /**
  * Class representing climber subsystem.
  *
@@ -24,7 +26,7 @@ public class Climber extends SubsystemBase {
      */
 
     public Climber(){
-        climberMotor = new TalonFX(13);
+        climberMotor = new TalonFX(CLIMBER_MOTOR_PORT);
         climberMotor.setNeutralMode(NeutralModeValue.Brake);
     }
 
@@ -33,7 +35,7 @@ public class Climber extends SubsystemBase {
      */
 
     public enum MotorStates {
-        UP, OFF;
+        UP, OFF
     }
 
     /**
@@ -43,11 +45,10 @@ public class Climber extends SubsystemBase {
 
     public void setClimberMotor(MotorStates states){
         switch (states) {
-            case OFF: climberMotor.set(0);
+            case OFF: climberMotor.set(CLIMBER_MOTOR_OFF_SPEED);
             break;
-            case UP: climberMotor.set(0.75);
+            case UP: climberMotor.set(CLIMBER_MOTOR_ON_SPEED);
             break;
-
         }
     }
 }
