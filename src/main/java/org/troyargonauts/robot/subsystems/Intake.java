@@ -4,6 +4,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.troyargonauts.robot.Constants;
 
 /**
  * Class representing Intake system
@@ -16,8 +17,8 @@ public class Intake extends SubsystemBase {
     private DigitalInput noteSensor;
 
     public Intake() {
-        motor = new TalonFX(1);
-        noteSensor = new DigitalInput(2);
+        motor = new TalonFX(Constants.Intake.MOTOR_CAN_ID);
+        noteSensor = new DigitalInput(Constants.Intake.NOTE_SENSOR_SLOT);
 
         SmartDashboard.putNumber("motor1SetPoint", 0);
 
