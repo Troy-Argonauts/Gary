@@ -18,7 +18,6 @@ import org.troyargonauts.robot.Constants;
 public class Intake extends SubsystemBase {
     private TalonFX motor;
     private DigitalInput noteSensor;
-    private DoubleLogEntry intakeEncoderLog;
     private DoubleLogEntry intakeBusVoltage;
     private DoubleLogEntry intakeOutputCurrentLog;
 
@@ -29,7 +28,9 @@ public class Intake extends SubsystemBase {
         SmartDashboard.putNumber("motor1SetPoint", 0);
 
         DataLog log = DataLogManager.getLog();
-        intakeEncoderLog =  new DoubleLogEntry(log, "Elevator Encoder log");
+        intakeBusVoltage =  new DoubleLogEntry(log, "Intake Bus Voltage log");
+        intakeOutputCurrentLog =  new DoubleLogEntry(log, "Intake Output Current log");
+
 
     }
 
@@ -49,7 +50,6 @@ public class Intake extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("Note_Readiness",isNoteReady());
-        intakeEncoderLog.append(motor.getPosition().getValue());
         intakeOutputCurrentLog.append(motor.getMotorVoltage().getValue());
         intakeBusVoltage.append(motor.getMotorVoltage().getValue());
     }
