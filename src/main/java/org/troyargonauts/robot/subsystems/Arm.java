@@ -29,6 +29,7 @@ public class Arm extends SubsystemBase {
     private DoubleLogEntry armRightBusVoltage;
     private DoubleLogEntry armLeftTargetLog;
     private DoubleLogEntry armRightTargetLog;
+
     public Arm() {
         leftArmMotor = new TalonFX(LEFT_MOTOR_ID);
         rightArmMotor = new TalonFX(RIGHT_MOTOR_ID);
@@ -81,6 +82,7 @@ public class Arm extends SubsystemBase {
     /**
      * Sets the left and right arm motors to their corresponding targets and
      * sets the motors power to that.
+     *
      * @param target target position of motors
      */
     public void run(double target) {
@@ -91,17 +93,12 @@ public class Arm extends SubsystemBase {
     /**
      * Checks if the PID for Left and Right arm motors are finished.
      * Checks if the distance in between the Target position and Current Position is less than or equal to 5
+     *
      * @param motorID Motor ID of motor checked.
      * @return Returns false if the motor ID is not 1 or 2.
      */
     public boolean isPidFinished(int motorID) {
-        if (motorID == 1) {
-            return (Math.abs((leftArmTarget - leftArmMotor.getVelocity().getValueAsDouble()) ) <= 5);
-        } else if (motorID == 2) {
-            return (Math.abs((rightArmTarget - rightArmMotor.getVelocity().getValueAsDouble()) ) <= 5);
-        } else {
-            return false;
-        }
-    }
+        return (Math.abs((leftArmTarget - leftArmMotor.getVelocity().getValueAsDouble())) <= 5) && (Math.abs((rightArmTarget - rightArmMotor.getVelocity().getValueAsDouble())) <= 5);
 
+    }
 }
