@@ -1,6 +1,9 @@
 package org.troyargonauts.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -15,6 +18,9 @@ import org.troyargonauts.robot.Constants;
 public class Intake extends SubsystemBase {
     private TalonFX motor;
     private DigitalInput noteSensor;
+    private DoubleLogEntry intakeEncoderLog;
+    private DoubleLogEntry intakeBusVoltage;
+    private DoubleLogEntry intakeOutputCurrentLog;
 
     public Intake() {
         motor = new TalonFX(Constants.Intake.MOTOR_CAN_ID);
@@ -22,7 +28,13 @@ public class Intake extends SubsystemBase {
 
         SmartDashboard.putNumber("motor1SetPoint", 0);
 
+        DataLog log = DataLogManager.getLog();
+        intakeEncoderLog =  new DoubleLogEntry(log, "Elevator Encoder log");
+
     }
+
+
+
 
     public boolean isNoteReady() {
         if (noteSensor.get()) {
@@ -37,7 +49,12 @@ public class Intake extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("Note_Readiness",isNoteReady());
+        intakeEncoderLog.append(motor.getPosition().getValue());
+        intakeOutputCurrentLog.append(motor.getMotorVoltage().getValue());
+        intakeBusVoltage.append(motor.getMotorVoltage().getValue());
     }
+
+
 
 
     /**
