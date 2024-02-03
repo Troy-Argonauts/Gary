@@ -14,7 +14,7 @@ public class Shooter extends SubsystemBase {
     /**
      * Class representing the Shooter subsystem, including the Data Logging and PID
      *
-     * @author TheFlyingPig25, aarooshg
+     * @author aarooshg, TheFlyingPig25
      */
     private TalonFX Motor_top, Motor_bottom;
 
@@ -77,7 +77,7 @@ public class Shooter extends SubsystemBase {
     }
 
     /**
-     * Sets the raw power of the two shooter motors 
+     * Sets the raw power of the two shooter motors
      * @param speed
      */
     public void setRawPowerTop(double speed) {
@@ -95,7 +95,10 @@ public class Shooter extends SubsystemBase {
         Motor_bottom.setPosition(0);
     }
 
-    
+    /**
+     * Checks if PID is finished
+     * @return the value of the target velocity and actual velocity of both motors
+     */
     public boolean isPidFinishedTop(){
         return (Math.abs((Motor_top_target - Motor_top.getVelocity().getValueAsDouble()) ) <= 5);
     }
