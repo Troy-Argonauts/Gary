@@ -16,19 +16,13 @@ public final class Constants {
         public int TOP_MOTOR_ID = 1;
         public int BOTTOM_MOTOR_ID = 2;
 
-        public double MOTOR_1_ENCODER = 0;
-        public double MOTOR_2_ENCODER = 0;
+        double TOP_MOTOR_P = 0;
+        double TOP_MOTOR_I = 0;
+        double TOP_MOTOR_D = 0;
+        double BOTTOM_MOTOR_P = 0;
+        double BOTTOM_MOTOR_I = 0;
+        double BOTTOM_MOTOR_D = 0;
 
-        double MOTOR_1_P = 0;
-        double MOTOR_1_I = 0;
-        double MOTOR_1_D = 0;
-        double MOTOR_2_P = 0;
-        double MOTOR_2_I = 0;
-        double MOTOR_2_D = 0;
-        double MOTOR_3_P = 0;
-        double MOTOR_3_I = 0;
-        double MOTOR_3_D = 0;
-
-        String SHOOTER_CANBUS_NAME = "roborio";
+        String CANBUS_NAME = "roborio";
     }
 }
