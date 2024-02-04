@@ -104,5 +104,26 @@ public class Arm extends SubsystemBase {
         armTarget += joystickValue;
     }
 
-    public enum ARM
+    public enum ARM{
+        FLOOR_INTAKE(0),
+        AMP(1),
+        SHOOTER(2),
+        FAR_SHOOTER(3);
+    }
+
+    /**
+     * Returns average of two arm encoder values.
+     * @return double -  average arm encoder value.
+     */
+    public double getEncoderValue(){
+        return (rightArmEncoder + leftArmEncoder)/2;
+    }
+
+    /**
+     * Returns value of current arm target variable.
+     * @return double - current arm target
+     */
+    public double getCurrentTarget(){
+        return armTarget;
+    }
 }
