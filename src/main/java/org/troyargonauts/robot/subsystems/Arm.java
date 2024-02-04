@@ -81,7 +81,6 @@ public class Arm extends SubsystemBase {
      * Sets the left and right arm motors to their corresponding targets and
      * sets the motors power to that.
      *
-     * @param target target position of motors
      */
     public void run() {
         leftArmMotor.setControl(positionVoltage.withPosition(armTarget));
@@ -92,7 +91,6 @@ public class Arm extends SubsystemBase {
      * Checks if the PID for Left and Right arm motors are finished.
      * Checks if the distance in between the Target position and Current Position is less than or equal to 5
      *
-     * @param motorID Motor ID of motor checked.
      * @return Returns false if the motor ID is not 1 or 2.
      */
     public boolean isPidFinished() {
@@ -105,10 +103,10 @@ public class Arm extends SubsystemBase {
     }
 
     public enum ARM{
-        FLOOR_INTAKE(0),
-        AMP(1),
-        SHOOTER(2),
-        FAR_SHOOTER(3);
+        FLOOR_INTAKE(),
+        AMP(),
+        SHOOTER(),
+        FAR_SHOOTER();
     }
 
     /**
