@@ -5,7 +5,9 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.Rev2mDistanceSensor;
+import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.troyargonauts.robot.Constants;
@@ -20,53 +22,45 @@ import static org.troyargonauts.robot.Constants.Climber.*;
 
 public class Climber extends SubsystemBase {
     private final PositionVoltage positionVoltage = new PositionVoltage(0).withSlot(0);
-    private TalonFX Motor;
-    private double Encoder = 0;
-    private double Target = 0;
+    private TalonFX motor;
+    private double motorEncoder = 0;
+    private double motorTarget = 0;
     private Rev2mDistanceSensor distanceSensor;
     double distanceSensorOutput = distanceSensor.getRange();
     private DoubleLogEntry climberEncoderLog;
     private DoubleLogEntry climberOutputCurrentLog;
-    private DoubleLogEntry climberBusVoltage;
+    private DoubleLogEntry climberMotorVoltage;
     private DoubleLogEntry climberTargetLog;
+    private DoubleLogEntry distanceEncoder;
 
     /**
      * Instantiates motorController object and sets the neutral mode to break.
      */
 
     public Climber(){
-        Motor = new TalonFX(MOTOR_ID);
-        Motor.setNeutralMode(NeutralModeValue.Brake);
+        motor = new TalonFX(MOTOR_ID);
+        motor.setNeutralMode(NeutralModeValue.Brake);
 
-        Encoder = Motor.getPosition().getValueAsDouble();
-
-        SmartDashboard.putNumber("Climber Encoder: ", Encoder);
+        DataLog log = DataLogManager.getLog();
+        distanceEncoder = new DoubleLogEntry((log), "Distance Encoder Values");
+        climberTargetLog = new DoubleLogEntry((log), "Climber Target Values");
+        climberMotorVoltage = new DoubleLogEntry((log), "Climber Motor Voltage");
+        climberOutputCurrentLog = new DoubleLogEntry((log), "Climber Current Output Values");
+        climberEncoderLog = new DoubleLogEntry((log), "Climber Encoder Values");
         distanceSensor = new Rev2mDistanceSensor(Rev2mDistanceSensor.Port.kOnboard);
         distanceSensor.setAutomaticMode(true);
-
-        Encoder = Motor.getPosition().getValueAsDouble();
-
-        SmartDashboard.putNumber("Climber Encoder: ", Encoder);
-        SmartDashboard.putNumber("Range Onboard", distanceSensor.getRange);
-        SmartDashboard.putBoolean("Timestamp Onboard", distanceSensor.isRangeValid());
-
-        climberEncoderLog.append(Encoder);
-        climberOutputCurrentLog.append(Motor.getSupplyCurrent().getValue());
-        climberBusVoltage.append(Motor.getMotorVoltage().getValue());
-        climberTargetLog.append(Encoder);
     }
 
     public void resetEncoder() {
-        Motor.setPosition(0);
+        motor.setPosition(0);
     }
 
     /**
-     * Runs the motor to a specified target value expressed as a double.
-     * @param target: the target you want the motor to run to.
+     * Runs the motor to a specified target value expressed as a double..
      */
 
-    public void run(double target) {
-        Motor.setControl(positionVoltage.withPosition(target));
+    public void run() {
+        motor.setControl(positionVoltage.withPosition(motorTarget));
     }
 
     public enum MotorStates {
@@ -83,16 +77,27 @@ public class Climber extends SubsystemBase {
         }
     }
     public boolean isPidFinished() {
-        return (Math.abs((Target - Motor.getPosition().getValueAsDouble())) <= 5);
+        return (Math.abs((motorTarget - motor.getPosition().getValueAsDouble())) <= 5);
     }
 
     @Override
     public void periodic() {
-        run(Target);
+        climberEncoderLog.append(motorEncoder);
+        climberOutputCurrentLog.append(motor.getSupplyCurrent().getValue());
+        climberMotorVoltage.append(motor.getMotorVoltage().getValue());
+        climberTargetLog.append(motorEncoder);
+        distanceEncoder.append(distanceSensorOutput);
+
+        motorEncoder = motor.getPosition().getValueAsDouble();
+
+        SmartDashboard.putNumber("Climber Encoder: ", motorEncoder);
+        SmartDashboard.putNumber("Range Onboard", distanceSensor.getRange);
+        SmartDashboard.putBoolean("Timestamp Onboard", distanceSensor.isRangeValid());
+        SmartDashboard.putNumber("Distance Sensor", distanceSensorOutput);
     }
 
-    public boolean distanceWithinRange(){
-        if (((Constants.Climber.DISTANCE_MIN < distanceSensorOutput) && (distanceSensorOutput < Constants.Climber.DISTANCE_MAX))){
+    public boolean distanceWithinRange(double minDistance, double maxDistance){
+        if (((minDistance < distanceSensorOutput) && (distanceSensorOutput < maxDistance))){
             return true;
         }
         else {
