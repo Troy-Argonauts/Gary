@@ -24,6 +24,7 @@ public class RobotContainer {
     public static final Gamepad driver = new AutoGamepad(Constants.Controllers.DRIVER);
     public static final Gamepad operator = new AutoGamepad(Constants.Controllers.OPERATOR);
 
+
     public RobotContainer() {
         // Configure the button bindings
         configureBindings();
@@ -37,54 +38,28 @@ public class RobotContainer {
         Robot.getArm().setDefaultCommand(
                 new RunCommand(
                         () -> {
-                            double speed =  IStream.create(operator::getRightY)
+                            double joystickAdjust =  IStream.create(operator::getRightY)
                                     .filtered(x -> OMath.deadband(x, Constants.Arm.DEADBAND))
                                     .get();
-                            Robot.getArm().run(speed);
+                            Robot.getArm().adjustSetpoint(joystickAdjust);
                         }
                 )
         );
 
         operator.getBottomButton().whileTrue(
-                new InstantCommand(() -> Robot.getArm().run(10))
+                new InstantCommand(() -> Robot.getArm().adjustSetpoint(10))
                         .andThen(new InstantCommand(() -> getOperator().setRumble(1.0, 0.5)))
         );
 
         operator.getRightButton().whileTrue(
-                new InstantCommand(() -> Robot.getArm().run(10))
+                new InstantCommand(() -> Robot.getArm().adjustSetpoint(10))
                         .andThen(new InstantCommand(() -> getOperator().setRumble(1.0, 0.5)))
         );
 
         operator.getLeftButton().whileTrue(
-                new InstantCommand(() -> Robot.getArm().run(10))
+                new InstantCommand(() -> Robot.getArm().adjustSetpoint(10))
                         .andThen(new InstantCommand(() -> getOperator().setRumble(1.0, 0.5)))
         );
-//                new InstantCommand(() -> Robot.getDrivetrain().getDualSpeedTransmission().disableAutomaticShifting())
-//                        .andThen(new InstantCommand(() -> getDriver().setRumble(1.0, 0.5)))
-//        );
-        //Example Joystick Input Command
-        //Pulled for Troy-Argonauts/Butters
-//            Robot.getDrivetrain().setDefaultCommand(
-//                    new RunCommand(
-//                            () -> {
-//                                double speed = IStream.create(driver::getLeftY)
-//                                        .filtered(x -> OMath.deadband(x, Constants.DriveTrain.DEADBAND))
-//                                        .get();
-//                                double angle = IStream.create(driver::getRightX)
-//                                        .filtered(x -> OMath.deadband(x, Constants.DriveTrain.DEADBAND))
-//                                        .get();
-//                                Robot.getDrivetrain().cheesyDrive(speed, angle, 1);
-//                            }, Robot.getDrivetrain()
-//                    )
-//            );
-
-        //Example Button Input Command
-        //Pulled for Troy-Argonauts/Butters
-//        driver.getRightBumper().whileTrue(
-//                new InstantCommand(() -> Robot.getDrivetrain().getDualSpeedTransmission().disableAutomaticShifting())
-//                        .andThen(new InstantCommand(() -> getDriver().setRumble(1.0, 0.5)))
-//        );
-    }
 
     public static Gamepad getDriver() {
         return driver;

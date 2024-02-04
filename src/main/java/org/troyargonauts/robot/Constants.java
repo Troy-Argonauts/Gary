@@ -18,6 +18,6 @@ public final class Constants {
         int LEFT_MOTOR_ID = 0;
         int RIGHT_MOTOR_ID = 1;
         int DEADBAND = Integer.parseInt(null);
-        String ARM_CANBUS_NAME = "roborio";
+        String CANBUS_NAME = "roborio";
     }
 }

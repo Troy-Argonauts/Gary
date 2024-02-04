@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,17 +19,16 @@ public class Arm extends SubsystemBase {
 
     private double leftArmEncoder = 0, rightArmEncoder = 0;
 
-    private double leftArmTarget = 0, rightArmTarget = 0;
+    private double armTarget = 0;
 
     private final PositionVoltage positionVoltage = new PositionVoltage(0).withSlot(0);
     private DoubleLogEntry armLeftEncoderLog;
     private DoubleLogEntry armRightEncoderLog;
     private DoubleLogEntry armLeftOutputCurrentLog;
     private DoubleLogEntry armRightOutputCurrentLog;
-    private DoubleLogEntry armLeftBusVoltage;
-    private DoubleLogEntry armRightBusVoltage;
-    private DoubleLogEntry armLeftTargetLog;
-    private DoubleLogEntry armRightTargetLog;
+    private DoubleLogEntry armLeftMotorVoltage;
+    private DoubleLogEntry armRightMotorVoltage;
+    private DoubleLogEntry armTargetLog;
 
     public Arm() {
         leftArmMotor = new TalonFX(LEFT_MOTOR_ID);
@@ -42,10 +42,9 @@ public class Arm extends SubsystemBase {
         armRightEncoderLog = new DoubleLogEntry(log, "Arm Right Encoder Values");
         armLeftOutputCurrentLog = new DoubleLogEntry(log, "Arm Motor Output Current ");
         armRightOutputCurrentLog = new DoubleLogEntry(log, "Arm Motor Output Current ");
-        armLeftBusVoltage = new DoubleLogEntry(log, "Arm Motor Bus Voltage");
-        armRightBusVoltage = new DoubleLogEntry(log, "Arm Motor Bus Voltage");
-        armLeftTargetLog = new DoubleLogEntry(log, "Arm Target");
-        armRightTargetLog = new DoubleLogEntry(log, "Arm Target");
+        armLeftMotorVoltage = new DoubleLogEntry(log, "Arm Motor Bus Voltage");
+        armRightMotorVoltage = new DoubleLogEntry(log, "Arm Motor Bus Voltage");
+        armTargetLog = new DoubleLogEntry(log, "Arm Target Log");
     }
 
     /**
@@ -64,10 +63,9 @@ public class Arm extends SubsystemBase {
         armRightEncoderLog.append(rightArmEncoder);
         armLeftOutputCurrentLog.append(leftArmMotor.getSupplyCurrent().getValue());
         armRightOutputCurrentLog.append(rightArmMotor.getSupplyCurrent().getValue());
-        armLeftBusVoltage.append(leftArmMotor.getMotorVoltage().getValue());
-        armRightBusVoltage.append(rightArmMotor.getMotorVoltage().getValue());
-        armLeftTargetLog.append(leftArmEncoder);
-        armRightTargetLog.append(rightArmEncoder);
+        armLeftMotorVoltage.append(leftArmMotor.getMotorVoltage().getValue());
+        armRightMotorVoltage.append(rightArmMotor.getMotorVoltage().getValue());
+        armTargetLog.append(armTarget);
     }
 
     /**
@@ -85,9 +83,9 @@ public class Arm extends SubsystemBase {
      *
      * @param target target position of motors
      */
-    public void run(double target) {
-        leftArmMotor.setControl(positionVoltage.withPosition(target));
-        rightArmMotor.setControl(positionVoltage.withPosition(target));
+    public void run() {
+        leftArmMotor.setControl(positionVoltage.withPosition(armTarget));
+        rightArmMotor.setControl(positionVoltage.withPosition(armTarget));
     }
 
     /**
@@ -97,8 +95,14 @@ public class Arm extends SubsystemBase {
      * @param motorID Motor ID of motor checked.
      * @return Returns false if the motor ID is not 1 or 2.
      */
-    public boolean isPidFinished(int motorID) {
-        return (Math.abs((leftArmTarget - leftArmMotor.getVelocity().getValueAsDouble())) <= 5) && (Math.abs((rightArmTarget - rightArmMotor.getVelocity().getValueAsDouble())) <= 5);
+    public boolean isPidFinished() {
+        return (Math.abs((armTarget - ((leftArmMotor.getVelocity().getValueAsDouble())) + rightArmMotor.getVelocity().getValueAsDouble())/2) <= 5);
 
     }
+
+    public void adjustSetpoint(double joystickValue){
+        armTarget += joystickValue;
+    }
+
+    public enum ARM
 }

@@ -40,6 +40,7 @@ public class Robot extends TimedRobot {
 
         DataLogManager.start("/media/sda1/logs");
 
+        arm = new Arm();
         new RobotContainer();
 
         CameraServer.startAutomaticCapture().setFPS(14);
@@ -47,7 +48,6 @@ public class Robot extends TimedRobot {
         SmartDashboard.putData("Autonomous modes", chooser);
         chooser.addOption("Nothing", new WaitCommand(15));
 
-        arm = new Arm();
     }
 
     @Override
