@@ -31,7 +31,7 @@ public class Climber extends SubsystemBase {
     private DoubleLogEntry climberOutputCurrentLog;
     private DoubleLogEntry climberMotorVoltage;
     private DoubleLogEntry climberTargetLog;
-    private DoubleLogEntry distanceEncoder;
+    private DoubleLogEntry climberDistanceEncoder;
 
     /**
      * Instantiates motorController object and sets the neutral mode to break.
@@ -42,7 +42,7 @@ public class Climber extends SubsystemBase {
         motor.setNeutralMode(NeutralModeValue.Brake);
 
         DataLog log = DataLogManager.getLog();
-        distanceEncoder = new DoubleLogEntry((log), "Distance Encoder Values");
+        climberDistanceEncoder = new DoubleLogEntry((log), "Distance Encoder Values");
         climberTargetLog = new DoubleLogEntry((log), "Climber Target Values");
         climberMotorVoltage = new DoubleLogEntry((log), "Climber Motor Voltage");
         climberOutputCurrentLog = new DoubleLogEntry((log), "Climber Current Output Values");
@@ -86,7 +86,7 @@ public class Climber extends SubsystemBase {
         climberOutputCurrentLog.append(motor.getSupplyCurrent().getValue());
         climberMotorVoltage.append(motor.getMotorVoltage().getValue());
         climberTargetLog.append(motorEncoder);
-        distanceEncoder.append(distanceSensorOutput);
+        climberDistanceEncoder.append(distanceSensorOutput);
 
         motorEncoder = motor.getPosition().getValueAsDouble();
 

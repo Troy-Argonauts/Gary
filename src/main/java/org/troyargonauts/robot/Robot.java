@@ -40,10 +40,10 @@ public class Robot extends TimedRobot {
         LiveWindow.setEnabled(false);
 
         DataLogManager.start("/media/sda1/logs");
+        climber = new Climber();
 
         new RobotContainer();
 
-        climber = new Climber();
         climber.turnDistanceSensorOn();
 
 
