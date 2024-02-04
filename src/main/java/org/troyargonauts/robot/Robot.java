@@ -40,6 +40,8 @@ public class Robot extends TimedRobot {
 
         DataLogManager.start("/media/sda1/logs");
 
+        intake = new Intake();
+
         new RobotContainer();
 
         CameraServer.startAutomaticCapture().setFPS(14);

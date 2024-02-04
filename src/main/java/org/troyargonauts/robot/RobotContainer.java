@@ -54,16 +54,7 @@ public class RobotContainer {
 //                new InstantCommand(() -> Robot.getDrivetrain().getDualSpeedTransmission().disableAutomaticShifting())
 //                        .andThen(new InstantCommand(() -> getDriver().setRumble(1.0, 0.5)))
 //        );
-        operator.getRightBumper().whileTrue(
-                new InstantCommand(() -> Robot.getIntake().setState(Intake.MotorState.IN))
-        ).whileFalse(
-                new InstantCommand(() -> Robot.getIntake().setState(Intake.MotorState.OFF))
-        );
-        operator.getLeftBumper().whileTrue(
-                new InstantCommand(() -> Robot.getIntake().setState(Intake.MotorState.OUT))
-        ).whileFalse(
-                new InstantCommand(() -> Robot.getIntake().setState(Intake.MotorState.OFF))
-        );
+        
     }
 
     public static Gamepad getDriver() {

@@ -8,7 +8,7 @@ public final class Constants {
     public interface Intake{
         int MOTOR_CAN_ID = 5;
         int NOTE_SENSOR_SLOT = 0;
-        String INTAKE_CANBUS_NAME = "roborio";
+        String CANBUS_NAME = "roborio";
     }
 
     public interface Controllers {
