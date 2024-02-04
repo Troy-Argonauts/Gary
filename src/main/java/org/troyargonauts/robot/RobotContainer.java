@@ -54,7 +54,7 @@ public class RobotContainer {
 //                new InstantCommand(() -> Robot.getDrivetrain().getDualSpeedTransmission().disableAutomaticShifting())
 //                        .andThen(new InstantCommand(() -> getDriver().setRumble(1.0, 0.5)))
 //        );
-        
+
     }
 
     public static Gamepad getDriver() {

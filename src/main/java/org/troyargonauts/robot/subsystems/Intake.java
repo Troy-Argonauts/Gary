@@ -44,7 +44,7 @@ public class Intake extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("Note_Readiness",isNoteReady());
-        intakeOutputCurrentLog.append(motor.getMotorVoltage().getValue());
+        intakeOutputCurrentLog.append(motor.getSupplyCurrent().getValue());
         intakeMotorVoltage.append(motor.getMotorVoltage().getValue());
     }
 
