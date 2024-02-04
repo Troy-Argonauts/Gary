@@ -17,75 +17,66 @@ import static org.troyargonauts.robot.Constants.Climber.*;
  */
 
 public class Climber extends SubsystemBase {
-
-    /**
-     * Creates motorController object.
-     */
     private final PositionVoltage positionVoltage = new PositionVoltage(0).withSlot(0);
-    private TalonFX climberMotor;
-
-    private double climberEncoder = 0;
-
-    private double climberTarget = 0;
-
+    private TalonFX Motor;
+    private double Encoder = 0;
+    private double Target = 0;
     private DoubleLogEntry climberEncoderLog;
     private DoubleLogEntry climberOutputCurrentLog;
     private DoubleLogEntry climberBusVoltage;
     private DoubleLogEntry climberTargetLog;
-
 
     /**
      * Instantiates motorController object and sets the neutral mode to break.
      */
 
     public Climber(){
-        climberMotor = new TalonFX(CLIMBER_MOTOR_PORT);
-        climberMotor.setNeutralMode(NeutralModeValue.Brake);
+        Motor = new TalonFX(MOTOR_ID);
+        Motor.setNeutralMode(NeutralModeValue.Brake);
 
-        climberEncoder = climberMotor.getPosition().getValueAsDouble();
+        Encoder = Motor.getPosition().getValueAsDouble();
 
-        SmartDashboard.putNumber("Climber Encoder: ", climberEncoder);
+        SmartDashboard.putNumber("Climber Encoder: ", Encoder);
 
-        climberEncoderLog.append(climberEncoder);
-        climberOutputCurrentLog.append(climberMotor.getSupplyCurrent().getValue());
-        climberBusVoltage.append(climberMotor.getMotorVoltage().getValue());
-        climberTargetLog.append(climberEncoder);
+        climberEncoderLog.append(Encoder);
+        climberOutputCurrentLog.append(Motor.getSupplyCurrent().getValue());
+        climberBusVoltage.append(Motor.getMotorVoltage().getValue());
+        climberTargetLog.append(Encoder);
     }
 
-    public void resetEncoders() {
-        climberMotor.setPosition(0);
+    public void resetEncoder() {
+        Motor.setPosition(0);
     }
 
     /**
-     * Creates 3 different motor states (OFF, DOWN, and UP).
+     * Runs the motor to a specified target value expressed as a double.
+     * @param target: the target you want the motor to run to.
      */
 
-
     public void run(double target) {
-        climberMotor.setControl(positionVoltage.withPosition(target));
+        Motor.setControl(positionVoltage.withPosition(target));
     }
 
     public enum MotorStates {
-        UP, OFF
-    }
+        TOP(100),
+        BOTTOM(0);
+        final double encoderPosition;
 
-    public boolean isPidFinished(int motorID) {
-        return (Math.abs((climberTarget - climberMotor.getVelocity().getValueAsDouble())) <= 5);
-
-    }
-
-    /**
-     * Sets power to the motorController for each state (OFF has no power, DOWN and UP have a power value of 0.75 in their respective directions).
-     * @param states: pulls the state from MotorStates.
-     */
-
-    public void setClimberMotor(MotorStates states){
-        switch (states) {
-            case OFF: climberMotor.set(CLIMBER_MOTOR_OFF_SPEED);
-            break;
-            case UP: climberMotor.set(CLIMBER_MOTOR_ON_SPEED);
-            break;
+        MotorStates(double encoderPosition) {
+            this.encoderPosition = encoderPosition;
         }
+
+        public double getEncoderPosition() {
+            return this.encoderPosition;
+        }
+    }
+    public boolean isPidFinished() {
+        return (Math.abs((Target - Motor.getPosition().getValueAsDouble())) <= 5);
+    }
+
+    @Override
+    public void periodic() {
+        run(Target);
     }
 }
 

@@ -13,9 +13,7 @@ public final class Constants {
 
     public interface Climber
     {
-        double CLIMBER_MOTOR_OFF_SPEED = 0.0;
-        double CLIMBER_MOTOR_ON_SPEED = 0.75;
-        int CLIMBER_MOTOR_PORT = 13;
-        String CLIMBER_CANBUS_NAME = "roborio";
+        int MOTOR_ID = 13;
+        String CANBUS_NAME = "roborio";
     }
 }
