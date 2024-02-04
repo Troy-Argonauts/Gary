@@ -91,7 +91,7 @@ public class Climber extends SubsystemBase {
         motorEncoder = motor.getPosition().getValueAsDouble();
 
         SmartDashboard.putNumber("Climber Encoder: ", motorEncoder);
-        SmartDashboard.putNumber("Range Onboard", distanceSensor.getRange);
+        SmartDashboard.putNumber("Range Onboard", distanceSensor.getRange());
         SmartDashboard.putBoolean("Timestamp Onboard", distanceSensor.isRangeValid());
         SmartDashboard.putNumber("Distance Sensor", distanceSensorOutput);
     }
