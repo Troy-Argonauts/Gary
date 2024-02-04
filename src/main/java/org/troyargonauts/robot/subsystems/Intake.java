@@ -25,8 +25,6 @@ public class Intake extends SubsystemBase {
         motor = new TalonFX(Constants.Intake.MOTOR_CAN_ID);
         noteSensor = new DigitalInput(Constants.Intake.NOTE_SENSOR_SLOT);
 
-        SmartDashboard.putNumber("motor1SetPoint", 0);
-
         DataLog log = DataLogManager.getLog();
         intakeMotorVoltage =  new DoubleLogEntry(log, "Intake Bus Voltage log");
         intakeOutputCurrentLog =  new DoubleLogEntry(log, "Intake Output Current log");
