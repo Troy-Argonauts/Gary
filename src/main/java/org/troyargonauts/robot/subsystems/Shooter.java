@@ -105,7 +105,7 @@ public class Shooter extends SubsystemBase {
         topMotor.setPosition(0);
         bottomMotor.setPosition(0);
     }
-    public enum topSetPoints{
+    public enum topSetPoints {
         CENTER(2000),
         STAGE(2000),
         CLOSE(2000),
@@ -116,6 +116,7 @@ public class Shooter extends SubsystemBase {
         topSetPoints(double encoderRPM) {
             this.encoderRPM = encoderRPM;
         }
+    }
         public enum bottomSetPoints{
             CENTER(2000),
             STAGE(2000),
