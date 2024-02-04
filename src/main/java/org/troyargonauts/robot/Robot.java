@@ -5,6 +5,7 @@
 
 package org.troyargonauts.robot;
 
+import com.revrobotics.Rev2mDistanceSensor;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -32,6 +33,7 @@ public class Robot extends TimedRobot {
     private static Climber climber;
 
 
+
     @Override
     public void robotInit() {
         LiveWindow.disableAllTelemetry();
@@ -42,6 +44,8 @@ public class Robot extends TimedRobot {
         new RobotContainer();
 
         climber = new Climber();
+        climber.turnDistanceSensorOn();
+
 
         CameraServer.startAutomaticCapture().setFPS(14);
 
@@ -71,6 +75,11 @@ public class Robot extends TimedRobot {
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
+    }
+
+    @Override
+    public void teleopPeriodic(){
+
     }
 
     @Override
