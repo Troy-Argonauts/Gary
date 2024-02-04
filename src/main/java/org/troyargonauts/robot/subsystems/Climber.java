@@ -4,9 +4,11 @@ package org.troyargonauts.robot.subsystems;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.Rev2mDistanceSensor;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.troyargonauts.robot.Constants;
 
 import static org.troyargonauts.robot.Constants.Climber.*;
 
@@ -23,6 +25,9 @@ public class Climber extends SubsystemBase {
      */
     private final PositionVoltage positionVoltage = new PositionVoltage(0).withSlot(0);
     private TalonFX climberMotor;
+
+    private Rev2mDistanceSensor distanceSensor;
+    double distanceSensorOutput = distanceSensor.getRange();
 
     private double climberEncoder = 0;
 
@@ -42,9 +47,14 @@ public class Climber extends SubsystemBase {
         climberMotor = new TalonFX(CLIMBER_MOTOR_PORT);
         climberMotor.setNeutralMode(NeutralModeValue.Brake);
 
+        distanceSensor = new Rev2mDistanceSensor(Rev2mDistanceSensor.Port.kOnboard);
+        distanceSensor.setAutomaticMode(true);
+
         climberEncoder = climberMotor.getPosition().getValueAsDouble();
 
         SmartDashboard.putNumber("Climber Encoder: ", climberEncoder);
+        SmartDashboard.putNumber("Range Onboard", distanceSensor.getRange());
+        SmartDashboard.putBoolean("Timestamp Onboard", distanceSensor.isRangeValid());
 
         climberEncoderLog.append(climberEncoder);
         climberOutputCurrentLog.append(climberMotor.getSupplyCurrent().getValue());
@@ -86,6 +96,21 @@ public class Climber extends SubsystemBase {
             case UP: climberMotor.set(CLIMBER_MOTOR_ON_SPEED);
             break;
         }
+    }
+
+
+
+    public boolean distanceWithinRange(){
+        if (((Constants.Climber.DISTANCE_MIN < distanceSensorOutput) && (distanceSensorOutput < Constants.Climber.DISTANCE_MAX))){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public double getDistance(){
+        return distanceSensor.getRange();
     }
 }
 
