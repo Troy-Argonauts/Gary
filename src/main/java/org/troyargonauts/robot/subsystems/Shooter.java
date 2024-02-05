@@ -105,7 +105,7 @@ public class Shooter extends SubsystemBase {
         topMotor.setPosition(0);
         bottomMotor.setPosition(0);
     }
-    public enum topSetPoints {
+    public enum topStates {
         CENTER(2000),
         STAGE(2000),
         CLOSE(2000),
@@ -113,11 +113,11 @@ public class Shooter extends SubsystemBase {
 
         final double encoderRPM;
 
-        topSetPoints(double encoderRPM) {
+        topStates(double encoderRPM) {
             this.encoderRPM = encoderRPM;
         }
     }
-        public enum bottomSetPoints{
+        public enum bottomStates{
             CENTER(2000),
             STAGE(2000),
             CLOSE(2000),
@@ -125,13 +125,24 @@ public class Shooter extends SubsystemBase {
 
             final double encoderRPM;
 
-            bottomSetPoints(double encoderRPM) {
+            bottomStates(double encoderRPM) {
                 this.encoderRPM = encoderRPM;
             }
 
         public double getEncoderPosition() {
             return this.encoderRPM;
         }
+    }
+
+    /**
+     * Sets the top and bottom motors to a state determined by the enums
+     * @param state
+     */
+    public void setTopState(topStates state){
+        topTarget = state.encoderRPM;
+    }
+    public void setBottomState(bottomStates state){
+        bottomTarget = state.encoderRPM;
     }
 
     /**
