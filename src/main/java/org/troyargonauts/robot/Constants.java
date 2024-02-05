@@ -17,7 +17,7 @@ public final class Constants {
         int D = 0;
         int LEFT_MOTOR_ID = 0;
         int RIGHT_MOTOR_ID = 1;
-        int DEADBAND = Integer.parseInt(null);
+        double DEADBAND = 0.08;
         String CANBUS_NAME = "roborio";
     }
 }

@@ -12,6 +12,7 @@ import org.troyargonauts.common.input.Gamepad;
 import org.troyargonauts.common.input.gamepads.AutoGamepad;
 import org.troyargonauts.common.math.OMath;
 import org.troyargonauts.common.streams.IStream;
+import org.troyargonauts.robot.subsystems.Arm;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -46,20 +47,6 @@ public class RobotContainer {
                 )
         );
 
-        operator.getBottomButton().whileTrue(
-                new InstantCommand(() -> Robot.getArm().adjustSetpoint(10))
-                        .andThen(new InstantCommand(() -> getOperator().setRumble(1.0, 0.5)))
-        );
-
-        operator.getRightButton().whileTrue(
-                new InstantCommand(() -> Robot.getArm().adjustSetpoint(10))
-                        .andThen(new InstantCommand(() -> getOperator().setRumble(1.0, 0.5)))
-        );
-
-        operator.getLeftButton().whileTrue(
-                new InstantCommand(() -> Robot.getArm().adjustSetpoint(10))
-                        .andThen(new InstantCommand(() -> getOperator().setRumble(1.0, 0.5)))
-        );
 
     public static Gamepad getDriver() {
         return driver;

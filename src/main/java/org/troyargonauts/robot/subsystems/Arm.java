@@ -130,4 +130,9 @@ public class Arm extends SubsystemBase {
     public double getCurrentTarget(){
         return armTarget;
     }
+
+
+    public void setDesiredTarget(armSetpoints desiredTarget){
+        armTarget = desiredTarget.armPosition;
+    }
 }
