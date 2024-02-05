@@ -15,8 +15,5 @@ public final class Constants {
     {
         int MOTOR_ID = 13;
         String CANBUS_NAME = "roborio";
-        
-        int CLIMBER_MOTOR_PORT = 13;
-        String CLIMBER_CANBUS_NAME = "roborio";
     }
 }
