@@ -102,11 +102,17 @@ public class Arm extends SubsystemBase {
         armTarget += joystickValue;
     }
 
-    public enum ARM{
-        FLOOR_INTAKE(),
-        AMP(),
-        SHOOTER(),
-        FAR_SHOOTER();
+    public enum armSetpoints{
+        FLOOR_INTAKE(100),
+        AMP(200),
+        SHOOTER(233234),
+        FAR_SHOOTER(1234);
+
+        final double armPosition;
+
+        armSetpoints(double armPosition){
+            this.armPosition = armPosition;
+        }
     }
 
     /**
