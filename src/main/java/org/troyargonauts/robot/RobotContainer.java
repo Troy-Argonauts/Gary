@@ -39,20 +39,21 @@ public class RobotContainer {
         Robot.getArm().setDefaultCommand(
                 new RunCommand(
                         () -> {
-                            double joystickAdjust =  IStream.create(operator::getRightY)
+                            double joystickAdjust = IStream.create(operator::getRightY)
                                     .filtered(x -> OMath.deadband(x, Constants.Arm.DEADBAND))
                                     .get();
                             Robot.getArm().adjustSetpoint(joystickAdjust);
                         }
                 )
         );
-
-
-    public static Gamepad getDriver() {
-        return driver;
     }
 
-    public static Gamepad getOperator() {
-        return operator;
-    }
+
+        public static Gamepad getDriver () {
+            return driver;
+        }
+
+        public static Gamepad getOperator () {
+            return operator;
+        }
 }
