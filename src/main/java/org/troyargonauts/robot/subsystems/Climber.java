@@ -17,7 +17,7 @@ import static org.troyargonauts.robot.Constants.Climber.*;
 /**
  * Class representing climber subsystem.
  *
- * @author Nihaar57, SavageCabbage360, shaquilleinoatmeal
+ * @author Nihaar57, SavageCabbage360, firearcher2012, shaquilleinoatmeal
  */
 
 public class Climber extends SubsystemBase {
@@ -51,18 +51,23 @@ public class Climber extends SubsystemBase {
         distanceSensor.setAutomaticMode(true);
     }
 
+    /**
+     * Resets encoder value
+     */
     public void resetEncoder() {
         motor.setPosition(0);
     }
 
     /**
-     * Runs the motor to a specified target value expressed as a double..
+     * Runs the motor to a specified target value expressed as a double.
      */
-
     public void run() {
         motor.setControl(positionVoltage.withPosition(motorTarget));
     }
 
+    /**
+     * Enum for Motor States
+     */
     public enum MotorStates {
         TOP(100),
         BOTTOM(0);
@@ -76,10 +81,18 @@ public class Climber extends SubsystemBase {
             return this.encoderPosition;
         }
     }
+
+    /**
+     * Checks whether the PID is finished
+     * @return finished or not
+     */
     public boolean isPidFinished() {
         return (Math.abs((motorTarget - motor.getPosition().getValueAsDouble())) <= 5);
     }
 
+    /**
+     * Stores values of encoders
+     */
     @Override
     public void periodic() {
         climberEncoderLog.append(motorEncoder);
@@ -96,6 +109,12 @@ public class Climber extends SubsystemBase {
         SmartDashboard.putNumber("Distance Sensor", distanceSensorOutput);
     }
 
+    /**
+     * Determines if robot is within range
+     * @param minDistance determines the minimum of the range
+     * @param maxDistance determines the maximum of the range
+     * @return whether the robot is in range
+     */
     public boolean distanceWithinRange(double minDistance, double maxDistance){
         if (((minDistance < distanceSensorOutput) && (distanceSensorOutput < maxDistance))){
             return true;
@@ -105,6 +124,10 @@ public class Climber extends SubsystemBase {
         }
     }
 
+    /**
+     * Determines the range between the robot and the nearest object
+     * @return The distance
+     */
     public double getDistance(){
         return distanceSensor.getRange();
     }
