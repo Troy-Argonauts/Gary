@@ -16,9 +16,6 @@ import org.troyargonauts.robot.Constants;
  * @author aarooshg, TheFlyingPig25
  */
 
-/**
- * Instantiated motor controllers, data logging values and target speed for the Shooter
- */
 public class Shooter extends SubsystemBase {
     private TalonFX topMotor, bottomMotor;
 
@@ -33,12 +30,10 @@ public class Shooter extends SubsystemBase {
     private DoubleLogEntry shooterBottomMotorVoltage;
     private DoubleLogEntry shooterBottomOutputCurrentLog;
 
-    /**
-     * We are using PID to set motors to a specific voltage based on RPM in the following method
-     */
     final VelocityVoltage velocityVoltage = new VelocityVoltage(0).withSlot(0);
 
     /**
+     * Instantiated motor controllers, data logging values and target speed for the Shooter
      * We are also assigning the motor IDs and adding the log entries
      */
     public Shooter(){
