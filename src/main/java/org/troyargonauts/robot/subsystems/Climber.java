@@ -1,6 +1,5 @@
 package org.troyargonauts.robot.subsystems;
 
-
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -10,7 +9,6 @@ import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import org.troyargonauts.robot.Constants;
 
 import static org.troyargonauts.robot.Constants.Climber.*;
 
@@ -35,6 +33,7 @@ public class Climber extends SubsystemBase {
 
     /**
      * Instantiates motorController object and sets the neutral mode to break.
+     * Outputs values of motor target, voltage, current, and encoder to the DataLog.
      */
 
     public Climber(){
@@ -52,8 +51,9 @@ public class Climber extends SubsystemBase {
     }
 
     /**
-     * Resets encoder value
+     * Resets encoder value.
      */
+
     public void resetEncoder() {
         motor.setPosition(0);
     }
@@ -61,13 +61,15 @@ public class Climber extends SubsystemBase {
     /**
      * Runs the motor to a specified target value expressed as a double.
      */
+
     public void run() {
         motor.setControl(positionVoltage.withPosition(motorTarget));
     }
 
     /**
-     * Enum for Motor States
+     * Enum for different Motor States with different target values.
      */
+
     public enum MotorStates {
         TOP(100),
         BOTTOM(0);
@@ -83,16 +85,28 @@ public class Climber extends SubsystemBase {
     }
 
     /**
-     * Checks whether the PID is finished
-     * @return finished or not
+     * sets the motor to run to a position.
+     * @param state is the motor state with the encoder value desired to run to.
      */
+
+    public void setState(MotorStates state)
+    {
+        motor.setPosition(state.getEncoderPosition());
+    }
+
+    /**
+     * Checks whether the PID is finished.
+     * @return finished or not.
+     */
+
     public boolean isPidFinished() {
         return (Math.abs((motorTarget - motor.getPosition().getValueAsDouble())) <= 5);
     }
 
     /**
-     * Stores values of encoders
+     * Stores values of encoders and displays values on smartDashboard.
      */
+
     @Override
     public void periodic() {
         climberEncoderLog.append(motorEncoder);
@@ -110,11 +124,12 @@ public class Climber extends SubsystemBase {
     }
 
     /**
-     * Determines if robot is within range
-     * @param minDistance determines the minimum of the range
-     * @param maxDistance determines the maximum of the range
-     * @return whether the robot is in range
+     * Determines if robot is within range.
+     * @param minDistance determines the minimum of the range.
+     * @param maxDistance determines the maximum of the range.
+     * @return whether the robot is in range.
      */
+
     public boolean distanceWithinRange(double minDistance, double maxDistance){
         if (((minDistance < distanceSensorOutput) && (distanceSensorOutput < maxDistance))){
             return true;
@@ -125,9 +140,10 @@ public class Climber extends SubsystemBase {
     }
 
     /**
-     * Determines the range between the robot and the nearest object
-     * @return The distance
+     * Determines the range between the robot and the nearest object.
+     * @return distance as a double.
      */
+
     public double getDistance(){
         return distanceSensor.getRange();
     }

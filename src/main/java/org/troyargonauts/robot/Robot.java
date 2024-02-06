@@ -19,6 +19,7 @@ import org.troyargonauts.robot.subsystems.Climber;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The VM is configured to automatically run this class, and to call the methods corresponding to
@@ -41,6 +42,10 @@ public class Robot extends TimedRobot {
 
         DataLogManager.start("/media/sda1/logs");
         climber = new Climber();
+
+        scheduledExecutorService.scheduleAtFixedRate(() -> {
+            climber.run();
+        }, 100, 10, TimeUnit.MILLISECONDS);
 
         new RobotContainer();
 
