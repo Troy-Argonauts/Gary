@@ -37,6 +37,8 @@ public class Arm extends SubsystemBase {
         leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
         rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
 
+        leftArmMotor.setInverted();
+
         DataLog log = DataLogManager.getLog();
         armLeftEncoderLog = new DoubleLogEntry(log, "Arm Left Encoder Values");
         armRightEncoderLog = new DoubleLogEntry(log, "Arm Right Encoder Values");
