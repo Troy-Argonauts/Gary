@@ -35,10 +35,12 @@ public class Shooter extends SubsystemBase {
 
     /**
      * We are using PID to set motors to a specific voltage based on RPM in the following method
-     * We are also assigning the motor IDs and adding the log entries
      */
     final VelocityVoltage velocityVoltage = new VelocityVoltage(0).withSlot(0);
 
+    /**
+     * We are also assigning the motor IDs and adding the log entries
+     */
     public Shooter(){
         topMotor = new TalonFX(Constants.Shooter.TOP_MOTOR_ID);
         bottomMotor = new TalonFX(Constants.Shooter.BOTTOM_MOTOR_ID);
@@ -82,24 +84,32 @@ public class Shooter extends SubsystemBase {
     }
 
     /**
-     * Sets the shooter target speed for both the top and bottom motors
+     * Sets the shooter target speed for the top motor
      * @param target
      */
     public void setTopDesiredTarget(double target) {
         topTarget = target;
         }
+    /**
+     * Sets the shooter target speed for the bottom motor
+     * @param target
+     */
     public void setBottomDesiredTargetBottom(double target) {
         topTarget = target;
     }
 
     /**
-     * Sets the raw power of the two shooter motors
+     * Sets the raw power of the top shooter motor
      * @param power
      */
     public void setTopRawPower(double power) {
         topMotor.set(power);
     }
 
+    /**
+     * Sets the raw power of the bottom shooter motor
+     * @param power
+     */
     public void setBottomRawPower(double power) {
         bottomMotor.set(power);
     }
@@ -112,7 +122,7 @@ public class Shooter extends SubsystemBase {
     }
 
     /**
-     * Creates the bottom and top motor states
+     * Creates the top motor states
      */
     public enum topStates {
         CENTER(2000),
@@ -126,6 +136,9 @@ public class Shooter extends SubsystemBase {
             this.encoderRPM = encoderRPM;
         }
     }
+    /**
+     * Creates the bottom motor states
+     */
         public enum bottomStates{
             CENTER(2000),
             STAGE(2000),
@@ -144,24 +157,32 @@ public class Shooter extends SubsystemBase {
     }
 
     /**
-     * Sets the top and bottom motors to a state determined by the enums
+     * Sets the top motor to a state determined by the enums
      * @param state
      */
     public void setTopState(topStates state){
         topTarget = state.encoderRPM;
     }
+    /**
+     * Sets the bottom motor to a state determined by the enums
+     * @param state
+     */
     public void setBottomState(bottomStates state){
         bottomTarget = state.encoderRPM;
     }
 
     /**
-     * Checks if PID is finished
+     * Checks if PID is finished for the top motor
      * @return the value of the target velocity and actual velocity of both motors
      */
     public boolean isTopPidFinished(){
         return (Math.abs(topTarget - topEncoderRPM) <= 5);
     }
 
+    /**
+     * Checks if PID is finished for the bottom motor
+     * @return the value of the target velocity and actual velocity of both motors
+     */
     public boolean isBottomPidFinished(){
         return (Math.abs(bottomTarget - bottomEncoderRPM) <= 5);
     }
