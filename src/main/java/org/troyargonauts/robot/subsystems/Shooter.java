@@ -10,13 +10,16 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.troyargonauts.common.motors.wrappers.LazyTalonFX;
 import org.troyargonauts.robot.Constants;
 
+/**
+ * Class representing the Shooter subsystem, including the Data Logging and PID
+ *
+ * @author aarooshg, TheFlyingPig25
+ */
 
+/**
+ * Instantiated motor controllers, data logging values and target speed for the Shooter
+ */
 public class Shooter extends SubsystemBase {
-    /**
-     * Class representing the Shooter subsystem, including the Data Logging and PID
-     *
-     * @author aarooshg, TheFlyingPig25
-     */
     private TalonFX topMotor, bottomMotor;
 
     double topTarget = 0.0;
@@ -31,8 +34,7 @@ public class Shooter extends SubsystemBase {
     private DoubleLogEntry shooterBottomOutputCurrentLog;
 
     /**
-     * Instantiated motor controllers, data logging values and target speed for the Shooter
-     * Additionally, we are using PID to set motors to a specific voltage based on RPM in the following method
+     * We are using PID to set motors to a specific voltage based on RPM in the following method
      * We are also assigning the motor IDs and adding the log entries
      */
     final VelocityVoltage velocityVoltage = new VelocityVoltage(0).withSlot(0);
@@ -71,6 +73,9 @@ public class Shooter extends SubsystemBase {
 
     }
 
+    /**
+     * Sets the target using a voltage to reach that velocity
+     */
     public void run() {
         topMotor.setControl(velocityVoltage.withVelocity(topTarget));
         bottomMotor.setControl(velocityVoltage.withVelocity(bottomTarget));
@@ -105,6 +110,10 @@ public class Shooter extends SubsystemBase {
         topMotor.setPosition(0);
         bottomMotor.setPosition(0);
     }
+
+    /**
+     * Creates the bottom and top motor states
+     */
     public enum topStates {
         CENTER(2000),
         STAGE(2000),
