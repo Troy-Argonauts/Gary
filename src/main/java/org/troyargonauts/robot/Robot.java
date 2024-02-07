@@ -55,8 +55,6 @@ public class Robot extends TimedRobot {
             arm.run();
             climber.run();
         }, 100, 10, TimeUnit.MILLISECONDS);
-      
-        climber.turnDistanceSensorOn();
 
         CameraServer.startAutomaticCapture().setFPS(14);
 
