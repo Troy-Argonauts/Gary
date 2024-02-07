@@ -12,9 +12,9 @@ public final class Constants {
     }
 
     public interface Arm {
-        int P = 0;
-        int I = 0;
-        int D = 0;
+        double P = 0;
+        double I = 0;
+        double D = 0;
         int LEFT_MOTOR_ID = 0;
         int RIGHT_MOTOR_ID = 1;
         double DEADBAND = 0.08;
