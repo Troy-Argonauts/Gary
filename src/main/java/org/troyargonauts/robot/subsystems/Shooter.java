@@ -1,5 +1,6 @@
 package org.troyargonauts.robot.subsystems;
 
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.util.datalog.DataLog;
@@ -9,6 +10,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.troyargonauts.common.motors.wrappers.LazyTalonFX;
 import org.troyargonauts.robot.Constants;
+
+import static org.troyargonauts.robot.Constants.Shooter.*;
 
 /**
  * Class representing the Shooter subsystem, including the Data Logging and PID
@@ -39,6 +42,9 @@ public class Shooter extends SubsystemBase {
     public Shooter(){
         topMotor = new TalonFX(Constants.Shooter.TOP_MOTOR_ID);
         bottomMotor = new TalonFX(Constants.Shooter.BOTTOM_MOTOR_ID);
+
+        topMotor.getConfigurator().apply(new Slot0Configs().withKP(TOP_MOTOR_P).withKI(TOP_MOTOR_I).withKD(TOP_MOTOR_D));
+        bottomMotor.getConfigurator().apply(new Slot0Configs().withKP(BOTTOM_MOTOR_P).withKI(BOTTOM_MOTOR_I).withKD(BOTTOM_MOTOR_D));
 
         DataLog log = DataLogManager.getLog();
         shooterTopEncoderLog = new DoubleLogEntry((log), "Top Shooter Encoder Values");
