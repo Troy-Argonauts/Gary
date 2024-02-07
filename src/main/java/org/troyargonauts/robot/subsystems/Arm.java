@@ -12,7 +12,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static org.troyargonauts.robot.Constants.Arm.*;
 
-
+/**
+ * Class representing the Arm subsystem, including the Data Logging and PID
+ * @author Ashwin Shrivastav
+ */
 public class Arm extends SubsystemBase {
 
     private TalonFX leftArmMotor, rightArmMotor;
@@ -30,6 +33,9 @@ public class Arm extends SubsystemBase {
     private DoubleLogEntry armRightMotorVoltage;
     private DoubleLogEntry armTargetLog;
 
+    /**
+     * Instantiated motor controllers, motors, data logging values and data log, target, and motor IDs.
+     */
     public Arm() {
         leftArmMotor = new TalonFX(LEFT_MOTOR_ID);
         rightArmMotor = new TalonFX(RIGHT_MOTOR_ID);

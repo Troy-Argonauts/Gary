@@ -43,6 +43,10 @@ public class Robot extends TimedRobot {
         arm = new Arm();
         new RobotContainer();
 
+        scheduledExecutorService.scheduleAtFixedRate(() -> {
+            arm.run();
+        }, 100, 10, TimeUnit.MILLISECONDS);
+
         CameraServer.startAutomaticCapture().setFPS(14);
 
         SmartDashboard.putData("Autonomous modes", chooser);
