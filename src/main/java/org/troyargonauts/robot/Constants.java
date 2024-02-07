@@ -11,5 +11,8 @@ public final class Constants {
     {
         int MOTOR_ID = 13;
         String CANBUS_NAME = "roborio";
+        double P = 0;
+        double I = 0;
+        double D = 0;
     }
 }

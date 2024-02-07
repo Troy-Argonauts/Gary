@@ -1,5 +1,6 @@
 package org.troyargonauts.robot.subsystems;
 
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -39,6 +40,8 @@ public class Climber extends SubsystemBase {
     public Climber(){
         motor = new TalonFX(MOTOR_ID);
         motor.setNeutralMode(NeutralModeValue.Brake);
+
+        motor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
 
         DataLog log = DataLogManager.getLog();
         climberDistanceEncoder = new DoubleLogEntry((log), "Distance Encoder Values");
