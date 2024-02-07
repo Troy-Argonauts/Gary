@@ -7,6 +7,7 @@ package org.troyargonauts.robot;
 
 import org.troyargonauts.common.input.Gamepad;
 import org.troyargonauts.common.input.gamepads.AutoGamepad;
+import org.troyargonauts.robot.subsystems.Intake;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -28,6 +29,7 @@ public class RobotContainer {
      * Use this method to define your controller->command mappings.
      */
     private void configureBindings() {
+
 
     }
 
