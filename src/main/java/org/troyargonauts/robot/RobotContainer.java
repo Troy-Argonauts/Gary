@@ -5,14 +5,12 @@
 
 package org.troyargonauts.robot;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import org.troyargonauts.common.input.Gamepad;
 import org.troyargonauts.common.input.gamepads.AutoGamepad;
 import org.troyargonauts.common.math.OMath;
 import org.troyargonauts.common.streams.IStream;
 import org.troyargonauts.robot.subsystems.Arm;
+import org.troyargonauts.robot.subsystems.Intake;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -36,24 +34,14 @@ public class RobotContainer {
      */
     private void configureBindings() {
 
-        Robot.getArm().setDefaultCommand(
-                new RunCommand(
-                        () -> {
-                            double joystickAdjust = IStream.create(operator::getRightY)
-                                    .filtered(x -> OMath.deadband(x, Constants.Arm.DEADBAND))
-                                    .get();
-                            Robot.getArm().adjustSetpoint(joystickAdjust);
-                        }
-                )
-        );
     }
 
 
-        public static Gamepad getDriver () {
-            return driver;
-        }
+    public static Gamepad getDriver () {
+        return driver;
+    }
 
-        public static Gamepad getOperator () {
-            return operator;
-        }
+    public static Gamepad getOperator () {
+        return operator;
+    }
 }
