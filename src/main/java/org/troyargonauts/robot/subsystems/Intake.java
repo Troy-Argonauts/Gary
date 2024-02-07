@@ -12,7 +12,7 @@ import org.troyargonauts.robot.Constants;
 /**
  * Class representing Intake system
  *
- * @author firearcher2012, SavageCabbage360
+ * @author firearcher2012, SavageCabbage360, JJCgits, firelite2023
  */
 
 public class Intake extends SubsystemBase {
@@ -21,6 +21,9 @@ public class Intake extends SubsystemBase {
     private DoubleLogEntry intakeMotorVoltage;
     private DoubleLogEntry intakeOutputCurrentLog;
 
+    /**
+     * Makes a new intake with a motor and a note sensor
+     */
     public Intake() {
         motor = new TalonFX(Constants.Intake.MOTOR_CAN_ID);
         noteSensor = new DigitalInput(Constants.Intake.NOTE_SENSOR_SLOT);
@@ -28,13 +31,12 @@ public class Intake extends SubsystemBase {
         DataLog log = DataLogManager.getLog();
         intakeMotorVoltage =  new DoubleLogEntry(log, "Intake Bus Voltage log");
         intakeOutputCurrentLog =  new DoubleLogEntry(log, "Intake Output Current log");
-
-
     }
 
 
-
-
+    /**
+     * @return a boolean (true if the note is ready and false if the note isn't)
+     */
     public boolean isNoteReady() {
         return noteSensor.get();
     }
@@ -57,6 +59,9 @@ public class Intake extends SubsystemBase {
         motor.set(speed);
     }
 
+    /**
+     * Makes an enum for the 3 states the motor could be (In, Out, or Off)
+     */
     public enum MotorState{
         IN,
         OFF,
