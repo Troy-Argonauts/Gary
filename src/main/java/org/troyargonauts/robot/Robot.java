@@ -32,6 +32,7 @@ public class Robot extends TimedRobot {
     private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
     private Command autonomousCommand;
 
+    private static Intake intake;
 
 
     @Override
@@ -41,8 +42,11 @@ public class Robot extends TimedRobot {
 
         DataLogManager.start("/media/sda1/logs");
 
+        intake = new Intake();
         shooter = new Shooter();
+
         new RobotContainer();
+      
         scheduledExecutorService.scheduleAtFixedRate(() -> {
             shooter.run();
         }, 100, 10, TimeUnit.MILLISECONDS);
@@ -82,9 +86,15 @@ public class Robot extends TimedRobot {
         // Cancels all running commands at the start of test mode.
         CommandScheduler.getInstance().cancelAll();
     }
+  
     public static Shooter getArm() {
         if (shooter == null) shooter = new Shooter();
         return shooter;
+    }
+
+    public static Intake getIntake() {
+        if (intake == null) intake= new Intake();
+        return intake;
     }
 
 }

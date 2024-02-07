@@ -5,6 +5,11 @@ import org.troyargonauts.common.motors.wrappers.MotorController;
 import org.troyargonauts.common.util.Gains;
 
 public final class Constants {
+    public interface Intake{
+        int MOTOR_CAN_ID = 5;
+        int NOTE_SENSOR_SLOT = 0;
+        String CANBUS_NAME = "roborio";
+    }
 
     public interface Controllers {
         int DRIVER = 0;
