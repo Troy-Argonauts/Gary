@@ -100,7 +100,7 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().cancelAll();
     }
   
-    public static Shooter getArm() {
+    public static Shooter getShooter() {
         if (shooter == null) shooter = new Shooter();
         return shooter;
     }
