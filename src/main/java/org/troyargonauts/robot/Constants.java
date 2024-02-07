@@ -1,9 +1,5 @@
 package org.troyargonauts.robot;
 
-import edu.wpi.first.math.util.Units;
-import org.troyargonauts.common.motors.wrappers.MotorController;
-import org.troyargonauts.common.util.Gains;
-
 public final class Constants {
     public interface Intake{
         int MOTOR_CAN_ID = 5;
@@ -16,6 +12,15 @@ public final class Constants {
         int OPERATOR = 1;
     }
 
+    public interface Climber
+    {
+        int MOTOR_ID = 13;
+        String CANBUS_NAME = "roborio";
+        double P = 0;
+        double I = 0;
+        double D = 0;
+    }
+  
     public interface Shooter {
 
         public int TOP_MOTOR_ID = 1;
@@ -29,5 +34,5 @@ public final class Constants {
         double BOTTOM_MOTOR_D = 0;
 
         String CANBUS_NAME = "roborio";
-    }
+    }  
 }

@@ -5,6 +5,7 @@
 
 package org.troyargonauts.robot;
 
+import com.revrobotics.Rev2mDistanceSensor;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -14,7 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import org.troyargonauts.robot.subsystems.*;
+import org.troyargonauts.robot.subsystems.Climber;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -31,6 +32,8 @@ public class Robot extends TimedRobot {
     private final SendableChooser<Command> chooser = new SendableChooser<>();
     private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
     private Command autonomousCommand;
+    private static Climber climber;
+
 
     private static Intake intake;
 
@@ -41,6 +44,11 @@ public class Robot extends TimedRobot {
         LiveWindow.setEnabled(false);
 
         DataLogManager.start("/media/sda1/logs");
+        climber = new Climber();
+
+        scheduledExecutorService.scheduleAtFixedRate(() -> {
+            climber.run();
+        }, 100, 10, TimeUnit.MILLISECONDS);
 
         intake = new Intake();
         shooter = new Shooter();
@@ -50,6 +58,9 @@ public class Robot extends TimedRobot {
         scheduledExecutorService.scheduleAtFixedRate(() -> {
             shooter.run();
         }, 100, 10, TimeUnit.MILLISECONDS);
+
+        climber.turnDistanceSensorOn();
+
 
         CameraServer.startAutomaticCapture().setFPS(14);
 
@@ -82,6 +93,11 @@ public class Robot extends TimedRobot {
     }
 
     @Override
+    public void teleopPeriodic(){
+
+    }
+
+    @Override
     public void testInit() {
         // Cancels all running commands at the start of test mode.
         CommandScheduler.getInstance().cancelAll();
@@ -95,6 +111,15 @@ public class Robot extends TimedRobot {
     public static Intake getIntake() {
         if (intake == null) intake= new Intake();
         return intake;
+    }
+
+    public static Climber getClimber()
+    {
+        if(climber == null)
+        {
+            climber = new Climber();
+        }
+        return climber;
     }
 
 }
