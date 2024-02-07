@@ -7,6 +7,9 @@ package org.troyargonauts.robot;
 
 import org.troyargonauts.common.input.Gamepad;
 import org.troyargonauts.common.input.gamepads.AutoGamepad;
+import org.troyargonauts.common.math.OMath;
+import org.troyargonauts.common.streams.IStream;
+import org.troyargonauts.robot.subsystems.Arm;
 import org.troyargonauts.robot.subsystems.Intake;
 
 /**
@@ -20,6 +23,7 @@ public class RobotContainer {
     public static final Gamepad driver = new AutoGamepad(Constants.Controllers.DRIVER);
     public static final Gamepad operator = new AutoGamepad(Constants.Controllers.OPERATOR);
 
+
     public RobotContainer() {
         // Configure the button bindings
         configureBindings();
@@ -30,14 +34,14 @@ public class RobotContainer {
      */
     private void configureBindings() {
 
-
     }
 
-    public static Gamepad getDriver() {
+
+    public static Gamepad getDriver () {
         return driver;
     }
 
-    public static Gamepad getOperator() {
+    public static Gamepad getOperator () {
         return operator;
     }
 }

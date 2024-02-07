@@ -32,11 +32,10 @@ public class Robot extends TimedRobot {
     private final SendableChooser<Command> chooser = new SendableChooser<>();
     private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
     private Command autonomousCommand;
+  
+    private static Arm arm;
     private static Climber climber;
-
-
     private static Intake intake;
-
 
     @Override
     public void robotInit() {
@@ -44,28 +43,27 @@ public class Robot extends TimedRobot {
         LiveWindow.setEnabled(false);
 
         DataLogManager.start("/media/sda1/logs");
+      
         climber = new Climber();
-
-        scheduledExecutorService.scheduleAtFixedRate(() -> {
-            climber.run();
-        }, 100, 10, TimeUnit.MILLISECONDS);
-
         intake = new Intake();
         shooter = new Shooter();
-
+        arm = new Arm();
+      
         new RobotContainer();
       
         scheduledExecutorService.scheduleAtFixedRate(() -> {
             shooter.run();
+            arm.run();
+            climber.run();
         }, 100, 10, TimeUnit.MILLISECONDS);
-
+      
         climber.turnDistanceSensorOn();
-
 
         CameraServer.startAutomaticCapture().setFPS(14);
 
         SmartDashboard.putData("Autonomous modes", chooser);
         chooser.addOption("Nothing", new WaitCommand(15));
+
     }
 
     @Override
@@ -120,6 +118,13 @@ public class Robot extends TimedRobot {
             climber = new Climber();
         }
         return climber;
+    }
+
+    public static Arm getArm(){
+        if (arm == null){
+            arm = new Arm();
+        }
+        return arm;
     }
 
 }

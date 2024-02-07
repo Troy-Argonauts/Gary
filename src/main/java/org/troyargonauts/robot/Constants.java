@@ -12,6 +12,16 @@ public final class Constants {
         int OPERATOR = 1;
     }
 
+    public interface Arm {
+        double P = 0;
+        double I = 0;
+        double D = 0;
+        int LEFT_MOTOR_ID = 0;
+        int RIGHT_MOTOR_ID = 1;
+        double DEADBAND = 0.08;
+        String CANBUS_NAME = "roborio";
+    }
+  
     public interface Climber
     {
         int MOTOR_ID = 13;
