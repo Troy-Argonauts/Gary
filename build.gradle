@@ -99,6 +99,10 @@ dependencies {
     implementation wpi.java.deps.wpilib()
     implementation wpi.java.vendor.java()
 
+    implementation files('libs/DistanceSensor-java-0.4.0.jar')
+    // javadoc files('libs/com/revrobotics/frc/DistanceSensor-java/0.4.0/DistanceSensor-java-0.4.0-javadoc.jar')
+//    sources files('libs/com/revrobotics/frc/DistanceSensor-java/0.4.0/DistanceSensor-java-0.4.0-sources.jar')
+
     roborioDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.roborio)
     roborioDebug wpi.java.vendor.jniDebug(wpi.platforms.roborio)
 
