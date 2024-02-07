@@ -37,7 +37,8 @@ public class Arm extends SubsystemBase {
         leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
         rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
 
-        leftArmMotor.setInverted();
+        leftArmMotor.setInverted(true);
+        rightArmMotor.setInverted(false);
 
         DataLog log = DataLogManager.getLog();
         armLeftEncoderLog = new DoubleLogEntry(log, "Arm Left Encoder Values");
@@ -100,10 +101,17 @@ public class Arm extends SubsystemBase {
 
     }
 
+    /**
+     * Changes setpoint based on joystick value parameter.
+     * @param joystickValue joystick value being passed in to the function
+     */
     public void adjustSetpoint(double joystickValue){
-        armTarget += joystickValue;
+        armTarget += (joystickValue * 20);
     }
 
+    /**
+     * Sets enumerators of ArmStates
+     */
     public enum ArmStates{
         FLOOR_INTAKE(100),
         AMP(200),
@@ -133,11 +141,18 @@ public class Arm extends SubsystemBase {
         return armTarget;
     }
 
-
+    /**
+     * Sets target of arm to desired target
+     * @param desiredTarget desired arm target
+     */
     public void setDesiredTarget(double desiredTarget){
         armTarget = desiredTarget;
     }
 
+    /**
+     * Sets the arm target to an Arm State position
+     * @param state ArmStates enumerator for arm position
+     */
     public void setState(ArmStates state){
         armTarget = state.armPosition;
     }
