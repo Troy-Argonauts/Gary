@@ -27,11 +27,13 @@ import java.util.concurrent.TimeUnit;
  * project.
  */
 public class Robot extends TimedRobot {
+    private static Shooter shooter;
     private final SendableChooser<Command> chooser = new SendableChooser<>();
     private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
     private Command autonomousCommand;
 
     private static Intake intake;
+
 
     @Override
     public void robotInit() {
@@ -41,8 +43,13 @@ public class Robot extends TimedRobot {
         DataLogManager.start("/media/sda1/logs");
 
         intake = new Intake();
+        shooter = new Shooter();
 
         new RobotContainer();
+      
+        scheduledExecutorService.scheduleAtFixedRate(() -> {
+            shooter.run();
+        }, 100, 10, TimeUnit.MILLISECONDS);
 
         CameraServer.startAutomaticCapture().setFPS(14);
 
@@ -78,6 +85,11 @@ public class Robot extends TimedRobot {
     public void testInit() {
         // Cancels all running commands at the start of test mode.
         CommandScheduler.getInstance().cancelAll();
+    }
+  
+    public static Shooter getArm() {
+        if (shooter == null) shooter = new Shooter();
+        return shooter;
     }
 
     public static Intake getIntake() {
