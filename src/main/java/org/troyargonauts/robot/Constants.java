@@ -12,15 +12,15 @@ public final class Constants {
     }
 
     public interface Limelight {
-        double LIMELIGHT_HEIGHT = 32.625;
-        double APRIL_TAG_HEIGHT = 18;
-        double MOUNTING_ANGLE = 0;
+        double LIMELIGHT_HEIGHT = 36;
+        double MOUNTING_ANGLE = 25;
 
         double LOW_CONE_HEIGHT = 23;
 
         double HIGH_CONE_HEIGHT = 43;
 
         double DISTANCE_BETWEEN_CONES = 17;
+        double[] APRIL_TAG_HEIGHTS_BY_ID = {71, 48.125, 48.125, 51.875, 51.875, 48.125, 48.125, 51.875, 51.875, 48.125, 48.125, 47.5, 47.5, 47.5, 47.5};
 
     }
 }
