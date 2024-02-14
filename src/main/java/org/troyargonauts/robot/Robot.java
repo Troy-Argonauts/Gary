@@ -4,27 +4,50 @@
 
 package org.troyargonauts.robot;
 
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import org.troyargonauts.robot.subsystems.*;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+    private static Shooter shooter;
+    private final SendableChooser<Command> chooser = new SendableChooser<>();
+    private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+    private Command autonomousCommand;
+
+    private static Arm arm;
+    private static Climber climber;
+    private static Intake intake;
 
   @Override
   public void robotInit() {
-    m_robotContainer = new RobotContainer();
-  }
 
-  @Override
-  public void robotPeriodic() {
-    CommandScheduler.getInstance().run(); 
-  }
+        DataLogManager.start("/media/sda1/logs");
 
-  @Override
-  public void disabledInit() {}
+        climber = new Climber();
+        intake = new Intake();
+        shooter = new Shooter();
+        arm = new Arm();
+      
+        new RobotContainer();
+      
+        scheduledExecutorService.scheduleAtFixedRate(() -> {
+            shooter.run();
+            arm.run();
+            climber.run();
+        }, 100, 10, TimeUnit.MILLISECONDS);
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -38,6 +61,9 @@ public class Robot extends TimedRobot {
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
+        SmartDashboard.putData("Autonomous modes", chooser);
+        chooser.addOption("Nothing", new WaitCommand(15));
+
     }
   }
 
@@ -55,22 +81,50 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopExit() {
 
-  @Override
-  public void teleopExit() {}
-
-  @Override
-  public void testInit() {
-    CommandScheduler.getInstance().cancelAll();
   }
 
-  @Override
-  public void testPeriodic() {}
+    @Override
+    public void teleopPeriodic(){
 
-  @Override
-  public void testExit() {}
+    }
 
-  @Override
-  public void simulationPeriodic() {}
+    @Override
+    public void testInit() {
+        // Cancels all running commands at the start of test mode.
+        CommandScheduler.getInstance().cancelAll();
+    }
+
+    @Override
+    public void testExit() {}
+
+    @Override
+    public void simulationPeriodic() {}
+  
+    public static Shooter getShooter() {
+        if (shooter == null) shooter = new Shooter();
+        return shooter;
+    }
+
+    public static Intake getIntake() {
+        if (intake == null) intake= new Intake();
+        return intake;
+    }
+
+    public static Climber getClimber()
+    {
+        if(climber == null)
+        {
+            climber = new Climber();
+        }
+        return climber;
+    }
+
+    public static Arm getArm(){
+        if (arm == null){
+            arm = new Arm();
+        }
+        return arm;
+    }
 }
