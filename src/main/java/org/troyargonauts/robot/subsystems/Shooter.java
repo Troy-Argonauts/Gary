@@ -17,15 +17,12 @@ import static org.troyargonauts.robot.Constants.Shooter.*;
  *
  * @author aarooshg, TheFlyingPig25
  */
-
 public class Shooter extends SubsystemBase {
     private TalonFX topMotor, bottomMotor;
 
-    double topTarget = 0.0;
-    double bottomTarget = 0.0;
+    private double topTarget, bottomTarget = 0.0;
+    private double topEncoderRPM, bottomEncoderRPM;
 
-    private double topEncoderRPM;
-    private double bottomEncoderRPM;
     private DoubleLogEntry shooterTopEncoderLog;
     private DoubleLogEntry shooterTopMotorVoltage;
     private DoubleLogEntry shooterTopOutputCurrentLog;
@@ -33,13 +30,13 @@ public class Shooter extends SubsystemBase {
     private DoubleLogEntry shooterBottomMotorVoltage;
     private DoubleLogEntry shooterBottomOutputCurrentLog;
 
-    final VelocityVoltage velocityVoltage = new VelocityVoltage(0).withSlot(0);
+    private final VelocityVoltage velocityVoltage = new VelocityVoltage(0).withSlot(0);
 
     /**
      * Instantiated motor controllers, data logging values and target speed for the Shooter
      * We are also assigning the motor IDs and adding the log entries
      */
-    public Shooter(){
+    public Shooter() {
         topMotor = new TalonFX(Constants.Shooter.TOP_MOTOR_ID);
         bottomMotor = new TalonFX(Constants.Shooter.BOTTOM_MOTOR_ID);
 
@@ -59,7 +56,7 @@ public class Shooter extends SubsystemBase {
      * Periodic will constantly check the encoder position, motor voltage, and current output logs
      */
     @Override
-    public void periodic(){
+    public void periodic() {
         shooterTopEncoderLog.append(topMotor.getPosition().getValue());
         shooterBottomEncoderLog.append(bottomMotor.getPosition().getValue());
         shooterTopOutputCurrentLog.append(topMotor.getSupplyCurrent().getValue());
@@ -86,34 +83,14 @@ public class Shooter extends SubsystemBase {
 
     /**
      * Sets the shooter target speed for the top motor
-     * @param target
+     * @param topTarget
+     * @param bottomTarget
      */
-    public void setTopDesiredTarget(double target) {
-        topTarget = target;
-        }
-    /**
-     * Sets the shooter target speed for the bottom motor
-     * @param target
-     */
-    public void setBottomDesiredTargetBottom(double target) {
-        topTarget = target;
+    public void setDesiredTarget(double topTarget, double bottomTarget) {
+        this.topTarget = topTarget;
+        this.bottomTarget = bottomTarget;
     }
-
-    /**
-     * Sets the raw power of the top shooter motor
-     * @param power
-     */
-    public void setTopRawPower(double power) {
-        topMotor.set(power);
-    }
-
-    /**
-     * Sets the raw power of the bottom shooter motor
-     * @param power
-     */
-    public void setBottomRawPower(double power) {
-        bottomMotor.set(power);
-    }
+    
     /**
      * Sets all encoder values to 0.
      */
@@ -123,60 +100,36 @@ public class Shooter extends SubsystemBase {
     }
 
     /**
-     * Creates the top motor states
+     * Creates the shooter motor states
      */
-    public enum topStates {
-        STAGE(2000),
-        AMP(1000),
-        SPEAKER(2000),
-        OFF(0);
+    public enum ShooterStates {
+        STAGE(2000, 2000),
+        AMP(1000, 1000),
+        SPEAKER(2000, 2000),
+        OFF(0, 0);
 
-        final double encoderRPM;
+        final double encoderTopRPM, encoderBottomRPM;
 
-        topStates(double encoderRPM) {
-            this.encoderRPM = encoderRPM;
-        }
-    }
-    /**
-     * Creates the bottom motor states
-     */
-        public enum bottomStates{
-            STAGE(2000),
-            AMP(1000),
-            SPEAKER(2000),
-            OFF(0);
-
-            final double encoderRPM;
-
-            bottomStates(double encoderRPM) {
-                this.encoderRPM = encoderRPM;
-            }
-
-        public double getEncoderPosition() {
-            return this.encoderRPM;
+        ShooterStates(double encoderTopRPM, double encoderBottomRPM) {
+            this.encoderTopRPM = encoderTopRPM;
+            this.encoderBottomRPM = encoderBottomRPM;
         }
     }
 
     /**
-     * Sets the top motor to a state determined by the enums
+     * Sets the motors to a state determined by the enums
      * @param state
      */
-    public void setTopState(topStates state){
-        topTarget = state.encoderRPM;
-    }
-    /**
-     * Sets the bottom motor to a state determined by the enums
-     * @param state
-     */
-    public void setBottomState(bottomStates state){
-        bottomTarget = state.encoderRPM;
+    public void setState(ShooterStates state) {
+        topTarget = state.encoderTopRPM;
+        bottomTarget = state.encoderBottomRPM;
     }
 
     /**
      * Checks if PID is finished for the top motor
      * @return the value of the target velocity and actual velocity of both motors
      */
-    public boolean isTopPidFinished(){
+    public boolean isTopPidFinished() {
         return (Math.abs(topTarget - topEncoderRPM) <= 5);
     }
 
@@ -184,7 +137,7 @@ public class Shooter extends SubsystemBase {
      * Checks if PID is finished for the bottom motor
      * @return the value of the target velocity and actual velocity of both motors
      */
-    public boolean isBottomPidFinished(){
+    public boolean isBottomPidFinished() {
         return (Math.abs(bottomTarget - bottomEncoderRPM) <= 5);
     }
 }

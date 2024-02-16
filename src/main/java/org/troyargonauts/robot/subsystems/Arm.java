@@ -17,14 +17,11 @@ import static org.troyargonauts.robot.Constants.Arm.*;
  * @author Ashwin Shrivastav
  */
 public class Arm extends SubsystemBase {
-
     private TalonFX leftArmMotor, rightArmMotor;
 
-    private double leftArmEncoder = 0, rightArmEncoder = 0;
-
+    private double leftArmEncoder, rightArmEncoder = 0;
     private double armTarget = 0;
 
-    private final PositionVoltage positionVoltage = new PositionVoltage(0).withSlot(0);
     private DoubleLogEntry armLeftEncoderLog;
     private DoubleLogEntry armRightEncoderLog;
     private DoubleLogEntry armLeftOutputCurrentLog;
@@ -32,6 +29,8 @@ public class Arm extends SubsystemBase {
     private DoubleLogEntry armLeftMotorVoltage;
     private DoubleLogEntry armRightMotorVoltage;
     private DoubleLogEntry armTargetLog;
+    
+    private final PositionVoltage positionVoltage = new PositionVoltage(0).withSlot(0);
 
     /**
      * Instantiated motor controllers, motors, data logging values and data log, target, and motor IDs.
@@ -103,7 +102,7 @@ public class Arm extends SubsystemBase {
      * @return Returns false if the motor ID is not 1 or 2.
      */
     public boolean isPidFinished() {
-        return (Math.abs((armTarget - ((leftArmMotor.getVelocity().getValueAsDouble())) + rightArmMotor.getVelocity().getValueAsDouble())/2) <= 5);
+        return (Math.abs((armTarget - ((leftArmMotor.getVelocity().getValueAsDouble())) + rightArmMotor.getVelocity().getValueAsDouble()) / 2) <= 5);
 
     }
 
@@ -111,7 +110,7 @@ public class Arm extends SubsystemBase {
      * Changes setpoint based on joystick value parameter.
      * @param joystickValue joystick value being passed in to the function
      */
-    public void adjustSetpoint(double joystickValue){
+    public void adjustSetpoint(double joystickValue) {
         armTarget += (joystickValue * 20);
     }
 
@@ -135,15 +134,15 @@ public class Arm extends SubsystemBase {
      * Returns average of two arm encoder values.
      * @return double -  average arm encoder value.
      */
-    public double getEncoderValue(){
-        return (rightArmEncoder + leftArmEncoder)/2;
+    public double getEncoderValue() {
+        return (rightArmEncoder + leftArmEncoder) / 2;
     }
 
     /**
      * Returns value of current arm target variable.
      * @return double - current arm target
      */
-    public double getCurrentTarget(){
+    public double getCurrentTarget() {
         return armTarget;
     }
 
@@ -151,7 +150,7 @@ public class Arm extends SubsystemBase {
      * Sets target of arm to desired target
      * @param desiredTarget desired arm target
      */
-    public void setDesiredTarget(double desiredTarget){
+    public void setDesiredTarget(double desiredTarget) {
         armTarget = desiredTarget;
     }
 
@@ -159,7 +158,7 @@ public class Arm extends SubsystemBase {
      * Sets the arm target to an Arm State position
      * @param state ArmStates enumerator for arm position
      */
-    public void setState(ArmStates state){
+    public void setState(ArmStates state) {
         armTarget = state.armPosition;
     }
 }

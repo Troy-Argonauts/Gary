@@ -21,6 +21,7 @@ public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
 
     private RobotContainer m_robotContainer;
+
     private final SendableChooser<Command> chooser = new SendableChooser<>();
     private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
@@ -79,14 +80,10 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void teleopExit() {
-
-    }
+    public void teleopExit() {}
 
     @Override
-    public void teleopPeriodic(){
-
-    }
+    public void teleopPeriodic() {}
 
     @Override
     public void testInit() {
@@ -110,19 +107,13 @@ public class Robot extends TimedRobot {
         return intake;
     }
 
-    public static Climber getClimber()
-    {
-        if(climber == null)
-        {
-            climber = new Climber();
-        }
+    public static Climber getClimber() {
+        if (climber == null) climber = new Climber();
         return climber;
     }
 
-    public static Arm getArm(){
-        if (arm == null){
-            arm = new Arm();
-        }
+    public static Arm getArm() {
+        if (arm == null) arm = new Arm();
         return arm;
     }
 }

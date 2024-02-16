@@ -4,13 +4,10 @@
 
 package org.troyargonauts.robot;
 
-import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -23,9 +20,10 @@ import org.troyargonauts.robot.commands.ShootingSequence;
 import org.troyargonauts.robot.generated.TunerConstants;
 
 import org.troyargonauts.robot.subsystems.*;
+import org.troyargonauts.robot.subsystems.Intake.MotorState;
+import org.troyargonauts.robot.subsystems.Shooter.ShooterStates;
 
 import static org.troyargonauts.robot.Constants.Controllers.*;
-
 
 public class RobotContainer {
     private double MaxSpeed = 6; // 6 meters per second desired top speed
@@ -33,7 +31,7 @@ public class RobotContainer {
 
     /* Setting up bindings for necessary control of the swerve drive platform */
 
-    private final CommandXboxController driver = new CommandXboxController(DRIVER); // My joystick
+    private final CommandXboxController driver = new CommandXboxController(DRIVER);
     private final CommandXboxController operator = new CommandXboxController(OPERATOR);
 
     private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
@@ -44,9 +42,9 @@ public class RobotContainer {
                                                                 // driving in open loop
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-    private final Telemetry logger = new Telemetry(MaxSpeed);
 
     private void configureBindings() {
+        // driver controller commands
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
             drivetrain.applyRequest(
                 () -> drive.withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
@@ -56,15 +54,27 @@ public class RobotContainer {
             )
         );
 
-        driver.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        driver.b().whileTrue(drivetrain
-                .applyRequest(() -> point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
+        driver.povDown().onTrue(
+            new InstantCommand(Robot.getClimber()::setTarget)
+        );
 
+        driver.rightBumper().whileTrue(drivetrain.applyRequest(() -> brake));
 
-        if (Utils.isSimulation()) {
-            drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
-            drivetrain.registerTelemetry(logger::telemeterize);
-        }
+        driver.b().whileTrue(
+            drivetrain.applyRequest(() -> point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX())))
+        );
+
+        // operator controller commands
+        Robot.getArm().setDefaultCommand(
+            new RunCommand(
+                () -> {
+                    double armSpeed = IStream.create(operator::getRightY)
+                        .filtered(x -> OMath.deadband(x, DEADBAND))
+                        .get();
+                    Robot.getArm().adjustSetpoint(armSpeed);
+                }, Robot.getArm()
+            )
+        );
 
         operator.a().onTrue(
             new ParallelCommandGroup(
@@ -76,52 +86,35 @@ public class RobotContainer {
 
         operator.x().onTrue(
             new ParallelCommandGroup(
-                new InstantCommand(() -> Robot.getShooter().setTopState(Shooter.topStates.AMP)),
-                new InstantCommand(() -> Robot.getShooter().setBottomState(Shooter.bottomStates.AMP)),
+                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.AMP)),
                 new InstantCommand(() -> Robot.getArm().setState(Arm.ArmStates.AMP))
             )
         );
 
         operator.y().onTrue(
             new ParallelCommandGroup(
-                new InstantCommand(() -> Robot.getShooter().setTopState(Shooter.topStates.STAGE)),
-                new InstantCommand(() -> Robot.getShooter().setBottomState(Shooter.bottomStates.STAGE)),
+                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.STAGE)),
                 new InstantCommand(() -> Robot.getArm().setState(Arm.ArmStates.STAGE))
             )
         );
 
         operator.b().onTrue(
             new ParallelCommandGroup(
-                new InstantCommand(() -> Robot.getShooter().setTopState(Shooter.topStates.SPEAKER)),
-                new InstantCommand(() -> Robot.getShooter().setBottomState(Shooter.bottomStates.SPEAKER)),
+                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.SPEAKER)),
                 new InstantCommand(() -> Robot.getArm().setState(Arm.ArmStates.SPEAKER))
             )
         );
 
-        driver.povDown().onTrue(
-            new InstantCommand(Robot.getClimber()::setTarget)
+        operator.rightBumper().onTrue(
+            new InstantCommand(() -> Robot.getIntake().setState(MotorState.OUT))
         );
 
-        if (operator.getRightTriggerAxis() > DEADBAND) {
-            new ShootingSequence();
-        }
+        operator.rightTrigger().onTrue(
+            new ShootingSequence().onlyIf(() -> operator.getRightTriggerAxis() > DEADBAND)
+        );
 
         operator.povDown().onTrue(
-            new ParallelCommandGroup(
-                new InstantCommand(() -> Robot.getShooter().setTopState(Shooter.topStates.OFF))
-                .andThen(new InstantCommand(() -> Robot.getShooter().setBottomState(Shooter.bottomStates.OFF)))
-            )
-        );
-
-        Robot.getArm().setDefaultCommand(
-            new RunCommand(
-                () -> {
-                    double armSpeed = IStream.create(operator::getRightY)
-                        .filtered(x -> OMath.deadband(x, DEADBAND))
-                        .get();
-                    Robot.getArm().adjustSetpoint(armSpeed);
-                }, Robot.getArm()
-            )
+            new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.OFF))
         );
     }
 
