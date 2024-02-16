@@ -8,7 +8,6 @@ import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import org.troyargonauts.common.motors.wrappers.LazyTalonFX;
 import org.troyargonauts.robot.Constants;
 
 import static org.troyargonauts.robot.Constants.Shooter.*;
@@ -24,6 +23,7 @@ public class Shooter extends SubsystemBase {
 
     double topTarget = 0.0;
     double bottomTarget = 0.0;
+
     private double topEncoderRPM;
     private double bottomEncoderRPM;
     private DoubleLogEntry shooterTopEncoderLog;

@@ -18,21 +18,19 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class Robot extends TimedRobot {
-  private Command m_autonomousCommand;
+    private Command m_autonomousCommand;
 
-  private RobotContainer m_robotContainer;
-    private static Shooter shooter;
+    private RobotContainer m_robotContainer;
     private final SendableChooser<Command> chooser = new SendableChooser<>();
     private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-    private Command autonomousCommand;
 
     private static Arm arm;
     private static Climber climber;
     private static Intake intake;
+    private static Shooter shooter;
 
-  @Override
-  public void robotInit() {
-
+    @Override
+    public void robotInit() {
         DataLogManager.start("/media/sda1/logs");
 
         climber = new Climber();
@@ -47,43 +45,43 @@ public class Robot extends TimedRobot {
             arm.run();
             climber.run();
         }, 100, 10, TimeUnit.MILLISECONDS);
-  }
+    }
 
-  @Override
-  public void disabledPeriodic() {}
+    @Override
+    public void disabledPeriodic() {}
 
-  @Override
-  public void disabledExit() {}
+    @Override
+    public void disabledExit() {}
 
-  @Override
-  public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    @Override
+    public void autonomousInit() {
+        m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-        SmartDashboard.putData("Autonomous modes", chooser);
-        chooser.addOption("Nothing", new WaitCommand(15));
+        if (m_autonomousCommand != null) {
+        m_autonomousCommand.schedule();
+            SmartDashboard.putData("Autonomous modes", chooser);
+            chooser.addOption("Nothing", new WaitCommand(15));
+
+        }
+    }
+
+    @Override
+    public void autonomousPeriodic() {}
+
+    @Override
+    public void autonomousExit() {}
+
+    @Override
+    public void teleopInit() {
+        if (m_autonomousCommand != null) {
+        m_autonomousCommand.cancel();
+        }
+    }
+
+    @Override
+    public void teleopExit() {
 
     }
-  }
-
-  @Override
-  public void autonomousPeriodic() {}
-
-  @Override
-  public void autonomousExit() {}
-
-  @Override
-  public void teleopInit() {
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
-  }
-
-  @Override
-  public void teleopExit() {
-
-  }
 
     @Override
     public void teleopPeriodic(){

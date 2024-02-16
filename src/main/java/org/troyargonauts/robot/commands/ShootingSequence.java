@@ -7,12 +7,11 @@ import org.troyargonauts.robot.Robot;
 import org.troyargonauts.robot.subsystems.Intake;
 
 public class ShootingSequence extends SequentialCommandGroup {
-    public ShootingSequence(){
+    public ShootingSequence() {
         super(
-                new InstantCommand(() -> Robot.getIntake().setState(Intake.MotorState.IN)),
-                new WaitCommand(3),
-                new InstantCommand(() -> Robot.getIntake().setState(Intake.MotorState.OFF))
+            new InstantCommand(() -> Robot.getIntake().setState(Intake.MotorState.IN)),
+            new WaitCommand(3),
+            new InstantCommand(() -> Robot.getIntake().setState(Intake.MotorState.OFF))
         );
     }
-
 }
