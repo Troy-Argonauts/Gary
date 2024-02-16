@@ -13,9 +13,13 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.troyargonauts.robot.generated.TunerConstants;
 import org.troyargonauts.common.input.Gamepad;
+import org.troyargonauts.robot.subsystems.Arm;
+import org.troyargonauts.robot.subsystems.Intake;
 
 
 public class RobotContainer {
@@ -53,6 +57,16 @@ public class RobotContainer {
           drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
           drivetrain.registerTelemetry(logger::telemeterize);
       }
+
+
+      joystick.a().onTrue(
+              new ParallelCommandGroup(
+                      new InstantCommand(() -> Robot.getArm().setState(Arm.ArmStates.FLOOR_INTAKE)),
+                      new InstantCommand(() -> Robot.getIntake().setState(Intake.MotorState.IN)).until(() -> Robot.getIntake().isNoteReady())
+                              .andThen(new InstantCommand(() -> Robot.getIntake().setState(Intake.MotorState.OFF)))
+              )
+      );
+
   }
 
   public RobotContainer() {
