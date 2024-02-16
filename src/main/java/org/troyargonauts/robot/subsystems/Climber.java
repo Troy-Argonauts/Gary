@@ -69,32 +69,8 @@ public class Climber extends SubsystemBase {
         motor.setControl(positionVoltage.withPosition(motorTarget));
     }
 
-    /**
-     * Enum for different Motor States with different target values.
-     */
-
-    public enum MotorStates {
-        TOP(100),
-        BOTTOM(0);
-        final double encoderPosition;
-
-        MotorStates(double encoderPosition) {
-            this.encoderPosition = encoderPosition;
-        }
-
-        public double getEncoderPosition() {
-            return this.encoderPosition;
-        }
-    }
-
-    /**
-     * sets the motor to run to a position.
-     * @param state is the motor state with the encoder value desired to run to.
-     */
-
-    public void setState(MotorStates state)
-    {
-        motor.setPosition(state.getEncoderPosition());
+    public void setTarget() {
+        motor.setPosition(100);
     }
 
     /**

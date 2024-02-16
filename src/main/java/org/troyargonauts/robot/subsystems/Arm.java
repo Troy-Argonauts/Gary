@@ -121,8 +121,8 @@ public class Arm extends SubsystemBase {
     public enum ArmStates{
         FLOOR_INTAKE(100),
         AMP(200),
-        SHOOTER(233234),
-        FAR_SHOOTER(1234);
+        STAGE(233234),
+        SPEAKER(1234);
 
         final double armPosition;
 

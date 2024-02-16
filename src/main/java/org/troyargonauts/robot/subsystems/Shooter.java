@@ -126,9 +126,9 @@ public class Shooter extends SubsystemBase {
      * Creates the top motor states
      */
     public enum topStates {
-        CENTER(2000),
         STAGE(2000),
-        CLOSE(2000),
+        AMP(1000),
+        SPEAKER(2000),
         OFF(0);
 
         final double encoderRPM;
@@ -141,9 +141,9 @@ public class Shooter extends SubsystemBase {
      * Creates the bottom motor states
      */
         public enum bottomStates{
-            CENTER(2000),
             STAGE(2000),
-            CLOSE(2000),
+            AMP(1000),
+            SPEAKER(2000),
             OFF(0);
 
             final double encoderRPM;
