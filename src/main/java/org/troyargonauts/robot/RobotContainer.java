@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.troyargonauts.common.math.OMath;
 import org.troyargonauts.common.streams.IStream;
@@ -33,8 +34,10 @@ public class RobotContainer {
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
   /* Setting up bindings for necessary control of the swerve drive platform */
+
   private final CommandXboxController operator = new CommandXboxController(Constants.Controllers.DRIVER); // My joystick
     private final CommandXboxController driver = new CommandXboxController(Constants.Controllers.OPERATOR);
+
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -66,11 +69,10 @@ public class RobotContainer {
               );
 
       operator.a().whileTrue(drivetrain.applyRequest(() -> brake));
-      operator.b().whileTrue(drivetrain
-              .applyRequest(() -> point.withModuleDirection(new Rotation2d(-operator.getLeftY(), -operator.getLeftX()))));
+      operator.b().whileTrue(drivetrain.applyRequest(() -> point.withModuleDirection(new Rotation2d(-operator.getLeftY(), -operator.getLeftX()))));
 
       // reset the field-centric heading on left bumper press
-      operator.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+      driver.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
       if (Utils.isSimulation()) {
           drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
@@ -80,7 +82,6 @@ public class RobotContainer {
       driver.rightBumper().onTrue(
               drivetrain.applyRequest(() -> brake)
       );
-
 
 
       if(driver.getRightTriggerAxis() > 0){
@@ -121,6 +122,19 @@ public class RobotContainer {
                       new InstantCommand(() -> Robot.getIntake().setState(Intake.MotorState.IN)).until(() -> Robot.getIntake().isNoteReady())
               )
       );
+
+      Robot.getArm().setDefaultCommand(
+              new RunCommand(
+                      () -> {
+                          double armSpeed = IStream.create(operator::getRightY)
+                                  .filtered(x -> OMath.deadband(x,0.08))
+                                  .get();
+                          Robot.getArm().setDesiredTarget(armSpeed);
+                      }, Robot.getArm()
+              )
+      );
+
+
 
   }
 
