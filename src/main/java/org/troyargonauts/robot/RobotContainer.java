@@ -13,12 +13,18 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import org.troyargonauts.common.math.OMath;
 import org.troyargonauts.common.streams.IStream;
 import org.troyargonauts.robot.generated.TunerConstants;
-import org.troyargonauts.common.input.Gamepad;
+import org.troyargonauts.robot.subsystems.Climber;
+import org.troyargonauts.robot.subsystems.Intake;
+
+import static org.troyargonauts.robot.Robot.*;
 import org.troyargonauts.robot.subsystems.Arm;
 import org.troyargonauts.robot.subsystems.Intake;
 import org.troyargonauts.robot.subsystems.Shooter;
@@ -56,23 +62,69 @@ public class RobotContainer {
       // reset the field-centric heading on left bumper press
       driver.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
+
       if (Utils.isSimulation()) {
           drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
           drivetrain.registerTelemetry(logger::telemeterize);
       }
 
+      driver.rightBumper().onTrue(
+              drivetrain.applyRequest(() -> brake)
+      );
 
-      driver.a().onTrue(
+      if(driver.getRightTriggerAxis() > 0){
+          new RunCommand(
+                  () -> {
+                      double climberInput = IStream.create(driver::getRightTriggerAxis)
+                              .filtered(x -> OMath.deadband(x, Constants.Climber.DEADBAND))
+                              .get();
+                      getClimber().setState(Climber.MotorStates.TOP);
+                  }, Robot.getClimber()
+          );
+      }
+      else if(driver.getLeftTriggerAxis() > 0){
+          new RunCommand(
+                  () -> {
+                      double climberInput = IStream.create(driver::getLeftTriggerAxis)
+                              .filtered(x -> OMath.deadband(x, Constants.Climber.DEADBAND))
+                              .get();
+                      getClimber().setState(Climber.MotorStates.BOTTOM);
+                  }, Robot.getClimber()
+          );
+      }
+
+
+
+      if(operator.getRightTriggerAxis() > 0){
+              new RunCommand(() -> {
+                  double intakeInput = IStream.create(operator::getRightTriggerAxis)
+                          .filtered(x -> OMath.deadband(x, Constants.Intake.DEADBAND))
+                          .get();
+                  getIntake().setState(Intake.MotorState.IN);
+              }, Robot.getIntake());
+              }
+
+      operator.a().onTrue(
               new ParallelCommandGroup(
                       new InstantCommand(() -> Robot.getArm().setState(Arm.ArmStates.FLOOR_INTAKE)),
                       new InstantCommand(() -> Robot.getIntake().setState(Intake.MotorState.IN)).until(() -> Robot.getIntake().isNoteReady())
-                              .andThen(new InstantCommand(() -> Robot.getIntake().setState(Intake.MotorState.OFF)))
               )
       );
       driver.povDown().onTrue(
               new ParallelCommandGroup(
                       new InstantCommand(() -> Robot.getShooter().setTopState(Shooter.topStates.OFF))
                               .andThen(new InstantCommand(() -> Robot.getShooter().setBottomState(Shooter.bottomStates.OFF)))
+              )
+      );
+
+      Robot.getArm().setDefaultCommand(
+              new RunCommand(
+                      () -> {
+                          double armSpeed = IStream.create(operator::getRightY)
+                                  .filtered(x -> OMath.deadband(x,0.08))
+                                  .get();
+                          Robot.getArm().setDesiredTarget(armSpeed);
+                      }, Robot.getArm()
               )
       );
   }
@@ -84,6 +136,5 @@ public class RobotContainer {
       public Command getAutonomousCommand () {
           return Commands.print("No autonomous command configured");
       }
-
-  }
+}
          
