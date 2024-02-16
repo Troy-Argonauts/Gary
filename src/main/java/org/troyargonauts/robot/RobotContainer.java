@@ -14,6 +14,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.troyargonauts.common.math.OMath;
 import org.troyargonauts.common.streams.IStream;
@@ -22,6 +24,8 @@ import org.troyargonauts.robot.subsystems.Climber;
 import org.troyargonauts.robot.subsystems.Intake;
 
 import static org.troyargonauts.robot.Robot.*;
+import org.troyargonauts.robot.subsystems.Arm;
+import org.troyargonauts.robot.subsystems.Intake;
 
 
 public class RobotContainer {
@@ -55,6 +59,18 @@ public class RobotContainer {
 
       // reset the field-centric heading on left bumper press
       driver.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+              drivetrain.applyRequest(() -> drive.withVelocityX(-operator.getLeftY() * MaxSpeed) // Drive forward with
+                      // negative Y (forward)
+                      .withVelocityY(-operator.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                      .withRotationalRate(-operator.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+              );
+
+      operator.a().whileTrue(drivetrain.applyRequest(() -> brake));
+      operator.b().whileTrue(drivetrain
+              .applyRequest(() -> point.withModuleDirection(new Rotation2d(-operator.getLeftY(), -operator.getLeftX()))));
+
+      // reset the field-centric heading on left bumper press
+      operator.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
       if (Utils.isSimulation()) {
           drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
@@ -98,6 +114,14 @@ public class RobotContainer {
                   getIntake().setState(Intake.MotorState.IN);
               }, Robot.getIntake());
               }
+
+      operator.a().onTrue(
+              new ParallelCommandGroup(
+                      new InstantCommand(() -> Robot.getArm().setState(Arm.ArmStates.FLOOR_INTAKE)),
+                      new InstantCommand(() -> Robot.getIntake().setState(Intake.MotorState.IN)).until(() -> Robot.getIntake().isNoteReady())
+              )
+      );
+
   }
 
 
