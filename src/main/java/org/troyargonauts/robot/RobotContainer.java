@@ -16,10 +16,12 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import org.troyargonauts.common.streams.IStream;
 import org.troyargonauts.robot.generated.TunerConstants;
 import org.troyargonauts.common.input.Gamepad;
 import org.troyargonauts.robot.subsystems.Arm;
 import org.troyargonauts.robot.subsystems.Intake;
+import org.troyargonauts.robot.subsystems.Shooter;
 
 
 public class RobotContainer {
@@ -27,7 +29,8 @@ public class RobotContainer {
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
   /* Setting up bindings for necessary control of the swerve drive platform */
-  private final CommandXboxController joystick = new CommandXboxController(0); // My joystick
+  private final CommandXboxController driver = new CommandXboxController(0); //My controller
+  private final CommandXboxController operator = new CommandXboxController(1); // My joystick
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -40,18 +43,18 @@ public class RobotContainer {
 
   private void configureBindings() {
       drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-              drivetrain.applyRequest(() -> drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with
+              drivetrain.applyRequest(() -> drive.withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
                       // negative Y (forward)
-                      .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                      .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                      .withVelocityY(-driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                      .withRotationalRate(-driver.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
               ));
 
-      joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-      joystick.b().whileTrue(drivetrain
-              .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
+      driver.a().whileTrue(drivetrain.applyRequest(() -> brake));
+      driver.b().whileTrue(drivetrain
+              .applyRequest(() -> point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))));
 
       // reset the field-centric heading on left bumper press
-      joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+      driver.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
       if (Utils.isSimulation()) {
           drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
@@ -59,21 +62,28 @@ public class RobotContainer {
       }
 
 
-      joystick.a().onTrue(
+      driver.a().onTrue(
               new ParallelCommandGroup(
                       new InstantCommand(() -> Robot.getArm().setState(Arm.ArmStates.FLOOR_INTAKE)),
                       new InstantCommand(() -> Robot.getIntake().setState(Intake.MotorState.IN)).until(() -> Robot.getIntake().isNoteReady())
                               .andThen(new InstantCommand(() -> Robot.getIntake().setState(Intake.MotorState.OFF)))
               )
       );
-
+      driver.povDown().onTrue(
+              new ParallelCommandGroup(
+                      new InstantCommand(() -> Robot.getShooter().setTopState(Shooter.topStates.OFF))
+                              .andThen(new InstantCommand(() -> Robot.getShooter().setBottomState(Shooter.bottomStates.OFF)))
+              )
+      );
   }
 
-  public RobotContainer() {
-    configureBindings();
-  }
+      public RobotContainer() {
+          configureBindings();
+      }
 
-  public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+      public Command getAutonomousCommand () {
+          return Commands.print("No autonomous command configured");
+      }
+
   }
-}
+         
