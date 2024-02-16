@@ -4,6 +4,8 @@ public final class Constants {
     public interface Intake{
         int MOTOR_CAN_ID = 5;
         int NOTE_SENSOR_SLOT = 0;
+
+        double DEADBAND = 0.08;
         String CANBUS_NAME = "roborio";
     }
 
@@ -29,6 +31,8 @@ public final class Constants {
         double P = 0;
         double I = 0;
         double D = 0;
+
+        double DEADBAND = 0.08;
     }
   
     public interface Shooter {
