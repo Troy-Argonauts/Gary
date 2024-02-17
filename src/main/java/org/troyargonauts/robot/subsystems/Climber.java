@@ -18,32 +18,35 @@ import static org.troyargonauts.robot.Constants.Climber.*;
  *
  * @author Nihaar57, SavageCabbage360, firearcher2012, shaquilleinoatmeal
  */
-
 public class Climber extends SubsystemBase {
-    private final PositionVoltage positionVoltage = new PositionVoltage(0).withSlot(0);
     private TalonFX motor;
+
     private double motorEncoder = 0;
     private double motorTarget = 0;
+
     private Rev2mDistanceSensor distanceSensor;
-    double distanceSensorOutput = distanceSensor.getRange();
+    private double distanceSensorOutput = distanceSensor.getRange();
+
     private DoubleLogEntry climberEncoderLog;
     private DoubleLogEntry climberOutputCurrentLog;
     private DoubleLogEntry climberMotorVoltage;
     private DoubleLogEntry climberTargetLog;
     private DoubleLogEntry climberDistanceEncoder;
 
+    private final PositionVoltage positionVoltage = new PositionVoltage(0).withSlot(0);
+
     /**
      * Instantiates motorController object and sets the neutral mode to break.
      * Outputs values of motor target, voltage, current, and encoder to the DataLog.
      */
-
-    public Climber(){
-        motor = new TalonFX(MOTOR_ID);
+    public Climber() {
+        motor = new TalonFX(MOTOR_ID, CANBUS_NAME);
         motor.setNeutralMode(NeutralModeValue.Brake);
 
         motor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
 
         DataLog log = DataLogManager.getLog();
+        
         climberDistanceEncoder = new DoubleLogEntry((log), "Distance Encoder Values");
         climberTargetLog = new DoubleLogEntry((log), "Climber Target Values");
         climberMotorVoltage = new DoubleLogEntry((log), "Climber Motor Voltage");
@@ -56,7 +59,6 @@ public class Climber extends SubsystemBase {
     /**
      * Resets encoder value.
      */
-
     public void resetEncoder() {
         motor.setPosition(0);
     }
@@ -64,44 +66,21 @@ public class Climber extends SubsystemBase {
     /**
      * Runs the motor to a specified target value expressed as a double.
      */
-
     public void run() {
         motor.setControl(positionVoltage.withPosition(motorTarget));
     }
 
     /**
-     * Enum for different Motor States with different target values.
+     * Sets motor to run to up position
      */
-
-    public enum MotorStates {
-        TOP(100),
-        BOTTOM(0);
-        final double encoderPosition;
-
-        MotorStates(double encoderPosition) {
-            this.encoderPosition = encoderPosition;
-        }
-
-        public double getEncoderPosition() {
-            return this.encoderPosition;
-        }
-    }
-
-    /**
-     * sets the motor to run to a position.
-     * @param state is the motor state with the encoder value desired to run to.
-     */
-
-    public void setState(MotorStates state)
-    {
-        motor.setPosition(state.getEncoderPosition());
+    public void setTarget() {
+        motor.setPosition(100);
     }
 
     /**
      * Checks whether the PID is finished.
      * @return finished or not.
      */
-
     public boolean isPidFinished() {
         return (Math.abs((motorTarget - motor.getPosition().getValueAsDouble())) <= 5);
     }
@@ -109,7 +88,6 @@ public class Climber extends SubsystemBase {
     /**
      * Stores values of encoders and displays values on smartDashboard.
      */
-
     @Override
     public void periodic() {
         climberEncoderLog.append(motorEncoder);
@@ -132,8 +110,7 @@ public class Climber extends SubsystemBase {
      * @param maxDistance determines the maximum of the range.
      * @return whether the robot is in range.
      */
-
-    public boolean distanceWithinRange(double minDistance, double maxDistance){
+    public boolean distanceWithinRange(double minDistance, double maxDistance) {
         if (((minDistance < distanceSensorOutput) && (distanceSensorOutput < maxDistance))){
             return true;
         }
@@ -146,8 +123,7 @@ public class Climber extends SubsystemBase {
      * Determines the range between the robot and the nearest object.
      * @return distance as a double.
      */
-
-    public double getDistance(){
+    public double getDistance() {
         return distanceSensor.getRange();
     }
 }

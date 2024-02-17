@@ -18,77 +18,72 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class Robot extends TimedRobot {
-  private Command m_autonomousCommand;
+    private Command m_autonomousCommand;
 
-  private RobotContainer m_robotContainer;
-    private static Shooter shooter;
     private final SendableChooser<Command> chooser = new SendableChooser<>();
     private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-    private Command autonomousCommand;
 
     private static Arm arm;
     private static Climber climber;
     private static Intake intake;
+    private static Shooter shooter;
 
-  @Override
-  public void robotInit() {
-
+    @Override
+    public void robotInit() {
         DataLogManager.start("/media/sda1/logs");
 
+        arm = new Arm();
         climber = new Climber();
         intake = new Intake();
         shooter = new Shooter();
-        arm = new Arm();
       
         new RobotContainer();
+
+        SmartDashboard.putData("Autonomous modes", chooser);
+
+        chooser.setDefaultOption("Nothing", new WaitCommand(15));
+        chooser.addOption("Nothing", new WaitCommand(15));
       
         scheduledExecutorService.scheduleAtFixedRate(() -> {
             shooter.run();
             arm.run();
             climber.run();
         }, 100, 10, TimeUnit.MILLISECONDS);
-  }
-
-  @Override
-  public void disabledPeriodic() {}
-
-  @Override
-  public void disabledExit() {}
-
-  @Override
-  public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-        SmartDashboard.putData("Autonomous modes", chooser);
-        chooser.addOption("Nothing", new WaitCommand(15));
-
     }
-  }
-
-  @Override
-  public void autonomousPeriodic() {}
-
-  @Override
-  public void autonomousExit() {}
-
-  @Override
-  public void teleopInit() {
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
-  }
-
-  @Override
-  public void teleopExit() {
-
-  }
 
     @Override
-    public void teleopPeriodic(){
+    public void disabledPeriodic() {}
 
+    @Override
+    public void disabledExit() {}
+
+    @Override
+    public void autonomousInit() {
+        m_autonomousCommand = chooser.getSelected();
+
+        if (m_autonomousCommand != null) {
+            m_autonomousCommand.schedule();
+        }
     }
+
+    @Override
+    public void autonomousPeriodic() {}
+
+    @Override
+    public void autonomousExit() {}
+
+    @Override
+    public void teleopInit() {
+        if (m_autonomousCommand != null) {
+            m_autonomousCommand.cancel();
+        }
+    }
+
+    @Override
+    public void teleopExit() {}
+
+    @Override
+    public void teleopPeriodic() {}
 
     @Override
     public void testInit() {
@@ -112,19 +107,13 @@ public class Robot extends TimedRobot {
         return intake;
     }
 
-    public static Climber getClimber()
-    {
-        if(climber == null)
-        {
-            climber = new Climber();
-        }
+    public static Climber getClimber() {
+        if (climber == null) climber = new Climber();
         return climber;
     }
 
-    public static Arm getArm(){
-        if (arm == null){
-            arm = new Arm();
-        }
+    public static Arm getArm() {
+        if (arm == null) arm = new Arm();
         return arm;
     }
 }
