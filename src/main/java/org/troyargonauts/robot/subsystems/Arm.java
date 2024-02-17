@@ -7,6 +7,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -18,6 +19,8 @@ import static org.troyargonauts.robot.Constants.Arm.*;
  */
 public class Arm extends SubsystemBase {
     private TalonFX leftArmMotor, rightArmMotor;
+
+    private DigitalInput limitSwitch;
 
     private double leftArmEncoder, rightArmEncoder = 0;
     private double armTarget = 0;
@@ -44,6 +47,8 @@ public class Arm extends SubsystemBase {
 
         leftArmMotor.setInverted(true);
         rightArmMotor.setInverted(false);
+
+        limitSwitch = new DigitalInput(LIMIT_SWITCH_SLOT);
 
         DataLog log = DataLogManager.getLog();
 
@@ -112,7 +117,9 @@ public class Arm extends SubsystemBase {
      * @param joystickValue joystick value being passed in to the function
      */
     public void adjustSetpoint(double joystickValue) {
-        armTarget += (joystickValue * 20);
+        if (!limitSwitch.get() || joystickValue < 0) {
+            armTarget += (joystickValue * 20);
+        }
     }
 
     /**
