@@ -76,37 +76,37 @@ public class RobotContainer {
 
         operator.a().onTrue(
             new ParallelCommandGroup(
-                new InstantCommand(() -> Robot.getArm().setState(ArmStates.FLOOR_INTAKE)),
-                new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.IN)).until(() -> Robot.getIntake().isNoteReady())
-                .andThen(new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF)))
+                new InstantCommand(() -> Robot.getArm().setState(ArmStates.FLOOR_INTAKE), Robot.getArm()),
+                new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.IN), Robot.getIntake()).until(() -> Robot.getIntake().isNoteReady())
+                .andThen(new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF), Robot.getIntake()))
             )
         );
 
         operator.x().onTrue(
             new ParallelCommandGroup(
-                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.AMP)),
-                new InstantCommand(() -> Robot.getArm().setState(ArmStates.AMP))
+                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.AMP), Robot.getShooter()),
+                new InstantCommand(() -> Robot.getArm().setState(ArmStates.AMP), Robot.getArm())
             )
         );
 
         operator.y().onTrue(
             new ParallelCommandGroup(
-                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.PODIUM)),
-                new InstantCommand(() -> Robot.getArm().setState(ArmStates.PODIUM))
+                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.PODIUM), Robot.getShooter()),
+                new InstantCommand(() -> Robot.getArm().setState(ArmStates.PODIUM), Robot.getArm())
             )
         );
 
         operator.b().onTrue(
             new ParallelCommandGroup(
-                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.SUBWOOFER)),
-                new InstantCommand(() -> Robot.getArm().setState(ArmStates.SUBWOOFER))
+                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.SUBWOOFER), Robot.getShooter()),
+                new InstantCommand(() -> Robot.getArm().setState(ArmStates.SUBWOOFER), Robot.getArm())
             )
         );
 
         operator.rightBumper().whileTrue(
-            new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OUT))
+            new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OUT), Robot.getIntake())
         ).whileFalse(
-            new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF))
+            new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF), Robot.getIntake())
         );
 
         operator.rightTrigger().onTrue(
@@ -114,7 +114,7 @@ public class RobotContainer {
         );
 
         operator.povDown().onTrue(
-            new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.OFF))
+            new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.OFF), Robot.getShooter())
         );
     }
 
