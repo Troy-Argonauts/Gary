@@ -64,11 +64,11 @@ public class Shooter extends SubsystemBase {
         shooterBottomOutputCurrentLog.append(topMotor.getSupplyCurrent().getValue());
         shooterBottomMotorVoltage.append(bottomMotor.getMotorVoltage().getValue());
 
-        topEncoderRPM = topMotor.getVelocity().getValueAsDouble();
-        bottomEncoderRPM = bottomMotor.getVelocity().getValueAsDouble();
+        topEncoderRPM = topMotor.getVelocity().getValueAsDouble() * 60;
+        bottomEncoderRPM = bottomMotor.getVelocity().getValueAsDouble() * 60;
 
-        SmartDashboard.putNumber("Top Encoder Position", topEncoderRPM * 60);
-        SmartDashboard.putNumber("Bottom coder Position", bottomEncoderRPM * 60);
+        SmartDashboard.putNumber("Top Encoder Position", topEncoderRPM);
+        SmartDashboard.putNumber("Bottom coder Position", bottomEncoderRPM);
     }
 
     /**
