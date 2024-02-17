@@ -36,8 +36,8 @@ public class Arm extends SubsystemBase {
      * Instantiated motor controllers, motors, data logging values and data log, target, and motor IDs.
      */
     public Arm() {
-        leftArmMotor = new TalonFX(LEFT_MOTOR_ID);
-        rightArmMotor = new TalonFX(RIGHT_MOTOR_ID);
+        leftArmMotor = new TalonFX(LEFT_MOTOR_ID, CANBUS_NAME);
+        rightArmMotor = new TalonFX(RIGHT_MOTOR_ID, CANBUS_NAME);
 
         leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
         rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
@@ -46,6 +46,7 @@ public class Arm extends SubsystemBase {
         rightArmMotor.setInverted(false);
 
         DataLog log = DataLogManager.getLog();
+
         armLeftEncoderLog = new DoubleLogEntry(log, "Arm Left Encoder Values");
         armRightEncoderLog = new DoubleLogEntry(log, "Arm Right Encoder Values");
         armLeftOutputCurrentLog = new DoubleLogEntry(log, "Arm Motor Output Current ");
@@ -120,8 +121,8 @@ public class Arm extends SubsystemBase {
     public enum ArmStates{
         FLOOR_INTAKE(100),
         AMP(200),
-        STAGE(233234),
-        SPEAKER(1234);
+        PODIUM(233234),
+        SUBWOOFER(1234);
 
         final double armPosition;
 

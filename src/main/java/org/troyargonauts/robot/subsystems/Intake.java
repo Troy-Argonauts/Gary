@@ -27,10 +27,12 @@ public class Intake extends SubsystemBase {
      * Makes a new intake with a motor and a note sensor
      */
     public Intake() {
-        motor = new TalonFX(MOTOR_CAN_ID);
+        motor = new TalonFX(MOTOR_CAN_ID, CANBUS_NAME);
+
         noteSensor = new DigitalInput(NOTE_SENSOR_SLOT);
 
         DataLog log = DataLogManager.getLog();
+        
         intakeMotorVoltage =  new DoubleLogEntry(log, "Intake Bus Voltage log");
         intakeOutputCurrentLog =  new DoubleLogEntry(log, "Intake Output Current log");
     }
@@ -52,7 +54,7 @@ public class Intake extends SubsystemBase {
     /**
      * Makes an enum for the 3 states the motor could be (In, Out, or Off)
      */
-    public enum MotorState {
+    public enum IntakeStates {
         IN,
         OFF,
         OUT
@@ -62,8 +64,8 @@ public class Intake extends SubsystemBase {
      * Sets the state of the intake
      * @param State determines whether the Intake is going In, Out, or Off
      */
-    public void setState(MotorState State) {
-        switch (State){
+    public void setState(IntakeStates state) {
+        switch (state){
             case IN:
                 motor.set(-0.3);;
                 break;

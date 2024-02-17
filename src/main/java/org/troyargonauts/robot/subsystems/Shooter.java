@@ -8,7 +8,6 @@ import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import org.troyargonauts.robot.Constants;
 
 import static org.troyargonauts.robot.Constants.Shooter.*;
 
@@ -37,13 +36,14 @@ public class Shooter extends SubsystemBase {
      * We are also assigning the motor IDs and adding the log entries
      */
     public Shooter() {
-        topMotor = new TalonFX(Constants.Shooter.TOP_MOTOR_ID);
-        bottomMotor = new TalonFX(Constants.Shooter.BOTTOM_MOTOR_ID);
+        topMotor = new TalonFX(TOP_MOTOR_ID, CANBUS_NAME);
+        bottomMotor = new TalonFX(BOTTOM_MOTOR_ID, CANBUS_NAME);
 
         topMotor.getConfigurator().apply(new Slot0Configs().withKP(TOP_MOTOR_P).withKI(TOP_MOTOR_I).withKD(TOP_MOTOR_D));
         bottomMotor.getConfigurator().apply(new Slot0Configs().withKP(BOTTOM_MOTOR_P).withKI(BOTTOM_MOTOR_I).withKD(BOTTOM_MOTOR_D));
 
         DataLog log = DataLogManager.getLog();
+
         shooterTopEncoderLog = new DoubleLogEntry((log), "Top Shooter Encoder Values");
         shooterBottomEncoderLog = new DoubleLogEntry((log), "Bottom Shooter Encoder Values");
         shooterTopOutputCurrentLog = new DoubleLogEntry((log), "Top Shooter Motor Output Current ");
@@ -67,18 +67,16 @@ public class Shooter extends SubsystemBase {
         topEncoderRPM = topMotor.getVelocity().getValueAsDouble();
         bottomEncoderRPM = bottomMotor.getVelocity().getValueAsDouble();
 
-        SmartDashboard.putNumber("Top Encoder Position", topEncoderRPM);
-        SmartDashboard.putNumber("Top Encoder Position", bottomEncoderRPM);
-
-
+        SmartDashboard.putNumber("Top Encoder Position", topEncoderRPM * 60);
+        SmartDashboard.putNumber("Bottom coder Position", bottomEncoderRPM * 60);
     }
 
     /**
      * Sets the target using a voltage to reach that velocity
      */
     public void run() {
-        topMotor.setControl(velocityVoltage.withVelocity(topTarget));
-        bottomMotor.setControl(velocityVoltage.withVelocity(bottomTarget));
+        topMotor.setControl(velocityVoltage.withVelocity(topTarget / 60));
+        bottomMotor.setControl(velocityVoltage.withVelocity(bottomTarget / 60));
     }
 
     /**
@@ -103,10 +101,10 @@ public class Shooter extends SubsystemBase {
      * Creates the shooter motor states
      */
     public enum ShooterStates {
-        STAGE(2000, 2000),
+        OFF(0, 0),
         AMP(1000, 1000),
-        SPEAKER(2000, 2000),
-        OFF(0, 0);
+        PODIUM(2000, 2000),
+        SUBWOOFER(2000, 2000);
 
         final double encoderTopRPM, encoderBottomRPM;
 

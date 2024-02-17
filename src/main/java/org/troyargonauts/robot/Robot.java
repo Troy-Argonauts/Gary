@@ -20,8 +20,6 @@ import java.util.concurrent.TimeUnit;
 public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
 
-    private RobotContainer m_robotContainer;
-
     private final SendableChooser<Command> chooser = new SendableChooser<>();
     private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
@@ -34,12 +32,17 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         DataLogManager.start("/media/sda1/logs");
 
+        arm = new Arm();
         climber = new Climber();
         intake = new Intake();
         shooter = new Shooter();
-        arm = new Arm();
       
         new RobotContainer();
+
+        SmartDashboard.putData("Autonomous modes", chooser);
+
+        chooser.setDefaultOption("Nothing", new WaitCommand(15));
+        chooser.addOption("Nothing", new WaitCommand(15));
       
         scheduledExecutorService.scheduleAtFixedRate(() -> {
             shooter.run();
@@ -56,13 +59,10 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+        m_autonomousCommand = chooser.getSelected();
 
         if (m_autonomousCommand != null) {
-        m_autonomousCommand.schedule();
-            SmartDashboard.putData("Autonomous modes", chooser);
-            chooser.addOption("Nothing", new WaitCommand(15));
-
+            m_autonomousCommand.schedule();
         }
     }
 
@@ -75,7 +75,7 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopInit() {
         if (m_autonomousCommand != null) {
-        m_autonomousCommand.cancel();
+            m_autonomousCommand.cancel();
         }
     }
 

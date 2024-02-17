@@ -40,12 +40,13 @@ public class Climber extends SubsystemBase {
      * Outputs values of motor target, voltage, current, and encoder to the DataLog.
      */
     public Climber() {
-        motor = new TalonFX(MOTOR_ID);
+        motor = new TalonFX(MOTOR_ID, CANBUS_NAME);
         motor.setNeutralMode(NeutralModeValue.Brake);
 
         motor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
 
         DataLog log = DataLogManager.getLog();
+        
         climberDistanceEncoder = new DoubleLogEntry((log), "Distance Encoder Values");
         climberTargetLog = new DoubleLogEntry((log), "Climber Target Values");
         climberMotorVoltage = new DoubleLogEntry((log), "Climber Motor Voltage");

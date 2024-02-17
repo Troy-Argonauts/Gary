@@ -8,8 +8,6 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -19,8 +17,8 @@ import org.troyargonauts.common.streams.IStream;
 import org.troyargonauts.robot.commands.ShootingSequence;
 import org.troyargonauts.robot.generated.TunerConstants;
 
-import org.troyargonauts.robot.subsystems.*;
-import org.troyargonauts.robot.subsystems.Intake.MotorState;
+import org.troyargonauts.robot.subsystems.Arm.ArmStates;
+import org.troyargonauts.robot.subsystems.Intake.IntakeStates;
 import org.troyargonauts.robot.subsystems.Shooter.ShooterStates;
 
 import static org.troyargonauts.robot.Constants.Controllers.*;
@@ -47,21 +45,21 @@ public class RobotContainer {
         // driver controller commands
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
             drivetrain.applyRequest(
-                () -> drive.withVelocityX(-driver.getLeftY() * MaxSpeed) // Drive forward with
+                () -> drive.withVelocityX(OMath.square(-driver.getLeftY()) * MaxSpeed) // Drive forward with
                 // negative Y (forward)
-                .withVelocityY(-driver.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                .withRotationalRate(-driver.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                .withVelocityY(OMath.square(-driver.getLeftX()) * MaxSpeed) // Drive left with negative X (left)
+                .withRotationalRate(OMath.square(-driver.getRightX()) * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
+        );
+
+        driver.a().whileTrue(drivetrain.applyRequest(() -> brake));
+
+        driver.rightBumper().whileTrue(
+            drivetrain.applyRequest(() -> point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX())))
         );
 
         driver.povDown().onTrue(
             new InstantCommand(Robot.getClimber()::setTarget)
-        );
-
-        driver.rightBumper().whileTrue(drivetrain.applyRequest(() -> brake));
-
-        driver.b().whileTrue(
-            drivetrain.applyRequest(() -> point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX())))
         );
 
         // operator controller commands
@@ -78,35 +76,37 @@ public class RobotContainer {
 
         operator.a().onTrue(
             new ParallelCommandGroup(
-                new InstantCommand(() -> Robot.getArm().setState(Arm.ArmStates.FLOOR_INTAKE)),
-                new InstantCommand(() -> Robot.getIntake().setState(Intake.MotorState.IN)).until(() -> Robot.getIntake().isNoteReady())
-                .andThen(new InstantCommand(() -> Robot.getIntake().setState(Intake.MotorState.OFF)))
+                new InstantCommand(() -> Robot.getArm().setState(ArmStates.FLOOR_INTAKE)),
+                new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.IN)).until(() -> Robot.getIntake().isNoteReady())
+                .andThen(new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF)))
             )
         );
 
         operator.x().onTrue(
             new ParallelCommandGroup(
                 new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.AMP)),
-                new InstantCommand(() -> Robot.getArm().setState(Arm.ArmStates.AMP))
+                new InstantCommand(() -> Robot.getArm().setState(ArmStates.AMP))
             )
         );
 
         operator.y().onTrue(
             new ParallelCommandGroup(
-                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.STAGE)),
-                new InstantCommand(() -> Robot.getArm().setState(Arm.ArmStates.STAGE))
+                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.PODIUM)),
+                new InstantCommand(() -> Robot.getArm().setState(ArmStates.PODIUM))
             )
         );
 
         operator.b().onTrue(
             new ParallelCommandGroup(
-                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.SPEAKER)),
-                new InstantCommand(() -> Robot.getArm().setState(Arm.ArmStates.SPEAKER))
+                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.SUBWOOFER)),
+                new InstantCommand(() -> Robot.getArm().setState(ArmStates.SUBWOOFER))
             )
         );
 
-        operator.rightBumper().onTrue(
-            new InstantCommand(() -> Robot.getIntake().setState(MotorState.OUT))
+        operator.rightBumper().whileTrue(
+            new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OUT))
+        ).whileFalse(
+            new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF))
         );
 
         operator.rightTrigger().onTrue(
@@ -120,10 +120,6 @@ public class RobotContainer {
 
     public RobotContainer() {
         configureBindings();
-    }
-
-    public Command getAutonomousCommand () {
-        return Commands.print("No autonomous command configured");
     }
 }
          
