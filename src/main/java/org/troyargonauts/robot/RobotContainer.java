@@ -109,6 +109,10 @@ public class RobotContainer {
             new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF), Robot.getIntake())
         );
 
+        operator.leftBumper().onTrue(
+                new InstantCommand(() -> Robot.getArm().setState(ArmStates.CLIMBER), Robot.getArm())
+        );
+
         operator.rightTrigger().onTrue(
             new ShootingSequence().onlyIf(() -> operator.getRightTriggerAxis() > DEADBAND)
         );
