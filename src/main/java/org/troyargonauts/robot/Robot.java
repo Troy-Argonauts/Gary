@@ -28,6 +28,8 @@ public class Robot extends TimedRobot {
     private static Intake intake;
     private static Shooter shooter;
 
+    private boolean armLimitPressed;
+
     @Override
     public void robotInit() {
         DataLogManager.start("/media/sda1/logs");
@@ -45,8 +47,16 @@ public class Robot extends TimedRobot {
         chooser.addOption("Nothing", new WaitCommand(15));
       
         scheduledExecutorService.scheduleAtFixedRate(() -> {
+            if (Robot.getArm().getLimitSwitch()) {
+                armLimitPressed = true;
+                Robot.getArm().resetEncoders();
+            }
+
+            if (armLimitPressed) {
+                arm.run();
+            }
+
             shooter.run();
-            arm.run();
             climber.run();
         }, 100, 10, TimeUnit.MILLISECONDS);
     }
