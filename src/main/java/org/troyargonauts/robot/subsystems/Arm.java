@@ -122,7 +122,9 @@ public class Arm extends SubsystemBase {
         FLOOR_INTAKE(100),
         AMP(200),
         PODIUM(233234),
-        SUBWOOFER(1234);
+        SUBWOOFER(1234),
+
+        CLIMBER(123);
 
         final double armPosition;
 

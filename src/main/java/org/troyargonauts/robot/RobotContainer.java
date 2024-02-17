@@ -104,9 +104,13 @@ public class RobotContainer {
         );
 
         operator.rightBumper().whileTrue(
-            new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OUT))
+                new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OUT), Robot.getIntake())
         ).whileFalse(
-            new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF))
+                new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF), Robot.getIntake())
+        );
+
+        operator.leftBumper().onTrue(
+                new InstantCommand(() -> Robot.getArm().setState(ArmStates.CLIMBER), Robot.getArm())
         );
 
         operator.rightTrigger().onTrue(
