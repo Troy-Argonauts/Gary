@@ -92,6 +92,15 @@ public class Arm extends SubsystemBase {
     }
 
     /**
+     * Sets Motor Power
+     * @param power speed to set Power to
+     */
+    public void setPower(double power) {
+        leftArmMotor.set(power);
+        rightArmMotor.set(power);
+    }
+
+    /**
      * Sets the left and right arm motors to their corresponding targets and
      * sets the motors power to that.
      *
@@ -170,5 +179,13 @@ public class Arm extends SubsystemBase {
      */
     public void setState(ArmStates state) {
         armTarget = state.armPosition;
+    }
+
+    /**
+     * Gets limit switch state
+     * @return limit switch state
+     */
+    public boolean getLimitSwitch() {
+        return limitSwitch.get();
     }
 }
