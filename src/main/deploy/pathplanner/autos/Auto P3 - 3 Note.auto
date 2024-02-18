@@ -1,0 +1,73 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.2198050493372643,
+      "y": 4.52825959032701
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Starting Sequence"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shooting Sequence Subwoofer"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Floor Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Path 2A"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shooting Sequence W3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Floor Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Path 2B"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Path 2C"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shooting Sequence SH2"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
