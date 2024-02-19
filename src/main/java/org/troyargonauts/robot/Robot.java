@@ -61,6 +61,10 @@ public class Robot extends TimedRobot {
             //climber.run();
         }, 100, 10, TimeUnit.MILLISECONDS);
     }
+    
+    public void robotPeriodic() {
+        CommandScheduler.getInstance().run();
+    }
 
     @Override
     public void disabledPeriodic() {}
