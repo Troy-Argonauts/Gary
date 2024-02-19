@@ -50,15 +50,15 @@ public class Arm extends SubsystemBase {
 
         limitSwitch = new DigitalInput(LIMIT_SWITCH_SLOT);
 
-        DataLog log = DataLogManager.getLog();
+        //DataLog log = DataLogManager.getLog();
 
-        armLeftEncoderLog = new DoubleLogEntry(log, "Arm Left Encoder Values");
-        armRightEncoderLog = new DoubleLogEntry(log, "Arm Right Encoder Values");
-        armLeftOutputCurrentLog = new DoubleLogEntry(log, "Arm Motor Output Current ");
-        armRightOutputCurrentLog = new DoubleLogEntry(log, "Arm Motor Output Current ");
-        armLeftMotorVoltage = new DoubleLogEntry(log, "Arm Motor Bus Voltage");
-        armRightMotorVoltage = new DoubleLogEntry(log, "Arm Motor Bus Voltage");
-        armTargetLog = new DoubleLogEntry(log, "Arm Target Log");
+//        armLeftEncoderLog = new DoubleLogEntry(log, "Arm Left Encoder Values");
+//        armRightEncoderLog = new DoubleLogEntry(log, "Arm Right Encoder Values");
+//        armLeftOutputCurrentLog = new DoubleLogEntry(log, "Arm Motor Output Current ");
+//        armRightOutputCurrentLog = new DoubleLogEntry(log, "Arm Motor Output Current ");
+//        armLeftMotorVoltage = new DoubleLogEntry(log, "Arm Motor Bus Voltage");
+//        armRightMotorVoltage = new DoubleLogEntry(log, "Arm Motor Bus Voltage");
+//        armTargetLog = new DoubleLogEntry(log, "Arm Target Log");
     }
 
     /**
@@ -73,13 +73,13 @@ public class Arm extends SubsystemBase {
         SmartDashboard.putNumber("Left Arm Encoder: ", leftArmEncoder);
         SmartDashboard.putNumber("Right Arm Encoder: ", rightArmEncoder);
 
-        armLeftEncoderLog.append(leftArmEncoder);
-        armRightEncoderLog.append(rightArmEncoder);
-        armLeftOutputCurrentLog.append(leftArmMotor.getSupplyCurrent().getValue());
-        armRightOutputCurrentLog.append(rightArmMotor.getSupplyCurrent().getValue());
-        armLeftMotorVoltage.append(leftArmMotor.getMotorVoltage().getValue());
-        armRightMotorVoltage.append(rightArmMotor.getMotorVoltage().getValue());
-        armTargetLog.append(armTarget);
+//        armLeftEncoderLog.append(leftArmEncoder);
+//        armRightEncoderLog.append(rightArmEncoder);
+//        armLeftOutputCurrentLog.append(leftArmMotor.getSupplyCurrent().getValue());
+//        armRightOutputCurrentLog.append(rightArmMotor.getSupplyCurrent().getValue());
+//        armLeftMotorVoltage.append(leftArmMotor.getMotorVoltage().getValue());
+//        armRightMotorVoltage.append(rightArmMotor.getMotorVoltage().getValue());
+//        armTargetLog.append(armTarget);
     }
 
     /**
