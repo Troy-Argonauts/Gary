@@ -17,8 +17,8 @@ public final class Constants {
     }
 
     public interface Arm {
-        int LEFT_MOTOR_ID = 0;
-        int RIGHT_MOTOR_ID = 1;
+        int LEFT_MOTOR_ID = 20;
+        int RIGHT_MOTOR_ID = 21;
 
         int LIMIT_SWITCH_SLOT = 1;
 
@@ -30,7 +30,7 @@ public final class Constants {
     }
   
     public interface Climber {
-        int MOTOR_ID = 13;
+        int MOTOR_ID = 23;
 
         double P = 0;
         double I = 0;
@@ -40,8 +40,8 @@ public final class Constants {
     }
   
     public interface Shooter {
-        int TOP_MOTOR_ID = 1;
-        int BOTTOM_MOTOR_ID = 2;
+        int TOP_MOTOR_ID = 24;
+        int BOTTOM_MOTOR_ID = 25;
 
         double TOP_MOTOR_P = 0;
         double TOP_MOTOR_I = 0;
