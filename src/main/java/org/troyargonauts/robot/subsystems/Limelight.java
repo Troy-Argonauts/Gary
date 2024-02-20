@@ -4,7 +4,6 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import static org.troyargonauts.robot.Robot.limelight;
 import org.troyargonauts.robot.Constants;
 
 
@@ -16,7 +15,7 @@ public class Limelight extends SubsystemBase {
     /**
      * The current pipeline number being used by the Limelight.
      */
-    public static int pipeNumber = 0;
+    public static int pipeline = 0;
     private NetworkTableInstance table = null;
 
     /**
@@ -31,6 +30,7 @@ public class Limelight extends SubsystemBase {
     public enum CameraMode {
         VISION, DRIVER
     }
+
 
 
     private final static Limelight INSTANCE = new Limelight();
@@ -54,32 +54,9 @@ public class Limelight extends SubsystemBase {
         return INSTANCE;
     }
 
-    /**
-     * Raises the pipeline number by 1 if it is less than 2.
-     *
-     * @return The new pipeline number.
-     */
-    public static int raisePipe(){
-        if (pipeNumber < 2) {
-            return pipeNumber++;
-        }else{
-            return pipeNumber;
-        }
-    }
 
-    /**
-     * Lowers the pipeline number by 1 if it is greater than 0.
-     *
-     * @return The new pipeline number.
-     */
-    public static int lowerPipe(){
-        if(pipeNumber > 0) {
-            return pipeNumber--;
-        }
-        else{
-            return pipeNumber;
-        }
-    }
+
+
     /**
      * Returns the Ty (vertical offset from the crosshair to the target) value from the Limelight camera.
      *
@@ -114,35 +91,6 @@ public class Limelight extends SubsystemBase {
             return 0;
         double tan = Math.tan(Math.toRadians(angle));
         return (Limelight.getAprilTagHeight(0) - Constants.Limelight.LIMELIGHT_HEIGHT) / tan;
-
-    }
-
-    /**
-     * Calculates and returns the distance from the Limelight to the low cone in inches.
-     *
-     * @return The distance from the Limelight to the low cone in inches.
-     */
-    public double getLowConeDistance() {
-        double angle = Constants.Limelight.MOUNTING_ANGLE + getTy();
-        if (angle < 1 || angle > 89){
-            return 0;
-        }
-        double tan = Math.tan(Math.toRadians(angle));
-        return (Constants.Limelight.LOW_CONE_HEIGHT - Constants.Limelight.LIMELIGHT_HEIGHT) / tan;
-
-    }
-
-    /**
-     * Calculates and returns the distance from the Limelight to the high cone in inches.
-     *
-     * @return The distance from the Limelight to the high cone in inches.
-     */
-    public double getHighConeDistance() {
-        double angle = Constants.Limelight.MOUNTING_ANGLE + getTy();
-        if (angle < 1 || angle > 89)
-            return 0;
-        double tan = Math.tan(Math.toRadians(angle));
-        return ((Constants.Limelight.HIGH_CONE_HEIGHT - Constants.Limelight.LIMELIGHT_HEIGHT) / tan) + Constants.Limelight.DISTANCE_BETWEEN_CONES;
 
     }
 
@@ -185,26 +133,56 @@ public class Limelight extends SubsystemBase {
      * Sets the pipeline number of the Limelight.
      *
      */
-    public void setPipeline() {
-        getValue("pipeline").setNumber(pipeNumber);
+    private void setPipeline(int pipelineID) {
+        getValue("pipeline").setNumber(pipeline);
+        pipeline = pipelineID;
     }
 
+    /**
+     * Returns ID of current pipeline
+     * @return current pipeline number
+     */
+    public int getPipeline(){
+        if(pipeline != getValue("getPipe").getInteger(0)){
+            pipeline = (int) getValue("getPipe").getInteger(0);
+        }
+        return pipeline;
+    }
+
+    /**
+     * returns height of April Tag on field with given ID
+     * @param id April Tag ID
+     * @return height of April Tag with given ID in inches
+     */
     private static double getAprilTagHeight(int id){
         return Constants.Limelight.APRIL_TAG_HEIGHTS_BY_ID[id];
     }
 
     /**
-     * This method displays the April Tag Distance, Low Cone Distance, and High Cone Distance from the robot calculated from the getDistanceFromAprilTagInches,
-     * getLowConeDistance, and getHighConeDistance methods respectively. The setPipeline() calls the setPipeline method to check if the raise/lower pipeline method is called
-     * and if it is, then it will change the pipeline accordingly
+     * If robot is detected via object detection pipeline, returns area coverage of screen.
+     * @return area of screen covered by a detected robot.
+     */
+    public double getAreaOfDetectedRobot(){
+        if (pipeline == 1){
+            if(getValue("tclass").toString().equals("robot") && (((int) getValue("tv").getInteger(0)) == 1)){
+                return getValue("ta").getDouble(0);
+            }
+            return 0;
+        }
+        else{
+            return 0;
+        }
+    }
+
+    /**
+     * This method displays the April Tag Distance,  getDistanceFromAprilTagInches,
+     * methods respectively. Get pipeline displays current Pipeline;
      */
     @Override
     public void periodic() {
         SmartDashboard.putNumber("April Tag Distance", getDistanceFromAprilTagInches());
-        SmartDashboard.putNumber("Low Cone Distance", getLowConeDistance());
-        SmartDashboard.putNumber("High Cone Distance: ", getHighConeDistance());
         SmartDashboard.putNumber("Angle from AprilTag: ", getXAngle());
-        setPipeline();
+        SmartDashboard.putNumber("Current Pipeline", getPipeline());
     }
 
 

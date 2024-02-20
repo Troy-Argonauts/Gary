@@ -83,4 +83,11 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().cancelAll();
     }
 
+    public static Limelight getLimelight(){
+        if (limelight == null){
+            limelight = new Limelight();
+        }
+        return limelight;
+    }
+
 }
