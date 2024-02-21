@@ -135,8 +135,6 @@ public class RobotContainer {
         driver.b().onTrue(
                 new InstantCommand(() -> System.out.println("Here"), Robot.getIntake())
         );
-
-        System.out.println("Exit");
     }
 
     public RobotContainer() {

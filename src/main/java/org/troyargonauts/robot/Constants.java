@@ -43,12 +43,12 @@ public final class Constants {
         int TOP_MOTOR_ID = 24;
         int BOTTOM_MOTOR_ID = 25;
 
-        double TOP_MOTOR_P = 0.4;
-        double TOP_MOTOR_I = 0.1;
-        double TOP_MOTOR_D = 0.0006;
-        double BOTTOM_MOTOR_P = 0.4;
-        double BOTTOM_MOTOR_I = 0.1;
-        double BOTTOM_MOTOR_D = 0.0006;
+        double TOP_MOTOR_P = 0.455;
+        double TOP_MOTOR_I = 0.145;
+        double TOP_MOTOR_D = 0.002;
+        double BOTTOM_MOTOR_P = 0.455;
+        double BOTTOM_MOTOR_I = 0.145;
+        double BOTTOM_MOTOR_D = 0.002;
 
         String CANBUS_NAME = "roborio";
     }  

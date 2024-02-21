@@ -38,6 +38,7 @@ public class Shooter extends SubsystemBase {
     public Shooter() {
         topMotor = new TalonFX(TOP_MOTOR_ID, CANBUS_NAME);
         bottomMotor = new TalonFX(BOTTOM_MOTOR_ID, CANBUS_NAME);
+
         topMotor.setInverted(true);
         bottomMotor.setInverted(true);
 

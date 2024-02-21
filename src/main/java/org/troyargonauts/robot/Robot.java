@@ -70,6 +70,11 @@ public class Robot extends TimedRobot {
     public void disabledPeriodic() {}
 
     @Override
+    public void disabledInit() {
+        shooter.setDesiredTarget(0,0);
+    }
+
+    @Override
     public void disabledExit() {}
 
     @Override
