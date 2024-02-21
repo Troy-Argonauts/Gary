@@ -41,7 +41,7 @@ public class RobotContainer {
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
-    private void configureBindings() {
+    public void configureBindings() {
         // driver controller commands
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
             drivetrain.applyRequest(
@@ -116,6 +116,12 @@ public class RobotContainer {
         operator.povDown().onTrue(
             new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.OFF), Robot.getShooter())
         );
+
+        driver.b().onTrue(
+                new InstantCommand(() -> System.out.println("Here"), Robot.getIntake())
+        );
+
+        System.out.println("Exit");
     }
 
     public RobotContainer() {

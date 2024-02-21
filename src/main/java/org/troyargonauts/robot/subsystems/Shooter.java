@@ -42,14 +42,14 @@ public class Shooter extends SubsystemBase {
         topMotor.getConfigurator().apply(new Slot0Configs().withKP(TOP_MOTOR_P).withKI(TOP_MOTOR_I).withKD(TOP_MOTOR_D));
         bottomMotor.getConfigurator().apply(new Slot0Configs().withKP(BOTTOM_MOTOR_P).withKI(BOTTOM_MOTOR_I).withKD(BOTTOM_MOTOR_D));
 
-        DataLog log = DataLogManager.getLog();
-
-        shooterTopEncoderLog = new DoubleLogEntry((log), "Top Shooter Encoder Values");
-        shooterBottomEncoderLog = new DoubleLogEntry((log), "Bottom Shooter Encoder Values");
-        shooterTopOutputCurrentLog = new DoubleLogEntry((log), "Top Shooter Motor Output Current ");
-        shooterBottomOutputCurrentLog = new DoubleLogEntry((log), "Bottom Shooter Motor Output Current ");
-        shooterTopMotorVoltage = new DoubleLogEntry((log), "Top Shooter Motor Voltage");
-        shooterBottomMotorVoltage = new DoubleLogEntry((log), "Bottom Shooter Motor Voltage");
+//        DataLog log = DataLogManager.getLog();
+//
+//        shooterTopEncoderLog = new DoubleLogEntry((log), "Top Shooter Encoder Values");
+//        shooterBottomEncoderLog = new DoubleLogEntry((log), "Bottom Shooter Encoder Values");
+//        shooterTopOutputCurrentLog = new DoubleLogEntry((log), "Top Shooter Motor Output Current ");
+//        shooterBottomOutputCurrentLog = new DoubleLogEntry((log), "Bottom Shooter Motor Output Current ");
+//        shooterTopMotorVoltage = new DoubleLogEntry((log), "Top Shooter Motor Voltage");
+//        shooterBottomMotorVoltage = new DoubleLogEntry((log), "Bottom Shooter Motor Voltage");
     }
 
     /**
@@ -57,12 +57,12 @@ public class Shooter extends SubsystemBase {
      */
     @Override
     public void periodic() {
-        shooterTopEncoderLog.append(topMotor.getPosition().getValue());
-        shooterBottomEncoderLog.append(bottomMotor.getPosition().getValue());
-        shooterTopOutputCurrentLog.append(topMotor.getSupplyCurrent().getValue());
-        shooterTopMotorVoltage.append(bottomMotor.getMotorVoltage().getValue());
-        shooterBottomOutputCurrentLog.append(topMotor.getSupplyCurrent().getValue());
-        shooterBottomMotorVoltage.append(bottomMotor.getMotorVoltage().getValue());
+//        shooterTopEncoderLog.append(topMotor.getPosition().getValue());
+//        shooterBottomEncoderLog.append(bottomMotor.getPosition().getValue());
+//        shooterTopOutputCurrentLog.append(topMotor.getSupplyCurrent().getValue());
+//        shooterTopMotorVoltage.append(bottomMotor.getMotorVoltage().getValue());
+//        shooterBottomOutputCurrentLog.append(topMotor.getSupplyCurrent().getValue());
+//        shooterBottomMotorVoltage.append(bottomMotor.getMotorVoltage().getValue());
 
         topEncoderRPM = topMotor.getVelocity().getValueAsDouble() * 60;
         bottomEncoderRPM = bottomMotor.getVelocity().getValueAsDouble() * 60;

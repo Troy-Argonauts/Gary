@@ -27,19 +27,20 @@ public class Robot extends TimedRobot {
     private static Climber climber;
     private static Intake intake;
     private static Shooter shooter;
+    private static RobotContainer robotContainer;
 
     private boolean armLimitPressed;
 
     @Override
     public void robotInit() {
-        DataLogManager.start("/media/sda1/logs");
+      //  DataLogManager.start("/media/sda1/logs");
 
         arm = new Arm();
         climber = new Climber();
         intake = new Intake();
         shooter = new Shooter();
       
-        new RobotContainer();
+        robotContainer = new RobotContainer();
 
         SmartDashboard.putData("Autonomous modes", chooser);
 
@@ -53,12 +54,16 @@ public class Robot extends TimedRobot {
             }
 
             if (armLimitPressed) {
-                arm.run();
+              //  arm.run();
             }
 
             shooter.run();
-            climber.run();
+            //climber.run();
         }, 100, 10, TimeUnit.MILLISECONDS);
+    }
+    
+    public void robotPeriodic() {
+        CommandScheduler.getInstance().run();
     }
 
     @Override
@@ -87,13 +92,16 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             m_autonomousCommand.cancel();
         }
+
+
     }
 
     @Override
     public void teleopExit() {}
 
     @Override
-    public void teleopPeriodic() {}
+    public void teleopPeriodic() {
+    }
 
     @Override
     public void testInit() {

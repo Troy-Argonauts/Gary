@@ -31,24 +31,24 @@ public class Intake extends SubsystemBase {
 
         noteSensor = new DigitalInput(NOTE_SENSOR_SLOT);
 
-        DataLog log = DataLogManager.getLog();
-        
-        intakeMotorVoltage =  new DoubleLogEntry(log, "Intake Bus Voltage log");
-        intakeOutputCurrentLog =  new DoubleLogEntry(log, "Intake Output Current log");
+//        DataLog log = DataLogManager.getLog();
+//
+//        intakeMotorVoltage =  new DoubleLogEntry(log, "Intake Bus Voltage log");
+//        intakeOutputCurrentLog =  new DoubleLogEntry(log, "Intake Output Current log");
     }
 
     /**
      * @return a boolean (true if the note is ready and false if the note isn't)
      */
     public boolean isNoteReady() {
-        return noteSensor.get();
+        return !noteSensor.get();
     }
 
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("Note_Readiness",isNoteReady());
-        intakeOutputCurrentLog.append(motor.getSupplyCurrent().getValue());
-        intakeMotorVoltage.append(motor.getMotorVoltage().getValue());
+//        intakeOutputCurrentLog.append(motor.getSupplyCurrent().getValue());
+      //  intakeMotorVoltage.append(motor.getMotorVoltage().getValue());
     }
 
     /**

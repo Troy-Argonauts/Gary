@@ -25,7 +25,7 @@ public class Climber extends SubsystemBase {
     private double motorTarget = 0;
 
     private Rev2mDistanceSensor distanceSensor;
-    private double distanceSensorOutput = distanceSensor.getRange();
+    private double distanceSensorOutput;
 
     private DoubleLogEntry climberEncoderLog;
     private DoubleLogEntry climberOutputCurrentLog;
@@ -45,15 +45,18 @@ public class Climber extends SubsystemBase {
 
         motor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
 
-        DataLog log = DataLogManager.getLog();
-        
-        climberDistanceEncoder = new DoubleLogEntry((log), "Distance Encoder Values");
-        climberTargetLog = new DoubleLogEntry((log), "Climber Target Values");
-        climberMotorVoltage = new DoubleLogEntry((log), "Climber Motor Voltage");
-        climberOutputCurrentLog = new DoubleLogEntry((log), "Climber Current Output Values");
-        climberEncoderLog = new DoubleLogEntry((log), "Climber Encoder Values");
-        distanceSensor = new Rev2mDistanceSensor(Rev2mDistanceSensor.Port.kOnboard);
-        distanceSensor.setAutomaticMode(true);
+//        DataLog log = DataLogManager.getLog();
+//
+//        climberDistanceEncoder = new DoubleLogEntry((log), "Distance Encoder Values");
+//        climberTargetLog = new DoubleLogEntry((log), "Climber Target Values");
+//        climberMotorVoltage = new DoubleLogEntry((log), "Climber Motor Voltage");
+//        climberOutputCurrentLog = new DoubleLogEntry((log), "Climber Current Output Values");
+//        climberEncoderLog = new DoubleLogEntry((log), "Climber Encoder Values");
+
+//       // distanceSensor = new Rev2mDistanceSensor(Rev2mDistanceSensor.Port.kOnboard);
+//        distanceSensor.setAutomaticMode(true);
+
+   //     distanceSensorOutput = distanceSensor.getRange();
     }
 
     /**
@@ -90,18 +93,18 @@ public class Climber extends SubsystemBase {
      */
     @Override
     public void periodic() {
-        climberEncoderLog.append(motorEncoder);
-        climberOutputCurrentLog.append(motor.getSupplyCurrent().getValue());
-        climberMotorVoltage.append(motor.getMotorVoltage().getValue());
-        climberTargetLog.append(motorEncoder);
-        climberDistanceEncoder.append(distanceSensorOutput);
+//        climberEncoderLog.append(motorEncoder);
+//        climberOutputCurrentLog.append(motor.getSupplyCurrent().getValue());
+//        climberMotorVoltage.append(motor.getMotorVoltage().getValue());
+//        climberTargetLog.append(motorEncoder);
+     //   climberDistanceEncoder.append(distanceSensorOutput);
 
         motorEncoder = motor.getPosition().getValueAsDouble();
 
         SmartDashboard.putNumber("Climber Encoder: ", motorEncoder);
-        SmartDashboard.putNumber("Range Onboard", distanceSensor.getRange());
-        SmartDashboard.putBoolean("Timestamp Onboard", distanceSensor.isRangeValid());
-        SmartDashboard.putNumber("Distance Sensor", distanceSensorOutput);
+//        SmartDashboard.putNumber("Range Onboard", distanceSensor.getRange());
+//        SmartDashboard.putBoolean("Timestamp Onboard", distanceSensor.isRangeValid());
+//        SmartDashboard.putNumber("Distance Sensor", distanceSensorOutput);
     }
 
     /**
@@ -110,21 +113,22 @@ public class Climber extends SubsystemBase {
      * @param maxDistance determines the maximum of the range.
      * @return whether the robot is in range.
      */
-    public boolean distanceWithinRange(double minDistance, double maxDistance) {
-        if (((minDistance < distanceSensorOutput) && (distanceSensorOutput < maxDistance))){
-            return true;
-        }
-        else {
-            return false;
-        }
+    public void distanceWithinRange(double minDistance, double maxDistance) {
+//        if (((minDistance < distanceSensorOutput) && (distanceSensorOutput < maxDistance))){
+//            return true;
+//        }
+//        else {
+//            return false;
+//        }
+
     }
 
     /**
      * Determines the range between the robot and the nearest object.
      * @return distance as a double.
      */
-    public double getDistance() {
-        return distanceSensor.getRange();
+    public void getDistance() {
+        //return distanceSensor.getRange();
     }
 }
 
