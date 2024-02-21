@@ -62,6 +62,8 @@ public class RobotContainer {
             new InstantCommand(Robot.getClimber()::setTarget)
         );
 
+
+
         // operator controller commands
         Robot.getArm().setDefaultCommand(
             new RunCommand(
@@ -89,6 +91,13 @@ public class RobotContainer {
             )
         );
 
+        operator.povRight().onTrue(
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.IDLE), Robot.getShooter()),
+                        new InstantCommand(() -> Robot.getArm().setState(ArmStates.AMP), Robot.getArm())
+                )
+        );
+
         operator.y().onTrue(
             new ParallelCommandGroup(
                 new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.PODIUM), Robot.getShooter()),
@@ -107,6 +116,12 @@ public class RobotContainer {
             new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OUT), Robot.getIntake())
         ).whileFalse(
             new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF), Robot.getIntake())
+        );
+
+        operator.leftBumper().whileTrue(
+                new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.IN), Robot.getIntake())
+        ).whileFalse(
+                new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF), Robot.getIntake())
         );
 
         operator.rightTrigger().onTrue(

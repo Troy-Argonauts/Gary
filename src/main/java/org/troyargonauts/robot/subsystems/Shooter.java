@@ -38,6 +38,8 @@ public class Shooter extends SubsystemBase {
     public Shooter() {
         topMotor = new TalonFX(TOP_MOTOR_ID, CANBUS_NAME);
         bottomMotor = new TalonFX(BOTTOM_MOTOR_ID, CANBUS_NAME);
+        topMotor.setInverted(true);
+        bottomMotor.setInverted(true);
 
         topMotor.getConfigurator().apply(new Slot0Configs().withKP(TOP_MOTOR_P).withKI(TOP_MOTOR_I).withKD(TOP_MOTOR_D));
         bottomMotor.getConfigurator().apply(new Slot0Configs().withKP(BOTTOM_MOTOR_P).withKI(BOTTOM_MOTOR_I).withKD(BOTTOM_MOTOR_D));
@@ -67,8 +69,8 @@ public class Shooter extends SubsystemBase {
         topEncoderRPM = topMotor.getVelocity().getValueAsDouble() * 60;
         bottomEncoderRPM = bottomMotor.getVelocity().getValueAsDouble() * 60;
 
-        SmartDashboard.putNumber("Top Encoder Position", topEncoderRPM);
-        SmartDashboard.putNumber("Bottom coder Position", bottomEncoderRPM);
+        SmartDashboard.putNumber("Top Encoder RPM", topEncoderRPM);
+        SmartDashboard.putNumber("Bottom Encoder RPM", bottomEncoderRPM);
     }
 
     /**
@@ -102,6 +104,7 @@ public class Shooter extends SubsystemBase {
      */
     public enum ShooterStates {
         OFF(0, 0),
+        IDLE(700, 700),
         AMP(1000, 1000),
         PODIUM(2000, 2000),
         SUBWOOFER(2000, 2000);
