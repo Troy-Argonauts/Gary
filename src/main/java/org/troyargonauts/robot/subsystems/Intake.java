@@ -41,7 +41,7 @@ public class Intake extends SubsystemBase {
      * @return a boolean (true if the note is ready and false if the note isn't)
      */
     public boolean isNoteReady() {
-        return noteSensor.get();
+        return !noteSensor.get();
     }
 
     @Override
