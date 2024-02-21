@@ -42,7 +42,6 @@ public class RobotContainer {
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
     public void configureBindings() {
-        System.out.println("Start");
         // driver controller commands
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
             drivetrain.applyRequest(
@@ -50,8 +49,6 @@ public class RobotContainer {
                 // negative Y (forward)
                 .withVelocityY(OMath.square(-driver.getLeftX()) * MaxSpeed) // Drive left with negative X (left)
                 .withRotationalRate(OMath.square(-driver.getRightX()) * MaxAngularRate) // Drive counterclockwise with negative X (left)
-            ).andThen(
-                    new InstantCommand(() -> System.out.println(driver.getLeftX()), Robot.getIntake())
             )
         );
 

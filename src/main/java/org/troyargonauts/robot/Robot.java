@@ -93,9 +93,7 @@ public class Robot extends TimedRobot {
             m_autonomousCommand.cancel();
         }
 
-        if (robotContainer != null) {
-            System.out.println("INit");
-        }
+
     }
 
     @Override
