@@ -31,8 +31,8 @@ public class Intake extends SubsystemBase {
      * Makes a new intake with a motor and a note sensor
      */
     public Intake() {
-        motorLeft = new TalonFX(Left_MOTOR_CAN_ID, CANBUS_NAME);
-        motorRight = new TalonFX(Right_MOTOR_CAN_ID, CANBUS_NAME2);
+        motorLeft = new TalonFX(LEFT_MOTOR_CAN_ID, CANBUS_NAME);
+        motorRight = new TalonFX(RIGHT_MOTOR_CAN_ID, CANBUS_NAME2);
 
         noteSensor = new DigitalInput(NOTE_SENSOR_SLOT);
 

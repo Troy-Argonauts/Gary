@@ -2,9 +2,9 @@ package org.troyargonauts.robot;
 
 public final class Constants {
     public interface Intake {
-        int Left_MOTOR_CAN_ID = 22;
+        int LEFT_MOTOR_CAN_ID = 22;
 
-        int Right_MOTOR_CAN_ID = 26;
+        int RIGHT_MOTOR_CAN_ID = 26;
 
         int NOTE_SENSOR_SLOT = 0;
 
