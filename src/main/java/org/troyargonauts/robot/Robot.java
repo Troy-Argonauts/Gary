@@ -33,7 +33,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
-      //  DataLogManager.start("/media/sda1/logs");
+        DataLogManager.start();
 
         arm = new Arm();
         climber = new Climber();

@@ -32,7 +32,7 @@ public class Arm extends SubsystemBase {
     private DoubleLogEntry armLeftMotorVoltage;
     private DoubleLogEntry armRightMotorVoltage;
     private DoubleLogEntry armTargetLog;
-    
+    private DoubleLogEntry armAvgEncoderLog;
     private final PositionVoltage positionVoltage = new PositionVoltage(0).withSlot(0);
 
     /**
@@ -50,7 +50,7 @@ public class Arm extends SubsystemBase {
 
         limitSwitch = new DigitalInput(LIMIT_SWITCH_SLOT);
 
-        //DataLog log = DataLogManager.getLog();
+        DataLog log = DataLogManager.getLog();
 
 //        armLeftEncoderLog = new DoubleLogEntry(log, "Arm Left Encoder Values");
 //        armRightEncoderLog = new DoubleLogEntry(log, "Arm Right Encoder Values");
@@ -59,6 +59,7 @@ public class Arm extends SubsystemBase {
 //        armLeftMotorVoltage = new DoubleLogEntry(log, "Arm Motor Bus Voltage");
 //        armRightMotorVoltage = new DoubleLogEntry(log, "Arm Motor Bus Voltage");
 //        armTargetLog = new DoubleLogEntry(log, "Arm Target Log");
+        armAvgEncoderLog = new DoubleLogEntry(log, "Arm Average Encoder Values");
     }
 
     /**
@@ -79,7 +80,8 @@ public class Arm extends SubsystemBase {
 //        armRightOutputCurrentLog.append(rightArmMotor.getSupplyCurrent().getValue());
 //        armLeftMotorVoltage.append(leftArmMotor.getMotorVoltage().getValue());
 //        armRightMotorVoltage.append(rightArmMotor.getMotorVoltage().getValue());
-//        armTargetLog.append(armTarget);
+        armTargetLog.append(armTarget);
+        armAvgEncoderLog.append((leftArmEncoder+rightArmEncoder)/2);
     }
 
     /**
