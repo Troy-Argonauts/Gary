@@ -69,8 +69,19 @@ public class Intake extends SubsystemBase {
      * Sets enumerators for various Intake States
      */
     public enum IntakeStates {
+        /**
+         * Intake rollers IN
+         */
         IN,
+
+        /**
+         * Intake rollers OFF
+         */
         OFF,
+
+        /**
+         * Intake rollers OUT
+         */
         OUT
     }
 

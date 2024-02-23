@@ -101,9 +101,24 @@ public class Shooter extends SubsystemBase {
      * Sets enumerators for encoder velocity setpoints of various Shooter States
      */
     public enum ShooterStates {
+        /**
+         * Shooter off Shooter RPM
+         */
         OFF(0, 0),
+
+        /**
+         * Amp scoring Shooter RPM
+         */
         AMP(1000, 1000),
+
+        /**
+         * Podium scoring Shooter RPM
+         */
         PODIUM(2000, 2000),
+
+        /**
+         * Subwoofer scoring Shooter RPM
+         */
         SUBWOOFER(2000, 2000);
 
         final double encoderTopRPM, encoderBottomRPM;

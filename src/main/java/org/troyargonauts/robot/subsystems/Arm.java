@@ -134,11 +134,29 @@ public class Arm extends SubsystemBase {
      * Sets enumerators for encoder positions of various Arm States
      */
     public enum ArmStates{
+        /**
+         * Floor Intake Arm position
+         */
         FLOOR_INTAKE(100),
+
+        /**
+         * Amp scoring Arm position
+         */
         AMP(200),
+
+        /**
+         * Podium scoring Arm position
+         */
         PODIUM(233234),
+
+        /**
+         * Subwoofer scoring Arm position
+         */
         SUBWOOFER(1234),
 
+        /**
+         * Climbing Arm position
+         */
         CLIMBER(123);
 
         final double armPosition;
