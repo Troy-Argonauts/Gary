@@ -28,7 +28,7 @@ public class Intake extends SubsystemBase {
     private DoubleLogEntry intakeOutputLeftCurrentLog;
 
     /**
-     * Makes a new intake with a motor and a note sensor
+     * Makes a new intake with two motors and a note sensor
      */
     public Intake() {
         motorLeft = new TalonFX(LEFT_MOTOR_CAN_ID, CANBUS_NAME);
@@ -51,6 +51,9 @@ public class Intake extends SubsystemBase {
         return !noteSensor.get();
     }
 
+    /**
+     * Updates logs and outputs sensor state to SmartDashboard
+     */
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("Note_Readiness",isNoteReady());
@@ -61,7 +64,7 @@ public class Intake extends SubsystemBase {
     }
 
     /**
-     * Makes an enum for the 3 states the motor could be (In, Out, or Off)
+     * Makes an enum for the 3 states the motors could be (In, Out, or Off)
      */
     public enum IntakeStates {
         IN,
