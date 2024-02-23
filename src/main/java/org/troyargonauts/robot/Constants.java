@@ -2,11 +2,15 @@ package org.troyargonauts.robot;
 
 public final class Constants {
     public interface Intake {
-        int MOTOR_CAN_ID = 22;
+        int LEFT_MOTOR_CAN_ID = 22;
+
+        int RIGHT_MOTOR_CAN_ID = 26;
 
         int NOTE_SENSOR_SLOT = 0;
 
         String CANBUS_NAME = "roborio";
+
+        String CANBUS_NAME2 = "roborio2";
     }
 
     public interface Controllers {
