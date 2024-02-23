@@ -1,6 +1,9 @@
 package org.troyargonauts.robot;
 
 public final class Constants {
+    /**
+     * Constants for the Intake subsystem
+     */
     public interface Intake {
         int LEFT_MOTOR_CAN_ID = 22;
 
@@ -13,6 +16,9 @@ public final class Constants {
         String CANBUS_NAME2 = "roborio2";
     }
 
+    /**
+     * Constants for the Controllers
+     */
     public interface Controllers {
         int DRIVER = 0;
         int OPERATOR = 1;
@@ -20,6 +26,9 @@ public final class Constants {
         double DEADBAND = 0.08;
     }
 
+    /**
+     * Constants for the Arm subsystem
+     */
     public interface Arm {
         int LEFT_MOTOR_ID = 20;
         int RIGHT_MOTOR_ID = 21;
@@ -32,7 +41,10 @@ public final class Constants {
 
         String CANBUS_NAME = "roborio";
     }
-  
+
+    /**
+     * Constants for the Climber subsystem
+     */
     public interface Climber {
         int MOTOR_ID = 23;
 
@@ -42,7 +54,10 @@ public final class Constants {
 
         String CANBUS_NAME = "roborio";
     }
-  
+
+    /**
+     * Constants for the Shooter subsystem
+     */
     public interface Shooter {
         int TOP_MOTOR_ID = 24;
         int BOTTOM_MOTOR_ID = 25;
