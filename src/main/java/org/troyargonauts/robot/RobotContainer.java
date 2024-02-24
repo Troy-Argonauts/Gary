@@ -146,7 +146,7 @@ public class RobotContainer {
     }
 
     /**
-     * Creates a Robot Container object and runs configureBindings() method
+     * Runs configureBindings() method and registers Pathplanner NamedCommands
      */
     public RobotContainer() {
         NamedCommands.registerCommand("Starting Sequence", new StartingSequence());
