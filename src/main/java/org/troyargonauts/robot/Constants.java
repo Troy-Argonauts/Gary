@@ -1,5 +1,8 @@
 package org.troyargonauts.robot;
 
+/**
+ * Class containing all constants for all subsystems except for CommandSwerveDrivetrain
+ */
 public final class Constants {
     /**
      * Constants for the Intake subsystem

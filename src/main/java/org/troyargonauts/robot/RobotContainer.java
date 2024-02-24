@@ -23,6 +23,9 @@ import org.troyargonauts.robot.subsystems.Shooter.ShooterStates;
 
 import static org.troyargonauts.robot.Constants.Controllers.*;
 
+/**
+ * Class for setting up commands for the entire robot
+ */
 public class RobotContainer {
     private double MaxSpeed = 6; // 6 meters per second desired top speed
     private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
@@ -41,6 +44,9 @@ public class RobotContainer {
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
+    /**
+     * Configures controller button bindings for Teleoperated mode
+     */
     public void configureBindings() {
         // driver controller commands
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
@@ -124,6 +130,9 @@ public class RobotContainer {
         System.out.println("Exit");
     }
 
+    /**
+     * Creates a Robot Container object and runs configureBindings() method
+     */
     public RobotContainer() {
         configureBindings();
     }
