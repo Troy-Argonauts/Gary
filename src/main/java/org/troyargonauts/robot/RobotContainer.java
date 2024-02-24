@@ -128,8 +128,6 @@ public class RobotContainer {
         driver.b().onTrue(
                 new InstantCommand(() -> System.out.println("Here"), Robot.getIntake())
         );
-
-        System.out.println("Exit");
     }
 
     /**
@@ -142,7 +140,7 @@ public class RobotContainer {
             new InstantCommand(() -> Robot.getShooter().setDesiredTarget(100, 100), Robot.getShooter())
                 .until(() -> Robot.getShooter().isTopPidFinished() && Robot.getShooter().isBottomPidFinished())
             .alongWith(new InstantCommand(() -> Robot.getArm().setDesiredTarget(100), Robot.getArm()))
-                .until(() -> Robot.getArm().isPidFinished())
+                .until(() -> Robot.getArm().isPIDFinished())
             .andThen(new ShootingSequence())
             .andThen(new InstantCommand(() -> Robot.getShooter().setDesiredTarget(10, 10), Robot.getShooter()))
         );
@@ -151,7 +149,7 @@ public class RobotContainer {
             new InstantCommand(() -> Robot.getShooter().setDesiredTarget(100, 100), Robot.getShooter())
                 .until(() -> Robot.getShooter().isTopPidFinished() && Robot.getShooter().isBottomPidFinished())
             .alongWith(new InstantCommand(() -> Robot.getArm().setDesiredTarget(100), Robot.getArm()))
-                .until(() -> Robot.getArm().isPidFinished())
+                .until(() -> Robot.getArm().isPIDFinished())
             .andThen(new ShootingSequence())
             .andThen(new InstantCommand(() -> Robot.getShooter().setDesiredTarget(10, 10), Robot.getShooter()))
         );
@@ -160,7 +158,7 @@ public class RobotContainer {
             new InstantCommand(() -> Robot.getShooter().setDesiredTarget(100, 100), Robot.getShooter())
                 .until(() -> Robot.getShooter().isTopPidFinished() && Robot.getShooter().isBottomPidFinished())
             .alongWith(new InstantCommand(() -> Robot.getArm().setDesiredTarget(100), Robot.getArm()))
-                .until(() -> Robot.getArm().isPidFinished())
+                .until(() -> Robot.getArm().isPIDFinished())
             .andThen(new ShootingSequence())
             .andThen(new InstantCommand(() -> Robot.getShooter().setDesiredTarget(10, 10), Robot.getShooter()))
         );
@@ -169,7 +167,7 @@ public class RobotContainer {
             new InstantCommand(() -> Robot.getShooter().setDesiredTarget(100, 100), Robot.getShooter())
                 .until(() -> Robot.getShooter().isTopPidFinished() && Robot.getShooter().isBottomPidFinished())
             .alongWith(new InstantCommand(() -> Robot.getArm().setDesiredTarget(100), Robot.getArm()))
-                .until(() -> Robot.getArm().isPidFinished())
+                .until(() -> Robot.getArm().isPIDFinished())
             .andThen(new ShootingSequence())
             .andThen(new InstantCommand(() -> Robot.getShooter().setDesiredTarget(10, 10), Robot.getShooter()))
         );
@@ -178,7 +176,7 @@ public class RobotContainer {
             new InstantCommand(() -> Robot.getShooter().setDesiredTarget(100, 100), Robot.getShooter())
                 .until(() -> Robot.getShooter().isTopPidFinished() && Robot.getShooter().isBottomPidFinished())
             .alongWith(new InstantCommand(() -> Robot.getArm().setDesiredTarget(100), Robot.getArm()))
-                .until(() -> Robot.getArm().isPidFinished())
+                .until(() -> Robot.getArm().isPIDFinished())
             .andThen(new ShootingSequence())
             .andThen(new InstantCommand(() -> Robot.getShooter().setDesiredTarget(10, 10), Robot.getShooter()))
         );
