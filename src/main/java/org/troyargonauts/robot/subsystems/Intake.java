@@ -11,70 +11,101 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static org.troyargonauts.robot.Constants.Intake.*;
 
 /**
- * Class representing Intake system
+ * Class representing Intake subsystem
  *
  * @author firearcher2012, SavageCabbage360, JJCgits, firelite2023
  */
 public class Intake extends SubsystemBase {
-    private TalonFX motor;
+    private TalonFX motorLeft;
+
+    private TalonFX motorRight;
 
     private DigitalInput noteSensor;
 
-    private DoubleLogEntry intakeMotorVoltage;
-    private DoubleLogEntry intakeOutputCurrentLog;
+    private DoubleLogEntry intakeMotorLeftVoltage;
+    private DoubleLogEntry intakeOutputRightCurrentLog;
+    private DoubleLogEntry intakeMotorRightVoltage;
+    private DoubleLogEntry intakeOutputLeftCurrentLog;
 
     /**
-     * Makes a new intake with a motor and a note sensor
+     * Instantiates motor controllers and sensors; creates data logs
      */
     public Intake() {
-        motor = new TalonFX(MOTOR_CAN_ID, CANBUS_NAME);
+        motorLeft = new TalonFX(LEFT_MOTOR_CAN_ID, CANBUS_NAME);
+        motorRight = new TalonFX(RIGHT_MOTOR_CAN_ID, CANBUS_NAME2);
 
         noteSensor = new DigitalInput(NOTE_SENSOR_SLOT);
 
-        DataLog log = DataLogManager.getLog();
-        
-        intakeMotorVoltage =  new DoubleLogEntry(log, "Intake Bus Voltage log");
-        intakeOutputCurrentLog =  new DoubleLogEntry(log, "Intake Output Current log");
+//        DataLog log = DataLogManager.getLog();
+//
+//        intakeMotorLeftVoltage =  new DoubleLogEntry(log, "Intake Left Motor Bus Voltage log");
+//        intakeOutputRightCurrentLog =  new DoubleLogEntry(log, "Intake Right Motor Output Current log");
+//        intakeMotorRightVoltage =  new DoubleLogEntry(log, "Intake Right Motor Bus Voltage log");
+//        intakeOutputLeftCurrentLog =  new DoubleLogEntry(log, "Intake Left Motor Output Current log");
     }
 
     /**
-     * @return a boolean (true if the note is ready and false if the note isn't)
+     * Gets the state of the beam break sensor on the manipulator - indicates whether a note is ready to shoot
+     *
+     * @return Whether a note is ready to shoot
      */
     public boolean isNoteReady() {
-        return noteSensor.get();
+        return !noteSensor.get();
     }
 
+    /**
+     * Append values to each data log periodically and output Note Sensor value to SmartDashboard
+     */
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("Note_Readiness",isNoteReady());
-        intakeOutputCurrentLog.append(motor.getSupplyCurrent().getValue());
-        intakeMotorVoltage.append(motor.getMotorVoltage().getValue());
+        intakeOutputRightCurrentLog.append(motorRight.getSupplyCurrent().getValue());
+        intakeMotorRightVoltage.append(motorRight.getMotorVoltage().getValue());
+        intakeOutputLeftCurrentLog.append(motorLeft.getSupplyCurrent().getValue());
+        intakeMotorLeftVoltage.append(motorLeft.getMotorVoltage().getValue());
     }
 
     /**
-     * Makes an enum for the 3 states the motor could be (In, Out, or Off)
+     * Sets enumerators for various Intake States
      */
     public enum IntakeStates {
+        /**
+         * Intake rollers IN
+         */
         IN,
+
+        /**
+         * Intake rollers OFF
+         */
         OFF,
+
+        /**
+         * Intake rollers OUT
+         */
         OUT
     }
 
+
     /**
-     * Sets the state of the intake
-     * @param State determines whether the Intake is going In, Out, or Off
+     * Sets the power applied to the Intake motors depending on the provided IntakeState
+     *
+     * @param state State of the Intake
      */
     public void setState(IntakeStates state) {
         switch (state){
             case IN:
-                motor.set(-0.3);;
+                motorRight.set(-0.3);;
+                motorLeft.set(-0.3);;
                 break;
             case OFF:
-                motor.set(0);
+                motorRight.set(0);
+                motorLeft.set(0);
                 break;
             case OUT:
-                motor.set(0.3);
+                motorRight.set(0.3);
+                motorLeft.set(0.3);
                 break;
         }
     }
+
 }

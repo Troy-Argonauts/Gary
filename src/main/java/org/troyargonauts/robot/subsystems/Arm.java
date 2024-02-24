@@ -14,7 +14,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static org.troyargonauts.robot.Constants.Arm.*;
 
 /**
- * Class representing the Arm subsystem, including the Data Logging and PID
+ * Class representing the Arm subsystem
+ *
  * @author Ashwin Shrivastav
  */
 public class Arm extends SubsystemBase {
@@ -36,7 +37,7 @@ public class Arm extends SubsystemBase {
     private final PositionVoltage positionVoltage = new PositionVoltage(0).withSlot(0);
 
     /**
-     * Instantiated motor controllers, motors, data logging values and data log, target, and motor IDs.
+     * Instantiates and configures motor controllers and sensors; creates Data Logs. Assigns PID constants.
      */
     public Arm() {
         leftArmMotor = new TalonFX(LEFT_MOTOR_ID, CANBUS_NAME);
@@ -50,20 +51,19 @@ public class Arm extends SubsystemBase {
 
         limitSwitch = new DigitalInput(LIMIT_SWITCH_SLOT);
 
-        DataLog log = DataLogManager.getLog();
+        //DataLog log = DataLogManager.getLog();
 
-        armLeftEncoderLog = new DoubleLogEntry(log, "Arm Left Encoder Values");
-        armRightEncoderLog = new DoubleLogEntry(log, "Arm Right Encoder Values");
-        armLeftOutputCurrentLog = new DoubleLogEntry(log, "Arm Motor Output Current ");
-        armRightOutputCurrentLog = new DoubleLogEntry(log, "Arm Motor Output Current ");
-        armLeftMotorVoltage = new DoubleLogEntry(log, "Arm Motor Bus Voltage");
-        armRightMotorVoltage = new DoubleLogEntry(log, "Arm Motor Bus Voltage");
-        armTargetLog = new DoubleLogEntry(log, "Arm Target Log");
+//        armLeftEncoderLog = new DoubleLogEntry(log, "Arm Left Encoder Values");
+//        armRightEncoderLog = new DoubleLogEntry(log, "Arm Right Encoder Values");
+//        armLeftOutputCurrentLog = new DoubleLogEntry(log, "Arm Motor Output Current ");
+//        armRightOutputCurrentLog = new DoubleLogEntry(log, "Arm Motor Output Current ");
+//        armLeftMotorVoltage = new DoubleLogEntry(log, "Arm Motor Bus Voltage");
+//        armRightMotorVoltage = new DoubleLogEntry(log, "Arm Motor Bus Voltage");
+//        armTargetLog = new DoubleLogEntry(log, "Arm Target Log");
     }
 
     /**
-     * Periodic will constantly update the encoder values and put things on the SmartDashboard
-     * and will add all of the values to the data logging.
+     * Updates the encoders and outputs their positions to the SmartDashboard periodically. Append values to each data log periodically
      */
     @Override
     public void periodic() {
@@ -73,18 +73,18 @@ public class Arm extends SubsystemBase {
         SmartDashboard.putNumber("Left Arm Encoder: ", leftArmEncoder);
         SmartDashboard.putNumber("Right Arm Encoder: ", rightArmEncoder);
 
-        armLeftEncoderLog.append(leftArmEncoder);
-        armRightEncoderLog.append(rightArmEncoder);
-        armLeftOutputCurrentLog.append(leftArmMotor.getSupplyCurrent().getValue());
-        armRightOutputCurrentLog.append(rightArmMotor.getSupplyCurrent().getValue());
-        armLeftMotorVoltage.append(leftArmMotor.getMotorVoltage().getValue());
-        armRightMotorVoltage.append(rightArmMotor.getMotorVoltage().getValue());
-        armTargetLog.append(armTarget);
+//        armLeftEncoderLog.append(leftArmEncoder);
+//        armRightEncoderLog.append(rightArmEncoder);
+//        armLeftOutputCurrentLog.append(leftArmMotor.getSupplyCurrent().getValue());
+//        armRightOutputCurrentLog.append(rightArmMotor.getSupplyCurrent().getValue());
+//        armLeftMotorVoltage.append(leftArmMotor.getMotorVoltage().getValue());
+//        armRightMotorVoltage.append(rightArmMotor.getMotorVoltage().getValue());
+//        armTargetLog.append(armTarget);
     }
 
     /**
-     * Resets the encoders of the left and right motors.
-     * Sets both motor's positions to 0.
+     * Resets the encoders of both the left and right Arm motors.
+     * Sets both motor positions to 0.
      */
     public void resetEncoders() {
         leftArmMotor.setPosition(0);
@@ -92,8 +92,9 @@ public class Arm extends SubsystemBase {
     }
 
     /**
-     * Sets Motor Power
-     * @param power speed to set Power to
+     * Sets raw motor power for both left and right Arm motors
+     *
+     * @param power desired power (value between -1 and 1)
      */
     public void setPower(double power) {
         leftArmMotor.set(power);
@@ -101,9 +102,7 @@ public class Arm extends SubsystemBase {
     }
 
     /**
-     * Sets the left and right arm motors to their corresponding targets and
-     * sets the motors power to that.
-     *
+     * Sets the PID loops for the left and right Arm motors to their corresponding target positions
      */
     public void run() {
         leftArmMotor.setControl(positionVoltage.withPosition(armTarget));
@@ -111,19 +110,19 @@ public class Arm extends SubsystemBase {
     }
 
     /**
-     * Checks if the PID for Left and Right arm motors are finished.
-     * Checks if the distance in between the Target position and Current Position is less than or equal to 5
+     * Checks if the PID loops for Left and Right Arm motors are within the window for their setpoints
      *
-     * @return Returns false if the motor ID is not 1 or 2.
+     * @return Whether the PIDs are finished
      */
-    public boolean isPidFinished() {
+    public boolean isPIDFinished() {
         return (Math.abs((armTarget - ((leftArmMotor.getVelocity().getValueAsDouble())) + rightArmMotor.getVelocity().getValueAsDouble()) / 2) <= 5);
 
     }
 
     /**
-     * Changes setpoint based on joystick value parameter.
-     * @param joystickValue joystick value being passed in to the function
+     * Changes the setpoint based on joystick value
+     * .
+     * @param joystickValue joystick value between -1 and 1
      */
     public void adjustSetpoint(double joystickValue) {
         if (!limitSwitch.get() || joystickValue < 0) {
@@ -132,14 +131,32 @@ public class Arm extends SubsystemBase {
     }
 
     /**
-     * Sets enumerators of ArmStates
+     * Sets enumerators for encoder positions of various Arm States
      */
     public enum ArmStates{
+        /**
+         * Floor Intake Arm position
+         */
         FLOOR_INTAKE(100),
+
+        /**
+         * Amp scoring Arm position
+         */
         AMP(200),
+
+        /**
+         * Podium scoring Arm position
+         */
         PODIUM(233234),
+
+        /**
+         * Subwoofer scoring Arm position
+         */
         SUBWOOFER(1234),
 
+        /**
+         * Climbing Arm position
+         */
         CLIMBER(123);
 
         final double armPosition;
@@ -150,32 +167,35 @@ public class Arm extends SubsystemBase {
     }
 
     /**
-     * Returns average of two arm encoder values.
-     * @return double -  average arm encoder value.
+     * Returns the average of the Arm encoder values.
+     *
+     * @return Average arm encoder value.
      */
     public double getEncoderValue() {
         return (rightArmEncoder + leftArmEncoder) / 2;
     }
 
     /**
-     * Returns value of current arm target variable.
-     * @return double - current arm target
+     * Returns value of current Arm target position
+     *
+     * @return current Arm target
      */
     public double getCurrentTarget() {
         return armTarget;
     }
 
     /**
-     * Sets target of arm to desired target
-     * @param desiredTarget desired arm target
+     * Sets target of arm to desired target that is not included in ArmStates
+     *
+     * @param desiredTarget Desired arm target
      */
     public void setDesiredTarget(double desiredTarget) {
         armTarget = desiredTarget;
     }
 
     /**
-     * Sets the arm target to an Arm State position
-     * @param state ArmStates enumerator for arm position
+     * Sets the arm target to the desired Arm State position
+     * @param state Desired Arm state
      */
     public void setState(ArmStates state) {
         armTarget = state.armPosition;
@@ -183,7 +203,8 @@ public class Arm extends SubsystemBase {
 
     /**
      * Gets limit switch state
-     * @return limit switch state
+     *
+     * @return Limit switch state
      */
     public boolean getLimitSwitch() {
         return limitSwitch.get();

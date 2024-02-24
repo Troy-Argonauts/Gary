@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static org.troyargonauts.robot.Constants.Climber.*;
 
 /**
- * Class representing climber subsystem.
+ * Class representing the Climber subsystem.
  *
  * @author Nihaar57, SavageCabbage360, firearcher2012, shaquilleinoatmeal
  */
@@ -25,7 +25,7 @@ public class Climber extends SubsystemBase {
     private double motorTarget = 0;
 
     private Rev2mDistanceSensor distanceSensor;
-    private double distanceSensorOutput = distanceSensor.getRange();
+    private double distanceSensorOutput;
 
     private DoubleLogEntry climberEncoderLog;
     private DoubleLogEntry climberOutputCurrentLog;
@@ -36,8 +36,7 @@ public class Climber extends SubsystemBase {
     private final PositionVoltage positionVoltage = new PositionVoltage(0).withSlot(0);
 
     /**
-     * Instantiates motorController object and sets the neutral mode to break.
-     * Outputs values of motor target, voltage, current, and encoder to the DataLog.
+     * Instantiates motor controller and sets the neutral mode to brake. Creates data logs
      */
     public Climber() {
         motor = new TalonFX(MOTOR_ID, CANBUS_NAME);
@@ -45,86 +44,93 @@ public class Climber extends SubsystemBase {
 
         motor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
 
-        DataLog log = DataLogManager.getLog();
-        
-        climberDistanceEncoder = new DoubleLogEntry((log), "Distance Encoder Values");
-        climberTargetLog = new DoubleLogEntry((log), "Climber Target Values");
-        climberMotorVoltage = new DoubleLogEntry((log), "Climber Motor Voltage");
-        climberOutputCurrentLog = new DoubleLogEntry((log), "Climber Current Output Values");
-        climberEncoderLog = new DoubleLogEntry((log), "Climber Encoder Values");
-        distanceSensor = new Rev2mDistanceSensor(Rev2mDistanceSensor.Port.kOnboard);
-        distanceSensor.setAutomaticMode(true);
+//        DataLog log = DataLogManager.getLog();
+//
+//        climberDistanceEncoder = new DoubleLogEntry((log), "Distance Encoder Values");
+//        climberTargetLog = new DoubleLogEntry((log), "Climber Target Values");
+//        climberMotorVoltage = new DoubleLogEntry((log), "Climber Motor Voltage");
+//        climberOutputCurrentLog = new DoubleLogEntry((log), "Climber Current Output Values");
+//        climberEncoderLog = new DoubleLogEntry((log), "Climber Encoder Values");
+
+//       // distanceSensor = new Rev2mDistanceSensor(Rev2mDistanceSensor.Port.kOnboard);
+//        distanceSensor.setAutomaticMode(true);
+
+   //     distanceSensorOutput = distanceSensor.getRange();
     }
 
     /**
-     * Resets encoder value.
+     * Sets motor encoder position to 0
      */
     public void resetEncoder() {
         motor.setPosition(0);
     }
 
     /**
-     * Runs the motor to a specified target value expressed as a double.
+     * Sets the PID loop for the motor to its corresponding target position
      */
     public void run() {
         motor.setControl(positionVoltage.withPosition(motorTarget));
     }
 
     /**
-     * Sets motor to run to up position
+     * Sets setpoint to fully climbed position
      */
     public void setTarget() {
         motor.setPosition(100);
     }
 
     /**
-     * Checks whether the PID is finished.
-     * @return finished or not.
+     * Checks if the PID loop is within the window for the position setpoint
+     *
+     * @return Whether the PID is finished
      */
-    public boolean isPidFinished() {
+    public boolean isPIDFinished() {
         return (Math.abs((motorTarget - motor.getPosition().getValueAsDouble())) <= 5);
     }
 
     /**
-     * Stores values of encoders and displays values on smartDashboard.
+     * Updates the encoder value and outputs its position to the SmartDashboard periodically. Append values to each data log periodically
      */
     @Override
     public void periodic() {
-        climberEncoderLog.append(motorEncoder);
-        climberOutputCurrentLog.append(motor.getSupplyCurrent().getValue());
-        climberMotorVoltage.append(motor.getMotorVoltage().getValue());
-        climberTargetLog.append(motorEncoder);
-        climberDistanceEncoder.append(distanceSensorOutput);
+//        climberEncoderLog.append(motorEncoder);
+//        climberOutputCurrentLog.append(motor.getSupplyCurrent().getValue());
+//        climberMotorVoltage.append(motor.getMotorVoltage().getValue());
+//        climberTargetLog.append(motorEncoder);
+     //   climberDistanceEncoder.append(distanceSensorOutput);
 
         motorEncoder = motor.getPosition().getValueAsDouble();
 
         SmartDashboard.putNumber("Climber Encoder: ", motorEncoder);
-        SmartDashboard.putNumber("Range Onboard", distanceSensor.getRange());
-        SmartDashboard.putBoolean("Timestamp Onboard", distanceSensor.isRangeValid());
-        SmartDashboard.putNumber("Distance Sensor", distanceSensorOutput);
+//        SmartDashboard.putNumber("Range Onboard", distanceSensor.getRange());
+//        SmartDashboard.putBoolean("Timestamp Onboard", distanceSensor.isRangeValid());
+//        SmartDashboard.putNumber("Distance Sensor", distanceSensorOutput);
     }
 
     /**
-     * Determines if robot is within range.
-     * @param minDistance determines the minimum of the range.
-     * @param maxDistance determines the maximum of the range.
-     * @return whether the robot is in range.
+     * Determines if the distance sensor is returning a value within a provided range
+     * .
+     * @param minDistance the minimum of the range
+     * @param maxDistance the maximum of the range
+     * @return whether the distance sensor is outputting within provided range
      */
-    public boolean distanceWithinRange(double minDistance, double maxDistance) {
-        if (((minDistance < distanceSensorOutput) && (distanceSensorOutput < maxDistance))){
-            return true;
-        }
-        else {
-            return false;
-        }
+    public void distanceWithinRange(double minDistance, double maxDistance) {
+//        if (((minDistance < distanceSensorOutput) && (distanceSensorOutput < maxDistance))){
+//            return true;
+//        }
+//        else {
+//            return false;
+//        }
+
     }
 
     /**
-     * Determines the range between the robot and the nearest object.
-     * @return distance as a double.
+     * Determines the distance between the distance sensor and the nearest object.
+     *
+     * @return distance as a double in meters.
      */
-    public double getDistance() {
-        return distanceSensor.getRange();
+    public void getDistance() {
+        //return distanceSensor.getRange();
     }
 }
 

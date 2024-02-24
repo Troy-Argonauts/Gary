@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
- * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem
+ * Class that extends the Phoenix SwerveDrivetrain class and implements a swerve subsystem
  * so it can be used in command-based projects easily.
  */
 public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsystem {
@@ -32,6 +32,13 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     private final SwerveRequest.ApplyChassisSpeeds AutoRequest = new SwerveRequest.ApplyChassisSpeeds();
 
+    /**
+     * Creates a CommandSwerveDrivetrain object for simulation purposes
+     *
+     * @param driveTrainConstants
+     * @param OdometryUpdateFrequency
+     * @param modules
+     */
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
         configurePathPlanner();
@@ -39,6 +46,13 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             startSimThread();
         }
     }
+
+    /**
+     * Creates a CommandSwerveDrivetrain object from sets of expected constants from TunerConstants
+     *
+     * @param driveTrainConstants
+     * @param modules
+     */
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
         configurePathPlanner();
@@ -73,10 +87,19 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             this); // Subsystem for requirements
     }
 
+    /**
+     * Applies a SwerveRequest to the COmmandSwerveDrivetrain to allow for control
+     *
+     * @param requestSupplier
+     * @return
+     */
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
         return run(() -> this.setControl(requestSupplier.get()));
     }
 
+    /**
+     * Starts a simulation thread for the CommandSwerveDrivetrain
+     */
     private void startSimThread() {
         m_lastSimTime = Utils.getCurrentTimeSeconds();
 
