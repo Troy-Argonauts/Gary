@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static org.troyargonauts.robot.Constants.Shooter.*;
 
 /**
- * Class representing the Shooter subsystem, including the Data Logging and PID
+ * Class representing the Shooter subsystem
  *
  * @author aarooshg, TheFlyingPig25
  */
@@ -32,8 +32,7 @@ public class Shooter extends SubsystemBase {
     private final VelocityVoltage velocityVoltage = new VelocityVoltage(0).withSlot(0);
 
     /**
-     * Instantiated motor controllers, data logging values and target speed for the Shooter
-     * We are also assigning the motor IDs and adding the log entries
+     * Instantiates and configures motor controllers and sensors; creates Data Logs. Assigns PID constants.
      */
     public Shooter() {
         topMotor = new TalonFX(TOP_MOTOR_ID, CANBUS_NAME);
@@ -56,7 +55,7 @@ public class Shooter extends SubsystemBase {
     }
 
     /**
-     * Periodic will constantly check the encoder position, motor voltage, and current output logs
+     * Updates the encoder values and outputs their velocities to the SmartDashboard in RPM periodically. Append values to each data log periodically
      */
     @Override
     public void periodic() {
@@ -75,7 +74,7 @@ public class Shooter extends SubsystemBase {
     }
 
     /**
-     * Sets the target using a voltage to reach that velocity
+     * Sets the PID loops for the top and bottom Shooter motors to their corresponding target velocities
      */
     public void run() {
         topMotor.setControl(velocityVoltage.withVelocity(topTarget / 60));
@@ -83,7 +82,8 @@ public class Shooter extends SubsystemBase {
     }
 
     /**
-     * Sets the shooter target speed for the top motor
+     * Sets the target velocity for the top and bottom motors
+     *
      * @param topTarget
      * @param bottomTarget
      */
@@ -93,7 +93,7 @@ public class Shooter extends SubsystemBase {
     }
     
     /**
-     * Sets all encoder values to 0.
+     * Sets all encoder positions to 0.
      */
     public void resetEncoders() {
         topMotor.setPosition(0);
@@ -101,13 +101,31 @@ public class Shooter extends SubsystemBase {
     }
 
     /**
-     * Creates the shooter motor states
+     * Sets enumerators for encoder velocity setpoints of various Shooter States
      */
     public enum ShooterStates {
+        /**
+         * Shooter off Shooter RPM
+         */
         OFF(0, 0),
+        /**
+         * Shooter Idle RPM
+         */
         IDLE(700, 700),
+
+        /**
+         * Amp scoring Shooter RPM
+         */
         AMP(1000, 1000),
+
+        /**
+         * Podium scoring Shooter RPM
+         */
         PODIUM(2000, 2000),
+
+        /**
+         * Subwoofer scoring Shooter RPM
+         */
         SUBWOOFER(2000, 2000);
 
         final double encoderTopRPM, encoderBottomRPM;
@@ -119,7 +137,8 @@ public class Shooter extends SubsystemBase {
     }
 
     /**
-     * Sets the motors to a state determined by the enums
+     * Sets the Shooter motors' targets to the desired Shooter State velocities
+     *
      * @param state
      */
     public void setState(ShooterStates state) {
@@ -128,16 +147,18 @@ public class Shooter extends SubsystemBase {
     }
 
     /**
-     * Checks if PID is finished for the top motor
-     * @return the value of the target velocity and actual velocity of both motors
+     * Checks if the PID loop for the top Shooter motor is within the window for its setpoint
+     *
+     * @return Whether the PID is finished
      */
     public boolean isTopPidFinished() {
         return (Math.abs(topTarget - topEncoderRPM) <= 5);
     }
 
     /**
-     * Checks if PID is finished for the bottom motor
-     * @return the value of the target velocity and actual velocity of both motors
+     * Checks if the PID loop for the bottom Shooter motor is within the window for its setpoint
+     *
+     * @return Whether the PID is finished
      */
     public boolean isBottomPidFinished() {
         return (Math.abs(bottomTarget - bottomEncoderRPM) <= 5);

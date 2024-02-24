@@ -6,6 +6,7 @@ package org.troyargonauts.robot;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -15,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.troyargonauts.common.math.OMath;
 import org.troyargonauts.common.streams.IStream;
 import org.troyargonauts.robot.commands.ShootingSequence;
+import org.troyargonauts.robot.commands.StartingSequence;
 import org.troyargonauts.robot.generated.TunerConstants;
 
 import org.troyargonauts.robot.subsystems.Arm.ArmStates;
@@ -23,6 +25,9 @@ import org.troyargonauts.robot.subsystems.Shooter.ShooterStates;
 
 import static org.troyargonauts.robot.Constants.Controllers.*;
 
+/**
+ * Class for setting up commands for the entire robot
+ */
 public class RobotContainer {
     private double MaxSpeed = 6; // 6 meters per second desired top speed
     private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
@@ -41,6 +46,9 @@ public class RobotContainer {
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
+    /**
+     * Configures controller button bindings for Teleoperated mode
+     */
     public void configureBindings() {
         // driver controller commands
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
@@ -137,7 +145,63 @@ public class RobotContainer {
         );
     }
 
+    /**
+     * Creates a Robot Container object and runs configureBindings() method
+     */
     public RobotContainer() {
+        NamedCommands.registerCommand("Starting Sequence", new StartingSequence());
+
+        NamedCommands.registerCommand("Shooting Sequence Subwoofer", 
+            new InstantCommand(() -> Robot.getShooter().setDesiredTarget(100, 100), Robot.getShooter())
+                .until(() -> Robot.getShooter().isTopPidFinished() && Robot.getShooter().isBottomPidFinished())
+            .alongWith(new InstantCommand(() -> Robot.getArm().setDesiredTarget(100), Robot.getArm()))
+                .until(() -> Robot.getArm().isPIDFinished())
+            .andThen(new ShootingSequence())
+            .andThen(new InstantCommand(() -> Robot.getShooter().setDesiredTarget(10, 10), Robot.getShooter()))
+        );
+
+        NamedCommands.registerCommand("Shooting Sequence W2", 
+            new InstantCommand(() -> Robot.getShooter().setDesiredTarget(100, 100), Robot.getShooter())
+                .until(() -> Robot.getShooter().isTopPidFinished() && Robot.getShooter().isBottomPidFinished())
+            .alongWith(new InstantCommand(() -> Robot.getArm().setDesiredTarget(100), Robot.getArm()))
+                .until(() -> Robot.getArm().isPIDFinished())
+            .andThen(new ShootingSequence())
+            .andThen(new InstantCommand(() -> Robot.getShooter().setDesiredTarget(10, 10), Robot.getShooter()))
+        );
+
+        NamedCommands.registerCommand("Shooting Sequence W3", 
+            new InstantCommand(() -> Robot.getShooter().setDesiredTarget(100, 100), Robot.getShooter())
+                .until(() -> Robot.getShooter().isTopPidFinished() && Robot.getShooter().isBottomPidFinished())
+            .alongWith(new InstantCommand(() -> Robot.getArm().setDesiredTarget(100), Robot.getArm()))
+                .until(() -> Robot.getArm().isPIDFinished())
+            .andThen(new ShootingSequence())
+            .andThen(new InstantCommand(() -> Robot.getShooter().setDesiredTarget(10, 10), Robot.getShooter()))
+        );
+
+        NamedCommands.registerCommand("Shooting Sequence SH1", 
+            new InstantCommand(() -> Robot.getShooter().setDesiredTarget(100, 100), Robot.getShooter())
+                .until(() -> Robot.getShooter().isTopPidFinished() && Robot.getShooter().isBottomPidFinished())
+            .alongWith(new InstantCommand(() -> Robot.getArm().setDesiredTarget(100), Robot.getArm()))
+                .until(() -> Robot.getArm().isPIDFinished())
+            .andThen(new ShootingSequence())
+            .andThen(new InstantCommand(() -> Robot.getShooter().setDesiredTarget(10, 10), Robot.getShooter()))
+        );
+
+        NamedCommands.registerCommand("Shooting Sequence SH2", 
+            new InstantCommand(() -> Robot.getShooter().setDesiredTarget(100, 100), Robot.getShooter())
+                .until(() -> Robot.getShooter().isTopPidFinished() && Robot.getShooter().isBottomPidFinished())
+            .alongWith(new InstantCommand(() -> Robot.getArm().setDesiredTarget(100), Robot.getArm()))
+                .until(() -> Robot.getArm().isPIDFinished())
+            .andThen(new ShootingSequence())
+            .andThen(new InstantCommand(() -> Robot.getShooter().setDesiredTarget(10, 10), Robot.getShooter()))
+        );
+
+        NamedCommands.registerCommand("Floor Intake", 
+            new InstantCommand(() -> Robot.getArm().setState(ArmStates.FLOOR_INTAKE), Robot.getArm())
+            .alongWith(new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.IN), Robot.getIntake()).until(() -> Robot.getIntake().isNoteReady()))
+            .andThen(new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF), Robot.getIntake()))
+        );
+
         configureBindings();
     }
 }

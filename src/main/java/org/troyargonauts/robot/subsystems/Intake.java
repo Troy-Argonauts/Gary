@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static org.troyargonauts.robot.Constants.Intake.*;
 
 /**
- * Class representing Intake system
+ * Class representing Intake subsystem
  *
  * @author firearcher2012, SavageCabbage360, JJCgits, firelite2023
  */
@@ -28,7 +28,7 @@ public class Intake extends SubsystemBase {
     private DoubleLogEntry intakeOutputLeftCurrentLog;
 
     /**
-     * Makes a new intake with two motors and a note sensor
+     * Instantiates motor controllers and sensors; creates data logs
      */
     public Intake() {
         motorLeft = new TalonFX(LEFT_MOTOR_CAN_ID, CANBUS_NAME);
@@ -36,23 +36,25 @@ public class Intake extends SubsystemBase {
 
         noteSensor = new DigitalInput(NOTE_SENSOR_SLOT);
 
-        DataLog log = DataLogManager.getLog();
-
-        intakeMotorLeftVoltage =  new DoubleLogEntry(log, "Intake Left Motor Bus Voltage log");
-        intakeOutputRightCurrentLog =  new DoubleLogEntry(log, "Intake Right Motor Output Current log");
-        intakeMotorRightVoltage =  new DoubleLogEntry(log, "Intake Right Motor Bus Voltage log");
-        intakeOutputLeftCurrentLog =  new DoubleLogEntry(log, "Intake Left Motor Output Current log");
+//        DataLog log = DataLogManager.getLog();
+//
+//        intakeMotorLeftVoltage =  new DoubleLogEntry(log, "Intake Left Motor Bus Voltage log");
+//        intakeOutputRightCurrentLog =  new DoubleLogEntry(log, "Intake Right Motor Output Current log");
+//        intakeMotorRightVoltage =  new DoubleLogEntry(log, "Intake Right Motor Bus Voltage log");
+//        intakeOutputLeftCurrentLog =  new DoubleLogEntry(log, "Intake Left Motor Output Current log");
     }
 
     /**
-     * @return a boolean (true if the note is ready and false if the note isn't)
+     * Gets the state of the beam break sensor on the manipulator - indicates whether a note is ready to shoot
+     *
+     * @return Whether a note is ready to shoot
      */
     public boolean isNoteReady() {
         return !noteSensor.get();
     }
 
     /**
-     * Updates logs and outputs sensor state to SmartDashboard
+     * Append values to each data log periodically and output Note Sensor value to SmartDashboard
      */
     @Override
     public void periodic() {
@@ -64,18 +66,30 @@ public class Intake extends SubsystemBase {
     }
 
     /**
-     * Makes an enum for the 3 states the motors could be (In, Out, or Off)
+     * Sets enumerators for various Intake States
      */
     public enum IntakeStates {
+        /**
+         * Intake rollers IN
+         */
         IN,
+
+        /**
+         * Intake rollers OFF
+         */
         OFF,
+
+        /**
+         * Intake rollers OUT
+         */
         OUT
     }
 
 
     /**
-     * Sets the state of the intake
-     * @param state determines whether the Intake is going In, Out, or Off
+     * Sets the power applied to the Intake motors depending on the provided IntakeState
+     *
+     * @param state State of the Intake
      */
     public void setState(IntakeStates state) {
         switch (state){
