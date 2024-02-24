@@ -29,7 +29,7 @@ import static org.troyargonauts.robot.Constants.Controllers.*;
  * Class for setting up commands for the entire robot
  */
 public class RobotContainer {
-    private double MaxSpeed = 6; // 6 meters per second desired top speed
+    private double MaxSpeed = 4.572; // 6 meters per second desired top speed
     private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
     /* Setting up bindings for necessary control of the swerve drive platform */
