@@ -10,8 +10,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import org.troyargonauts.robot.subsystems.*;
+
+import com.pathplanner.lib.auto.AutoBuilder;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -23,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
 
-    private final SendableChooser<Command> chooser = new SendableChooser<>();
+    private SendableChooser<Command> autoChooser;
     private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
     private static Arm arm;
@@ -49,10 +50,9 @@ public class Robot extends TimedRobot {
       
         robotContainer = new RobotContainer();
 
-        SmartDashboard.putData("Autonomous modes", chooser);
+        autoChooser = AutoBuilder.buildAutoChooser();
 
-        chooser.setDefaultOption("Nothing", new WaitCommand(15));
-        chooser.addOption("Nothing", new WaitCommand(15));
+        SmartDashboard.putData("Auto Chooser", autoChooser);
       
         scheduledExecutorService.scheduleAtFixedRate(() -> {
             if (Robot.getArm().getLimitSwitch()) {
@@ -93,7 +93,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousInit() {
-        m_autonomousCommand = chooser.getSelected();
+        m_autonomousCommand = autoChooser.getSelected();
 
         if (m_autonomousCommand != null) {
             m_autonomousCommand.schedule();
