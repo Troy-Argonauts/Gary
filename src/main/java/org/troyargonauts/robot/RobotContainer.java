@@ -9,6 +9,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -23,6 +24,8 @@ import org.troyargonauts.robot.subsystems.Arm.ArmStates;
 import org.troyargonauts.robot.subsystems.Intake.IntakeStates;
 import org.troyargonauts.robot.subsystems.Shooter.ShooterStates;
 
+import java.util.function.BooleanSupplier;
+
 import static org.troyargonauts.robot.Constants.Controllers.*;
 
 /**
@@ -35,6 +38,8 @@ public class RobotContainer {
 
     private final CommandXboxController driver = new CommandXboxController(DRIVER);
     private final CommandXboxController operator = new CommandXboxController(OPERATOR);
+    private final InstantCommand intakeIn = new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.IN));
+    private final InstantCommand intakeOff = new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF));
 
     private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
@@ -120,15 +125,16 @@ public class RobotContainer {
         );
 
         operator.rightBumper().whileTrue(
-            new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OUT), Robot.getIntake())
+            new ParallelCommandGroup(
+                    new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.THROWOUT), Robot.getShooter()),
+                    new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OUT), Robot.getIntake())
+            )
         ).whileFalse(
-            new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF), Robot.getIntake())
+                new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF), Robot.getIntake())
         );
 
         operator.leftBumper().whileTrue(
-                new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.IN), Robot.getIntake())
-        ).whileFalse(
-                new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF), Robot.getIntake())
+            new ConditionalCommand(intakeIn,intakeOff, () -> !Robot.getIntake().isNoteReady())
         );
 
         operator.rightTrigger().onTrue(
@@ -139,9 +145,11 @@ public class RobotContainer {
             new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.OFF), Robot.getShooter())
         );
 
+
         driver.b().onTrue(
                 new InstantCommand(() -> System.out.println("Here"), Robot.getIntake())
         );
+
     }
 
     /**

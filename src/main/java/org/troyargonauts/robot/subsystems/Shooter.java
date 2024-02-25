@@ -126,7 +126,8 @@ public class Shooter extends SubsystemBase {
         /**
          * Subwoofer scoring Shooter RPM
          */
-        SUBWOOFER(2000, 2000);
+        SUBWOOFER(2000, 2000),
+        THROWOUT(-700,-700);
 
         final double encoderTopRPM, encoderBottomRPM;
 

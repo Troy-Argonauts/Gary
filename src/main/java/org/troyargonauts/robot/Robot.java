@@ -42,7 +42,6 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         DataLogManager.start();
-
         arm = new Arm();
         climber = new Climber();
         intake = new Intake();
