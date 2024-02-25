@@ -29,8 +29,7 @@ import static org.troyargonauts.robot.Constants.Controllers.*;
  * Class for setting up commands for the entire robot
  */
 public class RobotContainer {
-    private double MaxSpeed = 4.572; // 6 meters per second desired top speed
-    private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
+
 
     /* Setting up bindings for necessary control of the swerve drive platform */
 
@@ -40,7 +39,7 @@ public class RobotContainer {
     private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-        .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+        .withDeadband(Constants.Drivetrain.MAX_SPEED * 0.1).withRotationalDeadband(Constants.Drivetrain.MAX_ANGULAR_RATE * 0.1) // Add a 10% deadband
         .withDriveRequestType(DriveRequestType.Velocity); // I want field-centric
                                                                 // driving in open loop
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
@@ -53,10 +52,10 @@ public class RobotContainer {
         // driver controller commands
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
             drivetrain.applyRequest(
-                () -> drive.withVelocityX(OMath.square(-driver.getLeftY()) * MaxSpeed) // Drive forward with
+                () -> drive.withVelocityX(OMath.square(-driver.getLeftY()) * Constants.Drivetrain.MAX_SPEED) // Drive forward with
                 // negative Y (forward)
-                .withVelocityY(OMath.square(-driver.getLeftX()) * MaxSpeed) // Drive left with negative X (left)
-                .withRotationalRate(OMath.square(-driver.getRightX()) * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                .withVelocityY(OMath.square(-driver.getLeftX()) * Constants.Drivetrain.MAX_SPEED) // Drive left with negative X (left)
+                .withRotationalRate(OMath.square(-driver.getRightX()) * Constants.Drivetrain.MAX_ANGULAR_RATE) // Drive counterclockwise with negative X (left)
             )
         );
 

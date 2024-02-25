@@ -73,5 +73,11 @@ public final class Constants {
         double BOTTOM_MOTOR_D = 0.002;
 
         String CANBUS_NAME = "roborio";
-    }  
+    }
+
+    public interface Drivetrain{
+
+        double MAX_SPEED = 4.572; // 6 meters per second desired top speed
+        double MAX_ANGULAR_RATE = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
+    }
 }
