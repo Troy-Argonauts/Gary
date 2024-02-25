@@ -3,9 +3,7 @@ package org.troyargonauts.robot.subsystems;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
-import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -116,17 +114,17 @@ public class Shooter extends SubsystemBase {
         /**
          * Amp scoring Shooter RPM
          */
-        AMP(1000, 1000),
+        WING(4000, 4000),
 
         /**
          * Podium scoring Shooter RPM
          */
-        PODIUM(2000, 2000),
+        PODIUM(3000, 3000),
 
         /**
          * Subwoofer scoring Shooter RPM
          */
-        SUBWOOFER(2000, 2000);
+        SUBWOOFER(1500, 1500);
 
         final double encoderTopRPM, encoderBottomRPM;
 

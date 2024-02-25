@@ -32,7 +32,7 @@ public class Intake extends SubsystemBase {
      */
     public Intake() {
         motorLeft = new TalonFX(LEFT_MOTOR_CAN_ID, CANBUS_NAME);
-        motorRight = new TalonFX(RIGHT_MOTOR_CAN_ID, CANBUS_NAME2);
+        motorRight = new TalonFX(RIGHT_MOTOR_CAN_ID, CANBUS_NAME);
 
         noteSensor = new DigitalInput(NOTE_SENSOR_SLOT);
 
@@ -59,10 +59,10 @@ public class Intake extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("Note_Readiness",isNoteReady());
-        intakeOutputRightCurrentLog.append(motorRight.getSupplyCurrent().getValue());
-        intakeMotorRightVoltage.append(motorRight.getMotorVoltage().getValue());
-        intakeOutputLeftCurrentLog.append(motorLeft.getSupplyCurrent().getValue());
-        intakeMotorLeftVoltage.append(motorLeft.getMotorVoltage().getValue());
+//        intakeOutputRightCurrentLog.append(motorRight.getSupplyCurrent().getValue());
+//        intakeMotorRightVoltage.append(motorRight.getMotorVoltage().getValue());
+//        intakeOutputLeftCurrentLog.append(motorLeft.getSupplyCurrent().getValue());
+//        intakeMotorLeftVoltage.append(motorLeft.getMotorVoltage().getValue());
     }
 
     /**
@@ -94,16 +94,16 @@ public class Intake extends SubsystemBase {
     public void setState(IntakeStates state) {
         switch (state){
             case IN:
-                motorRight.set(-0.3);;
-                motorLeft.set(-0.3);;
+                motorRight.set(0.3);;
+                motorLeft.set(0.3);;
                 break;
             case OFF:
                 motorRight.set(0);
                 motorLeft.set(0);
                 break;
             case OUT:
-                motorRight.set(0.3);
-                motorLeft.set(0.3);
+                motorRight.set(-0.3);
+                motorLeft.set(-0.3);
                 break;
         }
     }

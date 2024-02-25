@@ -93,7 +93,7 @@ public class RobotContainer {
 
         operator.x().onTrue(
             new ParallelCommandGroup(
-                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.AMP), Robot.getShooter()),
+                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.WING), Robot.getShooter()),
                 new InstantCommand(() -> Robot.getArm().setState(ArmStates.AMP), Robot.getArm())
             )
         );
@@ -135,9 +135,9 @@ public class RobotContainer {
             new ShootingSequence().onlyIf(() -> operator.getRightTriggerAxis() > DEADBAND)
         );
 
-        operator.povDown().onTrue(
-            new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.OFF), Robot.getShooter())
-        );
+//        operator.povDown().onTrue(
+//            new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.OFF), Robot.getShooter())
+//        );
 
         driver.b().onTrue(
                 new InstantCommand(() -> System.out.println("Here"), Robot.getIntake())
