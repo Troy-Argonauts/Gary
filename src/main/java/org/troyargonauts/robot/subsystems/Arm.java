@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -46,8 +47,12 @@ public class Arm extends SubsystemBase {
         leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
         rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
 
-        leftArmMotor.setInverted(true);
-        rightArmMotor.setInverted(false);
+        leftArmMotor.setInverted(false);
+        rightArmMotor.setInverted(true);
+
+
+        leftArmMotor.setNeutralMode(NeutralModeValue.Brake);
+        rightArmMotor.setNeutralMode(NeutralModeValue.Brake);
 
         limitSwitch = new DigitalInput(LIMIT_SWITCH_SLOT);
 
@@ -71,8 +76,8 @@ public class Arm extends SubsystemBase {
         leftArmEncoder = leftArmMotor.getPosition().getValueAsDouble();
         rightArmEncoder = rightArmMotor.getPosition().getValueAsDouble();
 
-        SmartDashboard.putNumber("Left Arm Encoder: ", leftArmEncoder);
-        SmartDashboard.putNumber("Right Arm Encoder: ", rightArmEncoder);
+        SmartDashboard.putNumber("Average Arm Encoder: ", (leftArmEncoder+rightArmEncoder)/2);
+        SmartDashboard.putBoolean("Arm Limit: ", getLimitSwitch());
 
 //        armLeftEncoderLog.append(leftArmEncoder);
 //        armRightEncoderLog.append(rightArmEncoder);
@@ -80,8 +85,8 @@ public class Arm extends SubsystemBase {
 //        armRightOutputCurrentLog.append(rightArmMotor.getSupplyCurrent().getValue());
 //        armLeftMotorVoltage.append(leftArmMotor.getMotorVoltage().getValue());
 //        armRightMotorVoltage.append(rightArmMotor.getMotorVoltage().getValue());
-        armTargetLog.append(armTarget);
-        armAvgEncoderLog.append((leftArmEncoder+rightArmEncoder)/2);
+        //armTargetLog.append(armTarget);
+        //armAvgEncoderLog.append((leftArmEncoder+rightArmEncoder)/2);
     }
 
     /**
@@ -117,7 +122,7 @@ public class Arm extends SubsystemBase {
      * @return Whether the PIDs are finished
      */
     public boolean isPIDFinished() {
-        return (Math.abs((armTarget - ((leftArmMotor.getVelocity().getValueAsDouble())) + rightArmMotor.getVelocity().getValueAsDouble()) / 2) <= 5);
+        return (Math.abs((armTarget - ((leftArmMotor.getPosition().getValueAsDouble())) + rightArmMotor.getPosition().getValueAsDouble()) / 2) <= 5);
 
     }
 
@@ -144,12 +149,12 @@ public class Arm extends SubsystemBase {
         /**
          * Amp scoring Arm position
          */
-        AMP(200),
+        AMP(12),
 
         /**
          * Podium scoring Arm position
          */
-        PODIUM(233234),
+        PODIUM(5.33),
 
         /**
          * Subwoofer scoring Arm position
@@ -209,6 +214,7 @@ public class Arm extends SubsystemBase {
      * @return Limit switch state
      */
     public boolean getLimitSwitch() {
-        return limitSwitch.get();
+
+        return !limitSwitch.get();
     }
 }
