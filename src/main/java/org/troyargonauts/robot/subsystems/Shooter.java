@@ -7,6 +7,8 @@ import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import java.util.ArrayList;
+
 import static org.troyargonauts.robot.Constants.Shooter.*;
 
 /**
@@ -28,19 +30,25 @@ public class Shooter extends SubsystemBase {
     private DoubleLogEntry shooterBottomOutputCurrentLog;
 
     private final VelocityVoltage velocityVoltage = new VelocityVoltage(0).withSlot(0);
+    private ArrayList<Double> PIDArray;
 
     /**
      * Instantiates and configures motor controllers and sensors; creates Data Logs. Assigns PID constants.
      */
     public Shooter() {
+        PIDArray = new ArrayList<Double>(3);
+        PIDArray.set(0, 0.457);
+        PIDArray.set(1, 0.21);
+        PIDArray.set(2, 0.0028);
+
         topMotor = new TalonFX(TOP_MOTOR_ID, CANBUS_NAME);
         bottomMotor = new TalonFX(BOTTOM_MOTOR_ID, CANBUS_NAME);
 
         topMotor.setInverted(true);
         bottomMotor.setInverted(true);
 
-        topMotor.getConfigurator().apply(new Slot0Configs().withKP(TOP_MOTOR_P).withKI(TOP_MOTOR_I).withKD(TOP_MOTOR_D));
-        bottomMotor.getConfigurator().apply(new Slot0Configs().withKP(BOTTOM_MOTOR_P).withKI(BOTTOM_MOTOR_I).withKD(BOTTOM_MOTOR_D));
+        topMotor.getConfigurator().apply(new Slot0Configs().withKP(PIDArray.get(0)).withKI(PIDArray.get(1)).withKD(PIDArray.get(2)));
+        bottomMotor.getConfigurator().apply(new Slot0Configs().withKP(PIDArray.get(0)).withKI(PIDArray.get(1)).withKD(PIDArray.get(2)));
 
 //        DataLog log = DataLogManager.getLog();
 //
@@ -160,5 +168,12 @@ public class Shooter extends SubsystemBase {
      */
     public boolean isBottomPidFinished() {
         return (Math.abs(bottomTarget - bottomEncoderRPM) <= 5);
+    }
+
+
+    public void setArr(double[] arr){
+        PIDArray.set(0, arr[0]);
+        PIDArray.set(1, arr[1]);
+        PIDArray.set(2, arr[2]);
     }
 }

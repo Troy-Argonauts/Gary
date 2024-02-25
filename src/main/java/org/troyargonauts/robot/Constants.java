@@ -3,7 +3,7 @@ package org.troyargonauts.robot;
 /**
  * Class containing all constants for all subsystems except for CommandSwerveDrivetrain
  */
-public final class Constants {
+public class Constants {
     /**
      * Constants for the Intake subsystem
      */
@@ -78,4 +78,5 @@ public final class Constants {
         double MAX_SPEED = 4.572; // 6 meters per second desired top speed
         double MAX_ANGULAR_RATE = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
     }
+    
 }

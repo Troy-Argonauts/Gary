@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import java.util.ArrayList;
+
 import static org.troyargonauts.robot.Constants.Arm.*;
 
 /**
@@ -20,6 +22,7 @@ import static org.troyargonauts.robot.Constants.Arm.*;
  * @author Ashwin Shrivastav
  */
 public class Arm extends SubsystemBase {
+    private ArrayList<Double> PIDArray;
     private TalonFX leftArmMotor, rightArmMotor;
 
     private DigitalInput limitSwitch;
@@ -41,11 +44,16 @@ public class Arm extends SubsystemBase {
      * Instantiates and configures motor controllers and sensors; creates Data Logs. Assigns PID constants.
      */
     public Arm() {
+        PIDArray = new ArrayList<Double>(3);
+        PIDArray.set(0, 0.75);
+        PIDArray.set(1, 0.75);
+        PIDArray.set(2, 0.75);
+
         leftArmMotor = new TalonFX(LEFT_MOTOR_ID, CANBUS_NAME);
         rightArmMotor = new TalonFX(RIGHT_MOTOR_ID, CANBUS_NAME);
 
-        leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
-        rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
+        leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(PIDArray.get(0)).withKI(PIDArray.get(1)).withKD(PIDArray.get(2)));
+        rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(PIDArray.get(0)).withKI(PIDArray.get(1)).withKD(PIDArray.get(2)));
 
         leftArmMotor.setInverted(false);
         rightArmMotor.setInverted(true);
@@ -216,5 +224,11 @@ public class Arm extends SubsystemBase {
     public boolean getLimitSwitch() {
 
         return !limitSwitch.get();
+    }
+
+    public void setArr(double[] arr){
+        PIDArray.set(0, arr[0]);
+        PIDArray.set(1, arr[1]);
+        PIDArray.set(2, arr[2]);
     }
 }

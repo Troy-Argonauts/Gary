@@ -4,19 +4,23 @@
 
 package org.troyargonauts.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import org.troyargonauts.robot.subsystems.*;
-
-import com.pathplanner.lib.auto.AutoBuilder;
+import org.troyargonauts.robot.subsystems.Arm;
+import org.troyargonauts.robot.subsystems.Climber;
+import org.troyargonauts.robot.subsystems.Intake;
+import org.troyargonauts.robot.subsystems.Shooter;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import static org.troyargonauts.robot.Constants.Shooter.TOP_MOTOR_P;
 
 /**
  * Class representing the entire robot - CommandBasedRobot framework
@@ -34,6 +38,7 @@ public class Robot extends TimedRobot {
     private static RobotContainer robotContainer;
 
     private boolean armLimitPressed;
+    public double P, I, D, Z;
 
     /**
      * This method is the first that is run when the robot is powered on. Only runs once.
@@ -41,6 +46,9 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
+        P = 0;
+        I = 0;
+        D = 0;
         DataLogManager.start();
 
         arm = new Arm();
@@ -91,7 +99,13 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void disabledExit() {}
+    public void disabledExit() {
+        P = SmartDashboard.getNumber("SetP:", P);
+        I = SmartDashboard.getNumber("SetI:", I);
+        D = SmartDashboard.getNumber("SetD:", D);
+        double[] array = {P, I, D};
+        Robot.getArm().setArr(array);
+    }
 
     /**
      * This method runs once at the start of Autonomous mode. Selects the autonomous routine to run based on the chooser

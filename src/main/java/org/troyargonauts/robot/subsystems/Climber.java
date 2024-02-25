@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import java.util.ArrayList;
+
 import static org.troyargonauts.robot.Constants.Climber.*;
 
 /**
@@ -34,11 +36,18 @@ public class Climber extends SubsystemBase {
     private DoubleLogEntry climberDistanceEncoder;
 
     private final PositionVoltage positionVoltage = new PositionVoltage(0).withSlot(0);
+    private ArrayList<Double> PIDArray;
+
 
     /**
      * Instantiates motor controller and sets the neutral mode to brake. Creates data logs
      */
     public Climber() {
+        PIDArray = new ArrayList<Double>(3);
+        PIDArray.set(0, 0.0);
+        PIDArray.set(1, 0.0);
+        PIDArray.set(2, 0.0);
+        
         motor = new TalonFX(MOTOR_ID, CANBUS_NAME);
         motor.setNeutralMode(NeutralModeValue.Brake);
 
@@ -131,6 +140,12 @@ public class Climber extends SubsystemBase {
      */
     public void getDistance() {
         //return distanceSensor.getRange();
+    }
+
+    public void setArr(double[] arr){
+        PIDArray.set(0, arr[0]);
+        PIDArray.set(1, arr[1]);
+        PIDArray.set(2, arr[2]);
     }
 }
 
