@@ -9,6 +9,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -36,8 +37,8 @@ public class RobotContainer {
 
     /* Setting up bindings for necessary control of the swerve drive platform */
 
-    private final CommandXboxController driver = new CommandXboxController(DRIVER);
-    private final CommandXboxController operator = new CommandXboxController(OPERATOR);
+    public final CommandXboxController driver = new CommandXboxController(DRIVER);
+    public final CommandXboxController operator = new CommandXboxController(OPERATOR);
     private final InstantCommand intakeIn = new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.IN));
     private final InstantCommand intakeOff = new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF));
 
@@ -49,6 +50,7 @@ public class RobotContainer {
                                                                 // driving in open loop
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+
 
     /**
      * Configures controller button bindings for Teleoperated mode
@@ -96,18 +98,17 @@ public class RobotContainer {
             )
         );
 
-        operator.x().onTrue(
+        operator.x().whileTrue(
             new ParallelCommandGroup(
-                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.WING), Robot.getShooter()),
+                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.IDLE), Robot.getShooter()),
                 new InstantCommand(() -> Robot.getArm().setState(ArmStates.AMP), Robot.getArm())
             )
+        ).whileFalse(
+                new InstantCommand(() -> Robot.getShooter().exit(), Robot.getShooter())
         );
 
         operator.povRight().onTrue(
-                new ParallelCommandGroup(
-                        new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.IDLE), Robot.getShooter()),
-                        new InstantCommand(() -> Robot.getArm().setState(ArmStates.AMP), Robot.getArm())
-                )
+                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.IDLE), Robot.getShooter())
         );
 
         operator.y().onTrue(
@@ -135,15 +136,17 @@ public class RobotContainer {
 
         operator.leftBumper().whileTrue(
             new ConditionalCommand(intakeIn,intakeOff, () -> !Robot.getIntake().isNoteReady())
+        ).whileFalse(
+                new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF), Robot.getIntake())
         );
 
         operator.rightTrigger().onTrue(
             new ShootingSequence().onlyIf(() -> operator.getRightTriggerAxis() > DEADBAND)
         );
 
-//        operator.povDown().onTrue(
-//            new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.OFF), Robot.getShooter())
-//        );
+        operator.povDown().onTrue(
+            new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.OFF), Robot.getShooter())
+        );
 
 
         driver.b().onTrue(
@@ -210,6 +213,12 @@ public class RobotContainer {
         );
 
         configureBindings();
+    }
+    public boolean getOperatorRightBumper(){
+        return operator.rightBumper().getAsBoolean();
+    }
+    public boolean getOperatorX(){
+        return operator.x().getAsBoolean();
     }
 }
          

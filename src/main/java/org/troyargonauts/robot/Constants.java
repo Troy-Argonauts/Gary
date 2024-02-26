@@ -36,7 +36,7 @@ public final class Constants {
 
         int LIMIT_SWITCH_SLOT = 1;
 
-        double P = 0.75;
+        double P = 0.68;
         double I = 0;
         double D = 0;
 
@@ -63,12 +63,12 @@ public final class Constants {
         int TOP_MOTOR_ID = 24;
         int BOTTOM_MOTOR_ID = 25;
 
-        double TOP_MOTOR_P = 0.457;
-        double TOP_MOTOR_I = 0.21;
-        double TOP_MOTOR_D = 0.0028;
-        double BOTTOM_MOTOR_P = 0.457;
-        double BOTTOM_MOTOR_I = 0.21;
-        double BOTTOM_MOTOR_D = 0.0028;
+        double TOP_MOTOR_P = 0.4;
+        double TOP_MOTOR_I = 0.028;
+        double TOP_MOTOR_D = 0.2;
+        double BOTTOM_MOTOR_P = 0.4;
+        double BOTTOM_MOTOR_I = 0.028;
+        double BOTTOM_MOTOR_D = 0.2;
 
         String CANBUS_NAME = "roborio";
     }

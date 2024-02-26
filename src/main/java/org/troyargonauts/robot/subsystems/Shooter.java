@@ -71,6 +71,11 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putNumber("Bottom Encoder RPM", bottomEncoderRPM);
     }
 
+    public void exit(){
+        topMotor.setVoltage(0);
+        bottomMotor.setVoltage(0);
+    }
+
     /**
      * Sets the PID loops for the top and bottom Shooter motors to their corresponding target velocities
      */

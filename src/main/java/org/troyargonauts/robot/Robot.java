@@ -62,8 +62,12 @@ public class Robot extends TimedRobot {
             if (armLimitPressed) {
                //arm.run();
             }
+            if(robotContainer.getOperatorX()){
+                System.out.println("Xpressed");
+                shooter.run();
+            }
+            System.out.println("outside");
 
-            shooter.run();
             //climber.run();
         }, 100, 10, TimeUnit.MILLISECONDS);
     }
@@ -73,6 +77,12 @@ public class Robot extends TimedRobot {
      */
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
+
+        if(!robotContainer.getOperatorRightBumper() && Robot.getIntake().isNoteReady()){
+            Robot.getIntake().setState(Intake.IntakeStates.OFF);
+        }
+
+        SmartDashboard.putBoolean("GetOperatorX", robotContainer.getOperatorX());
     }
 
     /**
@@ -86,7 +96,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void disabledInit() {
-        shooter.setDesiredTarget(0,0);
+        //shooter.setDesiredTarget(0,0);
     }
 
     @Override
