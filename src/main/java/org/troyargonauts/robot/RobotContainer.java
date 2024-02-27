@@ -9,7 +9,6 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -24,8 +23,6 @@ import org.troyargonauts.robot.generated.TunerConstants;
 import org.troyargonauts.robot.subsystems.Arm.ArmStates;
 import org.troyargonauts.robot.subsystems.Intake.IntakeStates;
 import org.troyargonauts.robot.subsystems.Shooter.ShooterStates;
-
-import java.util.function.BooleanSupplier;
 
 import static org.troyargonauts.robot.Constants.Controllers.*;
 
@@ -98,17 +95,15 @@ public class RobotContainer {
             )
         );
 
-        operator.x().whileTrue(
+        operator.x().onTrue(
             new ParallelCommandGroup(
-                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.IDLE), Robot.getShooter()),
+                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.AMP), Robot.getShooter()),
                 new InstantCommand(() -> Robot.getArm().setState(ArmStates.AMP), Robot.getArm())
             )
-        ).whileFalse(
-                new InstantCommand(() -> Robot.getShooter().exit(), Robot.getShooter())
         );
 
-        operator.povRight().onTrue(
-                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.IDLE), Robot.getShooter())
+        operator.povDown().onTrue(
+                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.OFF), Robot.getShooter())
         );
 
         operator.y().onTrue(
@@ -140,8 +135,11 @@ public class RobotContainer {
                 new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF), Robot.getIntake())
         );
 
-        operator.rightTrigger().onTrue(
-            new ShootingSequence().onlyIf(() -> operator.getRightTriggerAxis() > DEADBAND)
+        operator.rightTrigger().whileTrue(
+           // new ShootingSequence().onlyIf(() -> operator.getRightTriggerAxis() > DEADBAND)
+            new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.IN), Robot.getIntake())
+        ).whileFalse(
+            new InstantCommand(() ->  Robot.getIntake().setState(IntakeStates.OFF), Robot.getIntake())
         );
 
         operator.povDown().onTrue(
@@ -214,8 +212,17 @@ public class RobotContainer {
 
         configureBindings();
     }
+    /**
+     * Gets boolean value of Operator controller RightBumper. Used to regulate intake when beam break is activated.
+     */
     public boolean getOperatorRightBumper(){
         return operator.rightBumper().getAsBoolean();
+    }
+    /**
+     * Gets boolean value of Operator controller RightTrigger. Used to regulate shooter when note is ready.
+     */
+    public boolean getOperatorRightTrigger(){
+        return operator.rightTrigger().getAsBoolean();
     }
     public boolean getOperatorX(){
         return operator.x().getAsBoolean();

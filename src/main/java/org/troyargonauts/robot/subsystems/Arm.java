@@ -144,7 +144,7 @@ public class Arm extends SubsystemBase {
         /**
          * Floor Intake Arm position
          */
-        FLOOR_INTAKE(100),
+        FLOOR_INTAKE(0),
 
         /**
          * Amp scoring Arm position
@@ -159,12 +159,12 @@ public class Arm extends SubsystemBase {
         /**
          * Subwoofer scoring Arm position
          */
-        SUBWOOFER(1234),
+        SUBWOOFER(0),
 
         /**
          * Climbing Arm position
          */
-        CLIMBER(123);
+        CLIMBER(0);
 
         final double armPosition;
 

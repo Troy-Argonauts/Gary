@@ -1,6 +1,7 @@
 package org.troyargonauts.robot.subsystems;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
@@ -15,6 +16,7 @@ import static org.troyargonauts.robot.Constants.Shooter.*;
  * @author aarooshg, TheFlyingPig25
  */
 public class Shooter extends SubsystemBase {
+    private ShooterStates currentState = ShooterStates.OFF;
     private TalonFX topMotor, bottomMotor;
 
     private double topTarget, bottomTarget = 0.0;
@@ -28,6 +30,7 @@ public class Shooter extends SubsystemBase {
     private DoubleLogEntry shooterBottomOutputCurrentLog;
 
     private final VelocityVoltage velocityVoltage = new VelocityVoltage(0).withSlot(0);
+    private final CoastOut coastRequest = new CoastOut();
 
     /**
      * Instantiates and configures motor controllers and sensors; creates Data Logs. Assigns PID constants.
@@ -39,8 +42,8 @@ public class Shooter extends SubsystemBase {
         topMotor.setInverted(true);
         bottomMotor.setInverted(true);
 
-        topMotor.getConfigurator().apply(new Slot0Configs().withKP(TOP_MOTOR_P).withKI(TOP_MOTOR_I).withKD(TOP_MOTOR_D));
-        bottomMotor.getConfigurator().apply(new Slot0Configs().withKP(BOTTOM_MOTOR_P).withKI(BOTTOM_MOTOR_I).withKD(BOTTOM_MOTOR_D));
+        topMotor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
+        bottomMotor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
 
 //        DataLog log = DataLogManager.getLog();
 //
@@ -66,7 +69,8 @@ public class Shooter extends SubsystemBase {
 
         topEncoderRPM = topMotor.getVelocity().getValueAsDouble() * 60;
         bottomEncoderRPM = bottomMotor.getVelocity().getValueAsDouble() * 60;
-
+        SmartDashboard.putNumber("Top Motor AMP", topMotor.getStatorCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("Bottom Motor AMP", bottomMotor.getStatorCurrent().getValueAsDouble());
         SmartDashboard.putNumber("Top Encoder RPM", topEncoderRPM);
         SmartDashboard.putNumber("Bottom Encoder RPM", bottomEncoderRPM);
     }
@@ -77,11 +81,17 @@ public class Shooter extends SubsystemBase {
     }
 
     /**
-     * Sets the PID loops for the top and bottom Shooter motors to their corresponding target velocities
+     * Sets the PID loops for the top and bottom Shooter motors to their corresponding target velocities if ShooterState is not OFF. If ShooterState is OFF, motors are set to Coast
      */
     public void run() {
-        topMotor.setControl(velocityVoltage.withVelocity(topTarget / 60));
-        bottomMotor.setControl(velocityVoltage.withVelocity(bottomTarget / 60));
+         if(currentState == ShooterStates.OFF){
+             topMotor.setControl(coastRequest);
+             bottomMotor.setControl(coastRequest);
+
+         } else {
+             topMotor.setControl(velocityVoltage.withVelocity(topTarget / 60));
+             bottomMotor.setControl(velocityVoltage.withVelocity(bottomTarget / 60));
+         }
     }
 
     /**
@@ -114,7 +124,7 @@ public class Shooter extends SubsystemBase {
         /**
          * Shooter Idle RPM
          */
-        IDLE(700, 700),
+        AMP(700, 700),
 
         /**
          * Amp scoring Shooter RPM
@@ -124,7 +134,7 @@ public class Shooter extends SubsystemBase {
         /**
          * Podium scoring Shooter RPM
          */
-        PODIUM(3000, 3000),
+        PODIUM(3100, 3100),
 
         /**
          * Subwoofer scoring Shooter RPM
@@ -151,6 +161,7 @@ public class Shooter extends SubsystemBase {
     public void setState(ShooterStates state) {
         topTarget = state.encoderTopRPM;
         bottomTarget = state.encoderBottomRPM;
+        currentState = state;
     }
 
     /**
