@@ -152,9 +152,9 @@ public class Arm extends SubsystemBase {
         AMP(12),
 
         /**
-         * Podium scoring Arm position
+         * Stage scoring Arm position
          */
-        PODIUM(5.33),
+        STAGE(5.33),
 
         /**
          * Subwoofer scoring Arm position
