@@ -132,9 +132,9 @@ public class Shooter extends SubsystemBase {
         WING(4000, 4000),
 
         /**
-         * Podium scoring Shooter RPM
+         * Stage scoring Shooter RPM
          */
-        PODIUM(3100, 3100),
+        STAGE(3100, 3100),
 
         /**
          * Subwoofer scoring Shooter RPM

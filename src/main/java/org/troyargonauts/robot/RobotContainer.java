@@ -108,7 +108,7 @@ public class RobotContainer {
 
         operator.y().onTrue(
             new ParallelCommandGroup(
-                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.PODIUM), Robot.getShooter()),
+                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.STAGE), Robot.getShooter()),
                 new InstantCommand(() -> Robot.getArm().setState(ArmStates.PODIUM), Robot.getArm())
             )
         );

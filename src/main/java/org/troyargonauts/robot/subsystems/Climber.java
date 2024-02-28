@@ -107,30 +107,30 @@ public class Climber extends SubsystemBase {
 //        SmartDashboard.putNumber("Distance Sensor", distanceSensorOutput);
     }
 
-    /**
-     * Determines if the distance sensor is returning a value within a provided range
-     * .
-     * @param minDistance the minimum of the range
-     * @param maxDistance the maximum of the range
-     * @return whether the distance sensor is outputting within provided range
-     */
-    public void distanceWithinRange(double minDistance, double maxDistance) {
-//        if (((minDistance < distanceSensorOutput) && (distanceSensorOutput < maxDistance))){
-//            return true;
-//        }
-//        else {
-//            return false;
-//        }
+//    /**
+//     * Determines if the distance sensor is returning a value within a provided range
+//     * .
+//     * @param minDistance the minimum of the range
+//     * @param maxDistance the maximum of the range
+//     * @return whether the distance sensor is outputting within provided range
+//     */
+//    public void distanceWithinRange(double minDistance, double maxDistance) {
+////        if (((minDistance < distanceSensorOutput) && (distanceSensorOutput < maxDistance))){
+////            return true;
+////        }
+////        else {
+////            return false;
+////        }
+//
+//    }
 
-    }
-
-    /**
-     * Determines the distance between the distance sensor and the nearest object.
-     *
-     * @return distance as a double in meters.
-     */
-    public void getDistance() {
-        //return distanceSensor.getRange();
-    }
+//    /**
+//     * Determines the distance between the distance sensor and the nearest object.
+//     *
+//     * @return distance as a double in meters.
+//     */
+////    public void getDistance() {
+////        //return distanceSensor.getRange();
+////    }
 }
 
