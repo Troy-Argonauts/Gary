@@ -107,6 +107,10 @@ public class Climber extends SubsystemBase {
 //        SmartDashboard.putNumber("Distance Sensor", distanceSensorOutput);
     }
 
+    public void setRawPower(double power){
+        motor.set(power);
+    }
+
 //    /**
 //     * Determines if the distance sensor is returning a value within a provided range
 //     * .
