@@ -1,6 +1,7 @@
 package org.troyargonauts.robot.subsystems;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -78,6 +79,10 @@ public class Arm extends SubsystemBase {
 
         SmartDashboard.putNumber("Average Arm Encoder: ", (leftArmEncoder+rightArmEncoder)/2);
         SmartDashboard.putBoolean("Arm Limit: ", getLimitSwitch());
+        if (getLimitSwitch()){
+            leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
+            rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
+        }
 
 //        armLeftEncoderLog.append(leftArmEncoder);
 //        armRightEncoderLog.append(rightArmEncoder);
@@ -112,8 +117,17 @@ public class Arm extends SubsystemBase {
      * Sets the PID loops for the left and right Arm motors to their corresponding target positions
      */
     public void run() {
+//        if (armTarget == 0){
+//            leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(FLOOR_P).withKI(FLOOR_I).withKD(FLOOR_D));
+//            rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(FLOOR_P).withKI(FLOOR_I).withKD(FLOOR_D));
+//        }
+        if (armTarget == 0 && leftArmEncoder <= 0.2 && rightArmEncoder <= 0.2){
+            leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(ZERO).withKI(ZERO).withKD(ZERO));
+            rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(ZERO).withKI(ZERO).withKD(ZERO));
+        }
         leftArmMotor.setControl(positionVoltage.withPosition(armTarget));
         rightArmMotor.setControl(positionVoltage.withPosition(armTarget));
+
     }
 
     /**
