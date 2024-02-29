@@ -121,7 +121,7 @@ public class Arm extends SubsystemBase {
 //            leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(FLOOR_P).withKI(FLOOR_I).withKD(FLOOR_D));
 //            rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(FLOOR_P).withKI(FLOOR_I).withKD(FLOOR_D));
 //        }
-        if (armTarget == 0 && leftArmEncoder <= 0.2 && rightArmEncoder <= 0.2){
+        if (armTarget == 0 && leftArmEncoder <= 1 && rightArmEncoder <= 1){
             leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(ZERO).withKI(ZERO).withKD(ZERO));
             rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(ZERO).withKI(ZERO).withKD(ZERO));
         }
