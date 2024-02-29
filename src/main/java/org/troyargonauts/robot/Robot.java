@@ -5,12 +5,14 @@
 package org.troyargonauts.robot;
 
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import org.troyargonauts.robot.subsystems.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -147,7 +149,9 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         if(!robotContainer.getOperatorRightBumper() && Robot.getIntake().isNoteReady() && !robotContainer.getOperatorRightTrigger()){
             Robot.getIntake().setState(Intake.IntakeStates.OFF);
-
+            robotContainer.getOperator().getHID().setRumble(GenericHID.RumbleType.kBothRumble,0.5);
+        } else{
+            robotContainer.getOperator().getHID().setRumble(GenericHID.RumbleType.kBothRumble,0);
         }
     }
 
@@ -209,5 +213,8 @@ public class Robot extends TimedRobot {
     public static Arm getArm() {
         if (arm == null) arm = new Arm();
         return arm;
+    }
+    public static RobotContainer getRobotContainer(){
+        return robotContainer;
     }
 }

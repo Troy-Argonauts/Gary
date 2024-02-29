@@ -231,5 +231,9 @@ public class RobotContainer {
     public boolean getOperatorX(){
         return operator.x().getAsBoolean();
     }
+    public CommandXboxController getOperator(){
+        return operator;
+    }
 }
+
          

@@ -104,7 +104,7 @@ public class Arm extends SubsystemBase {
         if (getLimitSwitch()){
             leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(UP_P).withKI(UP_I).withKD(UP_D));
             rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(UP_P).withKI(UP_I).withKD(UP_D));
-            
+
 //            positionVoltage.Slot = 0;
         }
 
