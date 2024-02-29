@@ -36,9 +36,9 @@ public final class Constants {
 
         int LIMIT_SWITCH_SLOT = 1;
 
-        double P = 0.83;
-        double I = 0;
-        double D = 0;
+        double UP_P = 0.83;
+        double UP_I = 0;
+        double UP_D = 0;
         double DOWN_P = 0.25;
         double DOWN_I = 0;
         double DOWN_D = 0;

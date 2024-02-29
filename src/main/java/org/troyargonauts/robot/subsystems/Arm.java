@@ -1,8 +1,6 @@
 package org.troyargonauts.robot.subsystems;
 
-import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.configs.Slot1Configs;
-import com.ctre.phoenix6.configs.SlotConfigs;
+import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -13,8 +11,10 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.troyargonauts.robot.Constants;
 
 import static org.troyargonauts.robot.Constants.Arm.*;
+import static org.troyargonauts.robot.Constants.Arm.UP_I;
 
 /**
  * Class representing the Arm subsystem
@@ -39,16 +39,36 @@ public class Arm extends SubsystemBase {
     private DoubleLogEntry armTargetLog;
     private DoubleLogEntry armAvgEncoderLog;
     private final PositionVoltage positionVoltage = new PositionVoltage(0).withSlot(0);
+    public final Slot0Configs upConfig = new Slot0Configs();
+    public final Slot1Configs downConfig = new Slot1Configs();
+    public final Slot2Configs zeroConfig = new Slot2Configs();
+
 
     /**
      * Instantiates and configures motor controllers and sensors; creates Data Logs. Assigns PID constants.
      */
     public Arm() {
+        upConfig.kP = UP_P;
+        upConfig.kI = UP_I;
+        upConfig.kD = UP_D;
+
+        downConfig.kP = DOWN_P;
+        downConfig.kI = DOWN_I;
+        downConfig.kD = DOWN_D;
+
+        zeroConfig.kP = ZERO;
+        zeroConfig.kI = ZERO;
+        zeroConfig.kD = ZERO;
+
+        TalonFXConfiguration allConfigs = new TalonFXConfiguration().withSlot0(upConfig).withSlot1(downConfig).withSlot2(zeroConfig);
+
+
         leftArmMotor = new TalonFX(LEFT_MOTOR_ID, CANBUS_NAME);
         rightArmMotor = new TalonFX(RIGHT_MOTOR_ID, CANBUS_NAME);
 
-        leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
-        rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
+        leftArmMotor.getConfigurator().apply(allConfigs);
+        rightArmMotor.getConfigurator().apply(allConfigs);
+
         leftArmMotor.setInverted(false);
         rightArmMotor.setInverted(true);
 
@@ -82,8 +102,10 @@ public class Arm extends SubsystemBase {
         SmartDashboard.putNumber("Average Arm Encoder: ", (leftArmEncoder+rightArmEncoder)/2);
         SmartDashboard.putBoolean("Arm Limit: ", getLimitSwitch());
         if (getLimitSwitch()){
-            leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
-            rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
+            leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(UP_P).withKI(UP_I).withKD(UP_D));
+            rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(UP_P).withKI(UP_I).withKD(UP_D));
+            
+//            positionVoltage.Slot = 0;
         }
 
 //        armLeftEncoderLog.append(leftArmEncoder);
@@ -119,21 +141,34 @@ public class Arm extends SubsystemBase {
      * Sets the PID loops for the left and right Arm motors to their corresponding target positions
      */
     public void run() {
-//        if (armTarget == 0){
-//            leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(FLOOR_P).withKI(FLOOR_I).withKD(FLOOR_D));
-//            rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(FLOOR_P).withKI(FLOOR_I).withKD(FLOOR_D));
-//        }
+
         if (armTarget == 0 && leftArmEncoder <= 1 && rightArmEncoder <= 1){
             leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(ZERO).withKI(ZERO).withKD(ZERO));
             rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(ZERO).withKI(ZERO).withKD(ZERO));
+
         }
         if (oldTarget > armTarget){
             leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(DOWN_P).withKI(DOWN_I).withKD(DOWN_D));
             rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(DOWN_P).withKI(DOWN_I).withKD(DOWN_D));
+
         } else{
-            leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
-            rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
+            leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(UP_P).withKI(UP_I).withKD(UP_D));
+            rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(UP_P).withKI(UP_I).withKD(UP_D));
         }
+
+
+
+//        if (armTarget == 0 && leftArmEncoder <= 1 && rightArmEncoder <= 1){
+//            positionVoltage.Slot = 2;
+//        }
+//        if (oldTarget > armTarget){
+//            positionVoltage.Slot = 1;
+//        } else{
+//            positionVoltage.Slot = 0;
+//        }
+
+
+
         leftArmMotor.setControl(positionVoltage.withPosition(armTarget));
         rightArmMotor.setControl(positionVoltage.withPosition(armTarget));
 
