@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import org.troyargonauts.robot.subsystems.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -60,13 +61,13 @@ public class Robot extends TimedRobot {
             }
 
             if (armLimitPressed) {
-              //arm.run();
+              arm.run();
             }
 //            if(robotContainer.getOperatorX()){
 //                System.out.println("Xpressed");
 //                shooter.run();
 //            }
-            shooter.run();
+            //shooter.run();
 
 
             //climber.run();
@@ -146,6 +147,7 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         if(!robotContainer.getOperatorRightBumper() && Robot.getIntake().isNoteReady() && !robotContainer.getOperatorRightTrigger()){
             Robot.getIntake().setState(Intake.IntakeStates.OFF);
+
         }
     }
 

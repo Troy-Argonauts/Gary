@@ -9,11 +9,9 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.troyargonauts.common.math.OMath;
 import org.troyargonauts.common.streams.IStream;
 import org.troyargonauts.robot.commands.ShootingSequence;
@@ -23,6 +21,8 @@ import org.troyargonauts.robot.generated.TunerConstants;
 import org.troyargonauts.robot.subsystems.Arm.ArmStates;
 import org.troyargonauts.robot.subsystems.Intake.IntakeStates;
 import org.troyargonauts.robot.subsystems.Shooter.ShooterStates;
+
+import java.util.function.BooleanSupplier;
 
 import static org.troyargonauts.robot.Constants.Controllers.*;
 
@@ -53,6 +53,7 @@ public class RobotContainer {
      * Configures controller button bindings for Teleoperated mode
      */
     public void configureBindings() {
+
         // driver controller commands
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
             drivetrain.applyRequest(
@@ -89,9 +90,9 @@ public class RobotContainer {
 
         operator.a().onTrue(
             new ParallelCommandGroup(
-                new InstantCommand(() -> Robot.getArm().setState(ArmStates.FLOOR_INTAKE), Robot.getArm()),
-                new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.IN), Robot.getIntake()).until(() -> Robot.getIntake().isNoteReady())
-                .andThen(new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF), Robot.getIntake()))
+                new InstantCommand(() -> Robot.getArm().setState(ArmStates.FLOOR_INTAKE), Robot.getArm())
+//                new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.IN), Robot.getIntake()).until(() -> Robot.getIntake().isNoteReady())
+//                .andThen(new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF), Robot.getIntake()))
             )
         );
 
@@ -150,6 +151,9 @@ public class RobotContainer {
         driver.b().onTrue(
                 new InstantCommand(() -> System.out.println("Here"), Robot.getIntake())
         );
+
+
+
 
     }
 
