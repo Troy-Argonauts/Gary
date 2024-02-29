@@ -1,6 +1,7 @@
 package org.troyargonauts.robot.subsystems;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -27,6 +28,7 @@ public class Arm extends SubsystemBase {
 
     private double leftArmEncoder, rightArmEncoder = 0;
     private double armTarget = 0;
+    private double oldTarget;
 
     private DoubleLogEntry armLeftEncoderLog;
     private DoubleLogEntry armRightEncoderLog;
@@ -47,7 +49,6 @@ public class Arm extends SubsystemBase {
 
         leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
         rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
-
         leftArmMotor.setInverted(false);
         rightArmMotor.setInverted(true);
 
@@ -76,7 +77,8 @@ public class Arm extends SubsystemBase {
     public void periodic() {
         leftArmEncoder = leftArmMotor.getPosition().getValueAsDouble();
         rightArmEncoder = rightArmMotor.getPosition().getValueAsDouble();
-
+        SmartDashboard.putNumber("oldtarget",oldTarget);
+        SmartDashboard.putNumber("current Target", armTarget);
         SmartDashboard.putNumber("Average Arm Encoder: ", (leftArmEncoder+rightArmEncoder)/2);
         SmartDashboard.putBoolean("Arm Limit: ", getLimitSwitch());
         if (getLimitSwitch()){
@@ -124,6 +126,13 @@ public class Arm extends SubsystemBase {
         if (armTarget == 0 && leftArmEncoder <= 1 && rightArmEncoder <= 1){
             leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(ZERO).withKI(ZERO).withKD(ZERO));
             rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(ZERO).withKI(ZERO).withKD(ZERO));
+        }
+        if (oldTarget > armTarget){
+            leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(DOWN_P).withKI(DOWN_I).withKD(DOWN_D));
+            rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(DOWN_P).withKI(DOWN_I).withKD(DOWN_D));
+        } else{
+            leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
+            rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
         }
         leftArmMotor.setControl(positionVoltage.withPosition(armTarget));
         rightArmMotor.setControl(positionVoltage.withPosition(armTarget));
@@ -219,6 +228,7 @@ public class Arm extends SubsystemBase {
      * @param state Desired Arm state
      */
     public void setState(ArmStates state) {
+        oldTarget = armTarget;
         armTarget = state.armPosition;
     }
 

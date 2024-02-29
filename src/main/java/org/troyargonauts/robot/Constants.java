@@ -36,12 +36,12 @@ public final class Constants {
 
         int LIMIT_SWITCH_SLOT = 1;
 
-        double P = 0.68;
+        double P = 0.83;
         double I = 0;
         double D = 0;
-        double FLOOR_P = 0.34;
-        double FLOOR_I = 0;
-        double FLOOR_D = 0;
+        double DOWN_P = 0.25;
+        double DOWN_I = 0;
+        double DOWN_D = 0;
         double ZERO = 0.0;
 
         String CANBUS_NAME = "roborio";
