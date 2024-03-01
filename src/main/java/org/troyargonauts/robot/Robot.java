@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import org.troyargonauts.robot.commands.ShootInPlaceAuton;
+import org.troyargonauts.robot.generated.TunerConstants;
 import org.troyargonauts.robot.subsystems.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -80,8 +81,11 @@ public class Robot extends TimedRobot {
      */
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
-
-
+        SmartDashboard.putNumber("0", robotContainer.drivetrain.getModule(0).getCANcoder().getAbsolutePosition().getValueAsDouble());
+        SmartDashboard.putNumber("1", robotContainer.drivetrain.getModule(1).getCANcoder().getAbsolutePosition().getValueAsDouble());
+        SmartDashboard.putNumber("2", robotContainer.drivetrain.getModule(2).getCANcoder().getAbsolutePosition().getValueAsDouble());
+        SmartDashboard.putNumber("3", robotContainer.drivetrain.getModule(3).getCANcoder().getAbsolutePosition().getValueAsDouble());
+        SmartDashboard.putNumber("3 power", robotContainer.drivetrain.getModule(3).getSteerMotor().getMotorVoltage().getValueAsDouble());
     }
 
     /**

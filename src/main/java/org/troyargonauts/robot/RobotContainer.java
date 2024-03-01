@@ -39,11 +39,15 @@ public class RobotContainer {
     private final InstantCommand intakeIn = new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.IN));
     private final InstantCommand intakeOff = new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF));
 
-    private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
+    public final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
+
+//    private final SwerveRequest.RobotCentric drive = new SwerveRequest.RobotCentric()
+//        .withDeadband(Constants.Drivetrain.MAX_SPEED * 0.1).withRotationalDeadband(Constants.Drivetrain.MAX_ANGULAR_RATE * 0.1) // Add a 10% deadband
+//        .withDriveRequestType(DriveRequestType.Velocity);
 
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-        .withDeadband(Constants.Drivetrain.MAX_SPEED * 0.1).withRotationalDeadband(Constants.Drivetrain.MAX_ANGULAR_RATE * 0.1) // Add a 10% deadband
-        .withDriveRequestType(DriveRequestType.Velocity); // I want field-centric
+            .withDeadband(Constants.Drivetrain.MAX_SPEED * 0.08).withRotationalDeadband(Constants.Drivetrain.MAX_ANGULAR_RATE * 0.08) // Add a 10% deadband
+            .withDriveRequestType(DriveRequestType.Velocity); // I want field-centric
                                                                 // driving in open loop
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
@@ -241,6 +245,7 @@ public class RobotContainer {
     public boolean getOperatorX(){
         return operator.x().getAsBoolean();
     }
+
     public CommandXboxController getOperator(){
         return operator;
     }
