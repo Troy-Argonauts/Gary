@@ -74,7 +74,20 @@ public class RobotContainer {
             new InstantCommand(Robot.getClimber()::setTarget)
         );
 
+        driver.b().onTrue(
+                new InstantCommand(() -> System.out.println("Here"), Robot.getIntake())
+        );
 
+        Robot.getClimber().setDefaultCommand(
+                new RunCommand(
+                        () -> {
+                            double climberSpeed = IStream.create(driver::getLeftTriggerAxis)
+                                    .filtered(x -> OMath.deadband(x, DEADBAND))
+                                    .get();
+                            Robot.getClimber().setRawPower(climberSpeed);
+                        }, Robot.getClimber()
+                )
+        );
 
         // operator controller commands
         Robot.getArm().setDefaultCommand(
@@ -148,9 +161,6 @@ public class RobotContainer {
         );
 
 
-        driver.b().onTrue(
-                new InstantCommand(() -> System.out.println("Here"), Robot.getIntake())
-        );
 
 
 

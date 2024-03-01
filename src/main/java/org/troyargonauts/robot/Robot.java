@@ -9,10 +9,8 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.*;
+import org.troyargonauts.robot.commands.ShootInPlaceAuton;
 import org.troyargonauts.robot.subsystems.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -53,9 +51,10 @@ public class Robot extends TimedRobot {
         robotContainer = new RobotContainer();
 
         autoChooser = AutoBuilder.buildAutoChooser();
-
+        autoChooser.addOption("ShootInPlace", new ShootInPlaceAuton());
+        autoChooser.addOption("Nothing", new WaitCommand(5));
         SmartDashboard.putData("Auto Chooser", autoChooser);
-      
+
         scheduledExecutorService.scheduleAtFixedRate(() -> {
             if (Robot.getArm().getLimitSwitch()) {
                 armLimitPressed = true;
