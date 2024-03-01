@@ -100,7 +100,7 @@ public class RobotContainer {
                     double armSpeed = IStream.create(operator::getRightY)
                         .filtered(x -> OMath.deadband(x, DEADBAND))
                         .get();
-                    Robot.getArm().adjustSetpoint(armSpeed);
+                    Robot.getArm().adjustSetpoint(-armSpeed);
                 }, Robot.getArm()
             )
         );

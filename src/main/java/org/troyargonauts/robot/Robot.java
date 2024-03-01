@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import org.troyargonauts.robot.commands.ShootInPlaceAuton;
+import org.troyargonauts.robot.commands.StartingSequence;
 import org.troyargonauts.robot.generated.TunerConstants;
 import org.troyargonauts.robot.subsystems.*;
 
@@ -54,6 +55,7 @@ public class Robot extends TimedRobot {
         autoChooser = AutoBuilder.buildAutoChooser();
         autoChooser.addOption("ShootInPlace", new ShootInPlaceAuton());
         autoChooser.addOption("Nothing", new WaitCommand(5));
+        autoChooser.addOption("StartingSequence", new StartingSequence());
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
         scheduledExecutorService.scheduleAtFixedRate(() -> {

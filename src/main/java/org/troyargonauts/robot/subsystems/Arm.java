@@ -142,30 +142,30 @@ public class Arm extends SubsystemBase {
      */
     public void run() {
 
-        if (armTarget == 0 && leftArmEncoder <= 1 && rightArmEncoder <= 1){
-            leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(ZERO).withKI(ZERO).withKD(ZERO));
-            rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(ZERO).withKI(ZERO).withKD(ZERO));
-
-        }
-        if (oldTarget > armTarget){
-            leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(DOWN_P).withKI(DOWN_I).withKD(DOWN_D));
-            rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(DOWN_P).withKI(DOWN_I).withKD(DOWN_D));
-
-        } else{
-            leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(UP_P).withKI(UP_I).withKD(UP_D));
-            rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(UP_P).withKI(UP_I).withKD(UP_D));
-        }
-
-
-
 //        if (armTarget == 0 && leftArmEncoder <= 1 && rightArmEncoder <= 1){
-//            positionVoltage.Slot = 2;
+//            leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(ZERO).withKI(ZERO).withKD(ZERO));
+//            rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(ZERO).withKI(ZERO).withKD(ZERO));
+//
 //        }
 //        if (oldTarget > armTarget){
-//            positionVoltage.Slot = 1;
+//            leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(DOWN_P).withKI(DOWN_I).withKD(DOWN_D));
+//            rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(DOWN_P).withKI(DOWN_I).withKD(DOWN_D));
+//
 //        } else{
-//            positionVoltage.Slot = 0;
+//            leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(UP_P).withKI(UP_I).withKD(UP_D));
+//            rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(UP_P).withKI(UP_I).withKD(UP_D));
 //        }
+
+
+
+        if (armTarget == 0 && leftArmEncoder <= 1 && rightArmEncoder <= 1){
+            positionVoltage.Slot = 2; //zero
+        }
+        if (oldTarget > armTarget){
+            positionVoltage.Slot = 1; //down
+        } else{
+            positionVoltage.Slot = 0; //up
+        }
 
 
 
@@ -190,8 +190,8 @@ public class Arm extends SubsystemBase {
      * @param joystickValue joystick value between -1 and 1
      */
     public void adjustSetpoint(double joystickValue) {
-        if (!limitSwitch.get() || joystickValue < 0) {
-            armTarget += (joystickValue * 20);
+        if (!limitSwitch.get() || joystickValue != 0) {
+            armTarget += (joystickValue * 0.03);
         }
     }
 
