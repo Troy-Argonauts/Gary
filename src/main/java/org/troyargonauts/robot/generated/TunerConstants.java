@@ -19,7 +19,7 @@ public class TunerConstants {
     // The steer motor uses any SwerveModule.SteerRequestType control request with the
     // output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
     private static final Slot0Configs steerGains = new Slot0Configs()
-        .withKP(100).withKI(0).withKD(0.5)
+        .withKP(500).withKI(0).withKD(0.5)
         .withKS(0).withKV(0).withKA(0);
     // When using closed-loop control, the drive motor uses the control
     // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
@@ -92,7 +92,7 @@ public class TunerConstants {
     private static final int kFrontLeftDriveMotorId = 6;
     private static final int kFrontLeftSteerMotorId = 3;
     private static final int kFrontLeftEncoderId = 10;
-    private static final double kFrontLeftEncoderOffset = -0.25390625;
+    static final double kFrontLeftEncoderOffset = -0.25341796875;
 
     private static final double kFrontLeftXPosInches = 10.25;
     private static final double kFrontLeftYPosInches = 10.25;
@@ -110,7 +110,7 @@ public class TunerConstants {
     private static final int kBackLeftDriveMotorId = 8;
     private static final int kBackLeftSteerMotorId = 4;
     private static final int kBackLeftEncoderId = 12;
-    private static final double kBackLeftEncoderOffset = -0.05712890625;
+    private static final double kBackLeftEncoderOffset = -0.056884765625;
 
     private static final double kBackLeftXPosInches = -10.25;
     private static final double kBackLeftYPosInches = 10.25;
@@ -119,7 +119,7 @@ public class TunerConstants {
     private static final int kBackRightDriveMotorId = 2;
     private static final int kBackRightSteerMotorId = 7;
     private static final int kBackRightEncoderId = 9;
-    private static final double kBackRightEncoderOffset = 0.096435546875;
+    private static final double kBackRightEncoderOffset = 0.095947265625;
 
     private static final double kBackRightXPosInches = -10.25;
     private static final double kBackRightYPosInches = -10.25;

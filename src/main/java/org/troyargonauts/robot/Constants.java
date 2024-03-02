@@ -15,8 +15,6 @@ public final class Constants {
         int NOTE_SENSOR_SLOT = 0;
 
         String CANBUS_NAME = "roborio";
-
-        String CANBUS_NAME2 = "roborio2";
     }
 
     /**
@@ -38,9 +36,13 @@ public final class Constants {
 
         int LIMIT_SWITCH_SLOT = 1;
 
-        double P = 0;
-        double I = 0;
-        double D = 0;
+        double UP_P = 0.83; //0.83
+        double UP_I = 0;
+        double UP_D = 0;
+        double DOWN_P = 0.1; //0.25
+        double DOWN_I = 0;
+        double DOWN_D = 0;
+        double ZERO = 0.0;
 
         String CANBUS_NAME = "roborio";
     }
@@ -65,13 +67,17 @@ public final class Constants {
         int TOP_MOTOR_ID = 24;
         int BOTTOM_MOTOR_ID = 25;
 
-        double TOP_MOTOR_P = 0;
-        double TOP_MOTOR_I = 0;
-        double TOP_MOTOR_D = 0;
-        double BOTTOM_MOTOR_P = 0;
-        double BOTTOM_MOTOR_I = 0;
-        double BOTTOM_MOTOR_D = 0;
+        double P = 0.457;
+        double I = 0.217;
+        double D = 0.0018;
+
 
         String CANBUS_NAME = "roborio";
-    }  
+    }
+
+    public interface Drivetrain{
+
+        double MAX_SPEED = 4.572; // 6 meters per second desired top speed
+        double MAX_ANGULAR_RATE = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
+    }
 }

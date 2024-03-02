@@ -2,6 +2,7 @@ package org.troyargonauts.robot;
 
 import java.util.function.Supplier;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.troyargonauts.robot.generated.TunerConstants;
 
 import com.ctre.phoenix6.Utils;

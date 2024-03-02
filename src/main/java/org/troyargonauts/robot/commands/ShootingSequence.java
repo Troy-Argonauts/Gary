@@ -16,7 +16,7 @@ public class ShootingSequence extends SequentialCommandGroup {
     public ShootingSequence() {
         super(
             new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.IN), Robot.getIntake()),
-            new WaitCommand(3),
+            new WaitCommand(1),
             new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF), Robot.getIntake())
         );
     }
