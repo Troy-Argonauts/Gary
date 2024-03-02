@@ -71,7 +71,7 @@ public class Robot extends TimedRobot {
 //                System.out.println("Xpressed");
 //                shooter.run();
 //            }
-            //shooter.run();
+            shooter.run();
 
 
             //climber.run();
@@ -155,8 +155,11 @@ public class Robot extends TimedRobot {
         if(!robotContainer.getOperatorRightBumper() && Robot.getIntake().isNoteReady() && !robotContainer.getOperatorRightTrigger()){
             Robot.getIntake().setState(Intake.IntakeStates.OFF);
             robotContainer.getOperator().getHID().setRumble(GenericHID.RumbleType.kBothRumble,0.5);
+            robotContainer.getDriver().getHID().setRumble(GenericHID.RumbleType.kBothRumble,0.5);
         } else{
             robotContainer.getOperator().getHID().setRumble(GenericHID.RumbleType.kBothRumble,0);
+            robotContainer.getDriver().getHID().setRumble(GenericHID.RumbleType.kBothRumble,0);
+
         }
     }
 

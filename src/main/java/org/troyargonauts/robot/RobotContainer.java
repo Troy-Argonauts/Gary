@@ -249,6 +249,11 @@ public class RobotContainer {
     public CommandXboxController getOperator(){
         return operator;
     }
+    public CommandXboxController getDriver(){
+        return driver;
+    }
 }
+
+
 
          
