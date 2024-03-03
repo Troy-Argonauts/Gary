@@ -4,6 +4,7 @@
 
 package org.troyargonauts.robot;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -12,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import org.troyargonauts.robot.commands.ShootInPlaceAuton;
 import org.troyargonauts.robot.commands.StartingSequence;
+import org.troyargonauts.robot.commands.TuneDrive;
 import org.troyargonauts.robot.generated.TunerConstants;
 import org.troyargonauts.robot.subsystems.*;
 
@@ -45,6 +47,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         DataLogManager.start();
+
         arm = new Arm();
         climber = new Climber();
         intake = new Intake();
@@ -56,6 +59,11 @@ public class Robot extends TimedRobot {
         autoChooser.addOption("ShootInPlace", new ShootInPlaceAuton());
         autoChooser.addOption("Nothing", new WaitCommand(5));
         autoChooser.addOption("StartingSequence", new StartingSequence());
+        autoChooser.addOption("TuneDrive", new TuneDrive());
+        autoChooser.addOption("2 Note Arm 0 Auto", new PathPlannerAuto("2 Note Arm 0 Auto"));
+//        autoChooser.addOption("2 Note Arm0 Auto", new PathPlannerAuto("2 Note ARM0 Auto"));
+//        autoChooser.addOption("2 Note Auto W3", new PathPlannerAuto("2 Note Auto W3"));
+
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
         scheduledExecutorService.scheduleAtFixedRate(() -> {
@@ -83,11 +91,10 @@ public class Robot extends TimedRobot {
      */
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
-        SmartDashboard.putNumber("0", robotContainer.drivetrain.getModule(0).getCANcoder().getAbsolutePosition().getValueAsDouble());
-        SmartDashboard.putNumber("1", robotContainer.drivetrain.getModule(1).getCANcoder().getAbsolutePosition().getValueAsDouble());
-        SmartDashboard.putNumber("2", robotContainer.drivetrain.getModule(2).getCANcoder().getAbsolutePosition().getValueAsDouble());
-        SmartDashboard.putNumber("3", robotContainer.drivetrain.getModule(3).getCANcoder().getAbsolutePosition().getValueAsDouble());
-        SmartDashboard.putNumber("3 power", robotContainer.drivetrain.getModule(3).getSteerMotor().getMotorVoltage().getValueAsDouble());
+        SmartDashboard.putNumber("0", robotContainer.drivetrain.getModule(0).getDriveMotor().getVelocity().getValueAsDouble());
+        SmartDashboard.putNumber("1", robotContainer.drivetrain.getModule(1).getDriveMotor().getVelocity().getValueAsDouble());
+        SmartDashboard.putNumber("2", robotContainer.drivetrain.getModule(2).getDriveMotor().getVelocity().getValueAsDouble());
+        SmartDashboard.putNumber("3", robotContainer.drivetrain.getModule(3).getDriveMotor().getVelocity().getValueAsDouble());
     }
 
     /**

@@ -282,7 +282,7 @@ public class LazyTalonFX<TalonType extends TalonFX> implements MotorController<T
 
 	public boolean setPeakOutputForward(final double percentOut) {
 		TalonFXConfiguration config = new TalonFXConfiguration();
-		config.MotorOutput.PeakForwardDutyCycle = percentOut;
+		config.Voltage.PeakForwardVoltage = percentOut;
 
 		return runWithRetries(() -> m_internal.getConfigurator().apply(config));	}
 

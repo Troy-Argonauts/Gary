@@ -12,7 +12,7 @@ public class ShootInPlaceAuton extends SequentialCommandGroup {
         super(
                 new StartingSequence(),
                 new InstantCommand(() -> Robot.getShooter().setState(Shooter.ShooterStates.SUBWOOFER), Robot.getShooter()),
-                new WaitUntilCommand(Robot.getArm()::getLimitSwitch),
+                new WaitUntilCommand(Robot.getShooter()::isTopPidFinished),
                 new ShootingSequence()
             );
     }

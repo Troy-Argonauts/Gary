@@ -44,12 +44,12 @@ public class Climber extends SubsystemBase {
 
         motor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
 
-//        DataLog log = DataLogManager.getLog();
+        DataLog log = DataLogManager.getLog();
 //
 //        climberDistanceEncoder = new DoubleLogEntry((log), "Distance Encoder Values");
 //        climberTargetLog = new DoubleLogEntry((log), "Climber Target Values");
-//        climberMotorVoltage = new DoubleLogEntry((log), "Climber Motor Voltage");
-//        climberOutputCurrentLog = new DoubleLogEntry((log), "Climber Current Output Values");
+        climberMotorVoltage = new DoubleLogEntry((log), "Climber Motor Voltage");
+        climberOutputCurrentLog = new DoubleLogEntry((log), "Climber Current Output Values");
 //        climberEncoderLog = new DoubleLogEntry((log), "Climber Encoder Values");
 
 //       // distanceSensor = new Rev2mDistanceSensor(Rev2mDistanceSensor.Port.kOnboard);
@@ -94,8 +94,8 @@ public class Climber extends SubsystemBase {
     @Override
     public void periodic() {
 //        climberEncoderLog.append(motorEncoder);
-//        climberOutputCurrentLog.append(motor.getSupplyCurrent().getValue());
-//        climberMotorVoltage.append(motor.getMotorVoltage().getValue());
+        climberOutputCurrentLog.append(motor.getStatorCurrent().getValue());
+        climberMotorVoltage.append(motor.getMotorVoltage().getValue());
 //        climberTargetLog.append(motorEncoder);
      //   climberDistanceEncoder.append(distanceSensorOutput);
 
