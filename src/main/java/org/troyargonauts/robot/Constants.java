@@ -39,7 +39,7 @@ public final class Constants {
         double UP_P = 0.6; //0.83
         double UP_I = 0;
         double UP_D = 0;
-        double DOWN_P = 0.1; //0.25
+        double DOWN_P = 0.2; //0.25
         double DOWN_I = 0;
         double DOWN_D = 0;
         double ZERO = 0.0;
@@ -78,6 +78,6 @@ public final class Constants {
     public interface Drivetrain{
 
         double MAX_SPEED = 4.572; // 6 meters per second desired top speed
-        double MAX_ANGULAR_RATE = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
+        double MAX_ANGULAR_RATE = 2 * Math.PI; // 3/4 of a rotation per second max angular velocity
     }
 }

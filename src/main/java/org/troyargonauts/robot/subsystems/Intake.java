@@ -95,16 +95,16 @@ public class Intake extends SubsystemBase {
     public void setState(IntakeStates state) {
         switch (state){
             case IN:
-                motorRight.set(0.3);;
-                motorLeft.set(0.3);;
+                motorRight.set(0.4);;
+                motorLeft.set(0.4);;
                 break;
             case OFF:
                 motorRight.set(0);
                 motorLeft.set(0);
                 break;
             case OUT:
-                motorRight.set(-0.3);
-                motorLeft.set(-0.3);
+                motorRight.set(-0.4);
+                motorLeft.set(-0.4);
                 break;
         }
     }

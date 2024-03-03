@@ -11,10 +11,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
-import org.troyargonauts.robot.commands.ShootInPlaceAuton;
+import org.troyargonauts.robot.commands.SubwooferShoot;
 import org.troyargonauts.robot.commands.StartingSequence;
 import org.troyargonauts.robot.commands.TuneDrive;
-import org.troyargonauts.robot.generated.TunerConstants;
 import org.troyargonauts.robot.subsystems.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -56,11 +55,14 @@ public class Robot extends TimedRobot {
         robotContainer = new RobotContainer();
 
         autoChooser = AutoBuilder.buildAutoChooser();
-        autoChooser.addOption("ShootInPlace", new ShootInPlaceAuton());
+        autoChooser.addOption("ShootInPlace", new SubwooferShoot());
         autoChooser.addOption("Nothing", new WaitCommand(5));
         autoChooser.addOption("StartingSequence", new StartingSequence());
         autoChooser.addOption("TuneDrive", new TuneDrive());
         autoChooser.addOption("2 Note Arm 0 Auto", new PathPlannerAuto("2 Note Arm 0 Auto"));
+       autoChooser.addOption("Copy of 2 Note Arm 0 Auto", new PathPlannerAuto("Copy of 2 Note Arm 0 Auto"));
+        autoChooser.addOption("Test", new PathPlannerAuto("Full Field Test"));
+        autoChooser.addOption("1Note Move Auto", new PathPlannerAuto("1Note Move Auto"));
 //        autoChooser.addOption("2 Note Arm0 Auto", new PathPlannerAuto("2 Note ARM0 Auto"));
 //        autoChooser.addOption("2 Note Auto W3", new PathPlannerAuto("2 Note Auto W3"));
 
@@ -91,10 +93,15 @@ public class Robot extends TimedRobot {
      */
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
-        SmartDashboard.putNumber("0", robotContainer.drivetrain.getModule(0).getDriveMotor().getVelocity().getValueAsDouble());
-        SmartDashboard.putNumber("1", robotContainer.drivetrain.getModule(1).getDriveMotor().getVelocity().getValueAsDouble());
-        SmartDashboard.putNumber("2", robotContainer.drivetrain.getModule(2).getDriveMotor().getVelocity().getValueAsDouble());
-        SmartDashboard.putNumber("3", robotContainer.drivetrain.getModule(3).getDriveMotor().getVelocity().getValueAsDouble());
+        SmartDashboard.putNumber("0", robotContainer.drivetrain.getModule(0).getDriveMotor().getVelocity().getValueAsDouble() * 2 * Math.PI * 0.0508);
+        SmartDashboard.putNumber("1", robotContainer.drivetrain.getModule(1).getDriveMotor().getVelocity().getValueAsDouble() * 2 * Math.PI * 0.0508);
+        SmartDashboard.putNumber("2", robotContainer.drivetrain.getModule(2).getDriveMotor().getVelocity().getValueAsDouble() * 2 * Math.PI * 0.0508);
+        SmartDashboard.putNumber("3", robotContainer.drivetrain.getModule(3).getDriveMotor().getVelocity().getValueAsDouble() * 2 * Math.PI * 0.0508);
+        SmartDashboard.putNumber("3Pos", robotContainer.drivetrain.getModule(3).getDriveMotor().getPosition().getValueAsDouble() * 2 * Math.PI * 0.0508);
+
+        SmartDashboard.putNumber("pose x", robotContainer.drivetrain.getState().Pose.getX());
+        SmartDashboard.putNumber("pose y", robotContainer.drivetrain.getState().Pose.getY());
+        SmartDashboard.putNumber("pose r", robotContainer.drivetrain.getState().Pose.getRotation().getDegrees());
     }
 
     /**
