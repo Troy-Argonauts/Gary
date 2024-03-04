@@ -62,7 +62,7 @@ public class Robot extends TimedRobot {
         autoChooser.addOption("2 Note Arm 0 Auto", new PathPlannerAuto("2 Note Arm 0 Auto"));
        autoChooser.addOption("Copy of 2 Note Arm 0 Auto", new PathPlannerAuto("Copy of 2 Note Arm 0 Auto"));
         autoChooser.addOption("Test", new PathPlannerAuto("Full Field Test"));
-        autoChooser.addOption("1Note Move Auto", new PathPlannerAuto("1Note Move Auto"));
+        autoChooser.addOption("1Note Move Auto", new PathPlannerAuto("Left Edge 1"));
 //        autoChooser.addOption("2 Note Arm0 Auto", new PathPlannerAuto("2 Note ARM0 Auto"));
 //        autoChooser.addOption("2 Note Auto W3", new PathPlannerAuto("2 Note Auto W3"));
 

@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.0445175813246057,
-      "y": 6.174014151112526
+      "x": 1.1418995079983048,
+      "y": 4.888572719019697
     },
-    "rotation": 0
+    "rotation": -38.219963943758884
   },
   "command": {
     "type": "sequential",
@@ -48,7 +48,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "1Note Move Path"
+                  "pathName": "Left 1"
                 }
               },
               {
