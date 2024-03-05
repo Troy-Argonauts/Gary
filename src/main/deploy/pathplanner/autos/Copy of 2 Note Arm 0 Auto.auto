@@ -2,31 +2,31 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.2392814346720042,
-      "y": 5.570246205735591
+      "x": 1.1788132218239744,
+      "y": 4.782233761998389
     },
-    "rotation": 0
+    "rotation": -29.57783868126123
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Starting Sequence"
+            "pathName": "2 Note A0 Path 1"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 3.0
+            "waitTime": 1.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Test Path"
+            "pathName": "2 Note A0 Path 2"
           }
         }
       ]

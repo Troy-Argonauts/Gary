@@ -61,6 +61,15 @@ public class Arm extends SubsystemBase {
         zeroConfig.kD = ZERO;
 
         TalonFXConfiguration allConfigs = new TalonFXConfiguration().withSlot0(upConfig).withSlot1(downConfig).withSlot2(zeroConfig);
+        allConfigs.Voltage.PeakForwardVoltage = 3;
+        allConfigs.Voltage.PeakReverseVoltage = -3;
+//       allConfigs.MotorOutput.PeakForwardDutyCycle = 0.3;
+//       allConfigs.MotorOutput.PeakReverseDutyCycle = -0.3;
+
+
+
+
+//        positionVoltage.withLimitForwardMotion(true);
 
 
         leftArmMotor = new TalonFX(LEFT_MOTOR_ID, CANBUS_NAME);
@@ -82,10 +91,10 @@ public class Arm extends SubsystemBase {
 
 //        armLeftEncoderLog = new DoubleLogEntry(log, "Arm Left Encoder Values");
 //        armRightEncoderLog = new DoubleLogEntry(log, "Arm Right Encoder Values");
-//        armLeftOutputCurrentLog = new DoubleLogEntry(log, "Arm Motor Output Current ");
-//        armRightOutputCurrentLog = new DoubleLogEntry(log, "Arm Motor Output Current ");
-//        armLeftMotorVoltage = new DoubleLogEntry(log, "Arm Motor Bus Voltage");
-//        armRightMotorVoltage = new DoubleLogEntry(log, "Arm Motor Bus Voltage");
+        armLeftOutputCurrentLog = new DoubleLogEntry(log, "Arm Left Motor Output Current ");
+        armRightOutputCurrentLog = new DoubleLogEntry(log, "Arm Right Motor Output Current ");
+        armLeftMotorVoltage = new DoubleLogEntry(log, "Arm Left Motor Bus Voltage");
+        armRightMotorVoltage = new DoubleLogEntry(log, "Arm Right Motor Bus Voltage");
 //        armTargetLog = new DoubleLogEntry(log, "Arm Target Log");
         armAvgEncoderLog = new DoubleLogEntry(log, "Arm Average Encoder Values");
     }
@@ -101,6 +110,7 @@ public class Arm extends SubsystemBase {
         SmartDashboard.putNumber("current Target", armTarget);
         SmartDashboard.putNumber("Average Arm Encoder: ", (leftArmEncoder+rightArmEncoder)/2);
         SmartDashboard.putBoolean("Arm Limit: ", getLimitSwitch());
+        SmartDashboard.putNumber("Voltage Cap", leftArmMotor.getMotorVoltage().getValueAsDouble());
         if (getLimitSwitch()){
             leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(UP_P).withKI(UP_I).withKD(UP_D));
             rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(UP_P).withKI(UP_I).withKD(UP_D));
@@ -110,10 +120,10 @@ public class Arm extends SubsystemBase {
 
 //        armLeftEncoderLog.append(leftArmEncoder);
 //        armRightEncoderLog.append(rightArmEncoder);
-//        armLeftOutputCurrentLog.append(leftArmMotor.getSupplyCurrent().getValue());
-//        armRightOutputCurrentLog.append(rightArmMotor.getSupplyCurrent().getValue());
-//        armLeftMotorVoltage.append(leftArmMotor.getMotorVoltage().getValue());
-//        armRightMotorVoltage.append(rightArmMotor.getMotorVoltage().getValue());
+        armLeftOutputCurrentLog.append(leftArmMotor.getStatorCurrent().getValue());
+        armRightOutputCurrentLog.append(rightArmMotor.getStatorCurrent().getValue());
+        armLeftMotorVoltage.append(leftArmMotor.getMotorVoltage().getValue());
+        armRightMotorVoltage.append(rightArmMotor.getMotorVoltage().getValue());
         //armTargetLog.append(armTarget);
         //armAvgEncoderLog.append((leftArmEncoder+rightArmEncoder)/2);
     }
@@ -207,7 +217,7 @@ public class Arm extends SubsystemBase {
         /**
          * Amp scoring Arm position
          */
-        AMP(12),
+        AMP(21.14),
 
         /**
          * Stage scoring Arm position
@@ -218,6 +228,8 @@ public class Arm extends SubsystemBase {
          * Subwoofer scoring Arm position
          */
         SUBWOOFER(0),
+        
+
 
         /**
          * Climbing Arm position

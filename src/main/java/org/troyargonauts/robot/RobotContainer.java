@@ -8,21 +8,18 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.troyargonauts.common.math.OMath;
 import org.troyargonauts.common.streams.IStream;
-import org.troyargonauts.robot.commands.ShootingSequence;
-import org.troyargonauts.robot.commands.StartingSequence;
+import org.troyargonauts.robot.commands.*;
 import org.troyargonauts.robot.generated.TunerConstants;
 
 import org.troyargonauts.robot.subsystems.Arm.ArmStates;
 import org.troyargonauts.robot.subsystems.Intake.IntakeStates;
 import org.troyargonauts.robot.subsystems.Shooter.ShooterStates;
-
-import java.util.function.BooleanSupplier;
 
 import static org.troyargonauts.robot.Constants.Controllers.*;
 
@@ -39,13 +36,14 @@ public class RobotContainer {
     private final InstantCommand intakeIn = new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.IN));
     private final InstantCommand intakeOff = new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF));
 
-    public final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
+    public final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain;
+    public Pose2d pose = drivetrain.getState().Pose;// My drivetrain
 
 //    private final SwerveRequest.RobotCentric drive = new SwerveRequest.RobotCentric()
 //        .withDeadband(Constants.Drivetrain.MAX_SPEED * 0.1).withRotationalDeadband(Constants.Drivetrain.MAX_ANGULAR_RATE * 0.1) // Add a 10% deadband
 //        .withDriveRequestType(DriveRequestType.Velocity);
 
-    private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+    public final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(Constants.Drivetrain.MAX_SPEED * 0.08).withRotationalDeadband(Constants.Drivetrain.MAX_ANGULAR_RATE * 0.08) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.Velocity); // I want field-centric
                                                                 // driving in open loop
@@ -68,7 +66,6 @@ public class RobotContainer {
             )
         );
 
-        driver.a().whileTrue(drivetrain.applyRequest(() -> brake));
 
         driver.rightBumper().whileTrue(
             drivetrain.applyRequest(() -> point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX())))
@@ -177,13 +174,18 @@ public class RobotContainer {
     public RobotContainer() {
         NamedCommands.registerCommand("Starting Sequence", new StartingSequence());
 
-        NamedCommands.registerCommand("Shooting Sequence Subwoofer", 
-            new InstantCommand(() -> Robot.getShooter().setDesiredTarget(100, 100), Robot.getShooter())
-                .until(() -> Robot.getShooter().isTopPidFinished() && Robot.getShooter().isBottomPidFinished())
-            .alongWith(new InstantCommand(() -> Robot.getArm().setDesiredTarget(100), Robot.getArm()))
-                .until(() -> Robot.getArm().isPIDFinished())
-            .andThen(new ShootingSequence())
-            .andThen(new InstantCommand(() -> Robot.getShooter().setDesiredTarget(10, 10), Robot.getShooter()))
+        NamedCommands.registerCommand("Shooting Sequence Subwoofer",
+        new SubwooferShoot()
+//            new InstantCommand(() -> Robot.getShooter().setState(Shooter.ShooterStates.SUBWOOFER), Robot.getShooter())
+//                    .until(() -> Robot.getShooter().isTopPidFinished()).;
+////                    .andThen(new ShootingSequence())
+
+                //            new InstantCommand(() -> Robot.getShooter().setDesiredTarget(100, 100), Robot.getShooter())
+//                .until(() -> Robot.getShooter().isTopPidFinished() && Robot.getShooter().isBottomPidFinished())
+//            .alongWith(new InstantCommand(() -> Robot.getArm().setDesiredTarget(100), Robot.getArm()))
+//                .until(() -> Robot.getArm().isPIDFinished())
+//            .andThen(new ShootingSequence())
+//            .andThen(new InstantCommand(() -> Robot.getShooter().setDesiredTarget(10, 10), Robot.getShooter()))
         );
 
         NamedCommands.registerCommand("Shooting Sequence W2", 
@@ -195,13 +197,12 @@ public class RobotContainer {
             .andThen(new InstantCommand(() -> Robot.getShooter().setDesiredTarget(10, 10), Robot.getShooter()))
         );
 
-        NamedCommands.registerCommand("Shooting Sequence W3", 
-            new InstantCommand(() -> Robot.getShooter().setDesiredTarget(100, 100), Robot.getShooter())
-                .until(() -> Robot.getShooter().isTopPidFinished() && Robot.getShooter().isBottomPidFinished())
-            .alongWith(new InstantCommand(() -> Robot.getArm().setDesiredTarget(100), Robot.getArm()))
+        NamedCommands.registerCommand("Shooting Sequence W3",
+            new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.STAGE), Robot.getShooter())
+                .until(() -> Robot.getShooter().isTopPidFinished())
+            .alongWith(new InstantCommand(() -> Robot.getArm().setState(ArmStates.STAGE), Robot.getArm()))
                 .until(() -> Robot.getArm().isPIDFinished())
             .andThen(new ShootingSequence())
-            .andThen(new InstantCommand(() -> Robot.getShooter().setDesiredTarget(10, 10), Robot.getShooter()))
         );
 
         NamedCommands.registerCommand("Shooting Sequence SH1", 
@@ -222,12 +223,13 @@ public class RobotContainer {
             .andThen(new InstantCommand(() -> Robot.getShooter().setDesiredTarget(10, 10), Robot.getShooter()))
         );
 
-        NamedCommands.registerCommand("Floor Intake", 
-            new InstantCommand(() -> Robot.getArm().setState(ArmStates.FLOOR_INTAKE), Robot.getArm())
-            .alongWith(new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.IN), Robot.getIntake()).until(() -> Robot.getIntake().isNoteReady()))
-            .andThen(new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF), Robot.getIntake()))
+        NamedCommands.registerCommand("WaitUntilNoteReady",
+                new WaitUntilNoteReady()
         );
 
+        NamedCommands.registerCommand("Floor Intake",
+                new FloorIntake()
+            );
         configureBindings();
     }
     /**
@@ -245,10 +247,14 @@ public class RobotContainer {
     public boolean getOperatorX(){
         return operator.x().getAsBoolean();
     }
+    public CommandSwerveDrivetrain getDrivetrain(){
+        return drivetrain;
+    }
 
     public CommandXboxController getOperator(){
         return operator;
     }
+
     public CommandXboxController getDriver(){
         return driver;
     }

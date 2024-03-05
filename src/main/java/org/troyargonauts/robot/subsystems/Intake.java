@@ -1,5 +1,6 @@
 package org.troyargonauts.robot.subsystems;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
@@ -36,12 +37,12 @@ public class Intake extends SubsystemBase {
 
         noteSensor = new DigitalInput(NOTE_SENSOR_SLOT);
 
-//        DataLog log = DataLogManager.getLog();
+        DataLog log = DataLogManager.getLog();
 //
-//        intakeMotorLeftVoltage =  new DoubleLogEntry(log, "Intake Left Motor Bus Voltage log");
-//        intakeOutputRightCurrentLog =  new DoubleLogEntry(log, "Intake Right Motor Output Current log");
-//        intakeMotorRightVoltage =  new DoubleLogEntry(log, "Intake Right Motor Bus Voltage log");
-//        intakeOutputLeftCurrentLog =  new DoubleLogEntry(log, "Intake Left Motor Output Current log");
+        intakeMotorLeftVoltage =  new DoubleLogEntry(log, "Intake Left Motor Bus Voltage log");
+        intakeOutputRightCurrentLog =  new DoubleLogEntry(log, "Intake Right Motor Output Current log");
+        intakeMotorRightVoltage =  new DoubleLogEntry(log, "Intake Right Motor Bus Voltage log");
+        intakeOutputLeftCurrentLog =  new DoubleLogEntry(log, "Intake Left Motor Output Current log");
     }
 
     /**
@@ -59,10 +60,10 @@ public class Intake extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("Note_Readiness",isNoteReady());
-//        intakeOutputRightCurrentLog.append(motorRight.getSupplyCurrent().getValue());
-//        intakeMotorRightVoltage.append(motorRight.getMotorVoltage().getValue());
-//        intakeOutputLeftCurrentLog.append(motorLeft.getSupplyCurrent().getValue());
-//        intakeMotorLeftVoltage.append(motorLeft.getMotorVoltage().getValue());
+        intakeOutputRightCurrentLog.append(motorRight.getStatorCurrent().getValue());
+        intakeMotorRightVoltage.append(motorRight.getMotorVoltage().getValue());
+        intakeOutputLeftCurrentLog.append(motorLeft.getStatorCurrent().getValue());
+        intakeMotorLeftVoltage.append(motorLeft.getMotorVoltage().getValue());
     }
 
     /**
@@ -94,16 +95,16 @@ public class Intake extends SubsystemBase {
     public void setState(IntakeStates state) {
         switch (state){
             case IN:
-                motorRight.set(0.3);;
-                motorLeft.set(0.3);;
+                motorRight.set(0.4);;
+                motorLeft.set(0.4);;
                 break;
             case OFF:
                 motorRight.set(0);
                 motorLeft.set(0);
                 break;
             case OUT:
-                motorRight.set(-0.3);
-                motorLeft.set(-0.3);
+                motorRight.set(-0.4);
+                motorLeft.set(-0.4);
                 break;
         }
     }

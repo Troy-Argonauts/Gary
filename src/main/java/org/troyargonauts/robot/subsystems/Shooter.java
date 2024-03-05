@@ -1,12 +1,18 @@
 package org.troyargonauts.robot.subsystems;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.Slot1Configs;
+import com.ctre.phoenix6.configs.Slot2Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.troyargonauts.robot.Robot;
 
 import static org.troyargonauts.robot.Constants.Shooter.*;
 
@@ -31,6 +37,7 @@ public class Shooter extends SubsystemBase {
 
     private final VelocityVoltage velocityVoltage = new VelocityVoltage(0).withSlot(0);
     private final CoastOut coastRequest = new CoastOut();
+//    public final Slot0Configs config = new Slot0Configs();
 
     /**
      * Instantiates and configures motor controllers and sensors; creates Data Logs. Assigns PID constants.
@@ -38,21 +45,32 @@ public class Shooter extends SubsystemBase {
     public Shooter() {
         topMotor = new TalonFX(TOP_MOTOR_ID, CANBUS_NAME);
         bottomMotor = new TalonFX(BOTTOM_MOTOR_ID, CANBUS_NAME);
-
+//        config.kP = P;
+//        config.kI = I;
+//        config.kD = D;
+//        TalonFXConfiguration allConfigs = new TalonFXConfiguration().withSlot0(config);
         topMotor.setInverted(true);
         bottomMotor.setInverted(true);
 
+//        allConfigs.CurrentLimits.StatorCurrentLimit = 30;
+
         topMotor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
         bottomMotor.getConfigurator().apply(new Slot0Configs().withKP(P).withKI(I).withKD(D));
+//        topMotor.getConfigurator().apply(allConfigs);
+//        bottomMotor.getConfigurator().apply(allConfigs);
 
-//        DataLog log = DataLogManager.getLog();
+
+
+
+        DataLog log = DataLogManager.getLog();
 //
 //        shooterTopEncoderLog = new DoubleLogEntry((log), "Top Shooter Encoder Values");
 //        shooterBottomEncoderLog = new DoubleLogEntry((log), "Bottom Shooter Encoder Values");
-//        shooterTopOutputCurrentLog = new DoubleLogEntry((log), "Top Shooter Motor Output Current ");
-//        shooterBottomOutputCurrentLog = new DoubleLogEntry((log), "Bottom Shooter Motor Output Current ");
-//        shooterTopMotorVoltage = new DoubleLogEntry((log), "Top Shooter Motor Voltage");
-//        shooterBottomMotorVoltage = new DoubleLogEntry((log), "Bottom Shooter Motor Voltage");
+        shooterTopOutputCurrentLog = new DoubleLogEntry((log), "Top Shooter Motor Output Current ");
+        shooterBottomOutputCurrentLog = new DoubleLogEntry((log), "Bottom Shooter Motor Output Current ");
+        shooterTopMotorVoltage = new DoubleLogEntry((log), "Top Shooter Motor Voltage");
+        shooterBottomMotorVoltage = new DoubleLogEntry((log), "Bottom Shooter Motor Voltage");
+
     }
 
     /**
@@ -62,16 +80,17 @@ public class Shooter extends SubsystemBase {
     public void periodic() {
 //        shooterTopEncoderLog.append(topMotor.getPosition().getValue());
 //        shooterBottomEncoderLog.append(bottomMotor.getPosition().getValue());
-//        shooterTopOutputCurrentLog.append(topMotor.getSupplyCurrent().getValue());
-//        shooterTopMotorVoltage.append(bottomMotor.getMotorVoltage().getValue());
-//        shooterBottomOutputCurrentLog.append(topMotor.getSupplyCurrent().getValue());
-//        shooterBottomMotorVoltage.append(bottomMotor.getMotorVoltage().getValue());
+        shooterTopOutputCurrentLog.append(topMotor.getStatorCurrent().getValue());
+        shooterTopMotorVoltage.append(bottomMotor.getMotorVoltage().getValue());
+        shooterBottomOutputCurrentLog.append(topMotor.getStatorCurrent().getValue());
+        shooterBottomMotorVoltage.append(bottomMotor.getMotorVoltage().getValue());
 
         topEncoderRPM = topMotor.getVelocity().getValueAsDouble() * 60;
         bottomEncoderRPM = bottomMotor.getVelocity().getValueAsDouble() * 60;
         SmartDashboard.putNumber("Top Motor AMP", topMotor.getStatorCurrent().getValueAsDouble());
         SmartDashboard.putNumber("Bottom Motor AMP", bottomMotor.getStatorCurrent().getValueAsDouble());
         SmartDashboard.putNumber("Top Encoder RPM", topEncoderRPM);
+        SmartDashboard.putBoolean("SHOOTERPID", isTopPidFinished());
         SmartDashboard.putNumber("Bottom Encoder RPM", bottomEncoderRPM);
     }
 
@@ -170,7 +189,7 @@ public class Shooter extends SubsystemBase {
      * @return Whether the PID is finished
      */
     public boolean isTopPidFinished() {
-        return (Math.abs(topTarget - topEncoderRPM) <= 5);
+        return (Math.abs(topTarget - topEncoderRPM) <= 100);
     }
 
     /**
