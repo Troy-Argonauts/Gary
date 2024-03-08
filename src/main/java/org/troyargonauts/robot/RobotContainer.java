@@ -75,9 +75,7 @@ public class RobotContainer {
             new InstantCommand(Robot.getClimber()::setTarget)
         );
 
-        driver.b().onTrue(
-                new InstantCommand(() -> System.out.println("Here"), Robot.getIntake())
-        );
+
 
         Robot.getClimber().setDefaultCommand(
                 new RunCommand(
@@ -123,8 +121,10 @@ public class RobotContainer {
 
         operator.y().onTrue(
             new ParallelCommandGroup(
-                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.STAGE), Robot.getShooter()),
-                new InstantCommand(() -> Robot.getArm().setState(ArmStates.STAGE), Robot.getArm())
+                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.WING_NOTE), Robot.getShooter()),
+                new InstantCommand(() -> Robot.getArm().setState(ArmStates.WING_NOTE), Robot.getArm())
+//                    new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.WING), Robot.getShooter()),
+//                    new InstantCommand(() -> Robot.getArm().setState(ArmStates.WING), Robot.getArm())
             )
         );
 
@@ -133,6 +133,13 @@ public class RobotContainer {
                 new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.SUBWOOFER), Robot.getShooter()),
                 new InstantCommand(() -> Robot.getArm().setState(ArmStates.SUBWOOFER), Robot.getArm())
             )
+        );
+
+        operator.povRight().onTrue(
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.WING_LINE), Robot.getShooter()),
+                        new InstantCommand(() -> Robot.getArm().setState(ArmStates.WING_LINE), Robot.getArm())
+                )
         );
 
         operator.rightBumper().whileTrue(
@@ -189,12 +196,7 @@ public class RobotContainer {
         );
 
         NamedCommands.registerCommand("Shooting Sequence W2", 
-            new InstantCommand(() -> Robot.getShooter().setDesiredTarget(100, 100), Robot.getShooter())
-                .until(() -> Robot.getShooter().isTopPidFinished() && Robot.getShooter().isBottomPidFinished())
-            .alongWith(new InstantCommand(() -> Robot.getArm().setDesiredTarget(100), Robot.getArm()))
-                .until(() -> Robot.getArm().isPIDFinished())
-            .andThen(new ShootingSequence())
-            .andThen(new InstantCommand(() -> Robot.getShooter().setDesiredTarget(10, 10), Robot.getShooter()))
+            new W2Shoot()
         );
 
         NamedCommands.registerCommand("Shooting Sequence W3",
@@ -215,16 +217,23 @@ public class RobotContainer {
         );
 
         NamedCommands.registerCommand("Shooting Sequence SH2", 
-            new InstantCommand(() -> Robot.getShooter().setDesiredTarget(100, 100), Robot.getShooter())
-                .until(() -> Robot.getShooter().isTopPidFinished() && Robot.getShooter().isBottomPidFinished())
-            .alongWith(new InstantCommand(() -> Robot.getArm().setDesiredTarget(100), Robot.getArm()))
-                .until(() -> Robot.getArm().isPIDFinished())
-            .andThen(new ShootingSequence())
-            .andThen(new InstantCommand(() -> Robot.getShooter().setDesiredTarget(10, 10), Robot.getShooter()))
+//            new InstantCommand(() -> Robot.getShooter().setState(100, 100), Robot.getShooter())
+//                .until(() -> Robot.getShooter().isTopPidFinished() && Robot.getShooter().isBottomPidFinished())
+//            .alongWith(new InstantCommand(() -> Robot.getArm().setDesiredTarget(100), Robot.getArm()))
+//                .until(() -> Robot.getArm().isPIDFinished())
+//            .andThen(new ShootingSequence())
+//            .andThen(new InstantCommand(() -> Robot.getShooter().setDesiredTarget(10, 10), Robot.getShooter()))
+
+                new SH2Shoot()
+
         );
 
         NamedCommands.registerCommand("WaitUntilNoteReady",
                 new WaitUntilNoteReady()
+        );
+
+        NamedCommands.registerCommand("WaitUntilArmDown",
+                new WaitUntilCommand(() -> Robot.getArm().getLimitSwitch())
         );
 
         NamedCommands.registerCommand("Floor Intake",

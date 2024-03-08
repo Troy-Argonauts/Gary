@@ -190,7 +190,7 @@ public class Arm extends SubsystemBase {
      * @return Whether the PIDs are finished
      */
     public boolean isPIDFinished() {
-        return (Math.abs((armTarget - ((leftArmMotor.getPosition().getValueAsDouble())) + rightArmMotor.getPosition().getValueAsDouble()) / 2) <= 5);
+        return (Math.abs(armTarget - rightArmMotor.getPosition().getValueAsDouble()) <= 1);
 
     }
 
@@ -201,7 +201,7 @@ public class Arm extends SubsystemBase {
      */
     public void adjustSetpoint(double joystickValue) {
         if (!limitSwitch.get() || joystickValue != 0) {
-            armTarget += (joystickValue * 0.03);
+            armTarget += (joystickValue * 0.06);
         }
     }
 
@@ -217,17 +217,27 @@ public class Arm extends SubsystemBase {
         /**
          * Amp scoring Arm position
          */
-        AMP(21.14),
+        AMP(24.4),
 
         /**
          * Stage scoring Arm position
          */
-        STAGE(5.33),
+        STAGE(8.3), //want 7.4
 
         /**
          * Subwoofer scoring Arm position
          */
         SUBWOOFER(0),
+
+        /**
+         * Wing scoring Arm position
+         */
+        WING_LINE(10.6),
+
+        /**
+         * Wing scoring Arm position
+         */
+        WING_NOTE(7.4),
         
 
 

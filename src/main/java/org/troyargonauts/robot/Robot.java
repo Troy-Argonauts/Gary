@@ -61,10 +61,14 @@ public class Robot extends TimedRobot {
         autoChooser.addOption("TuneDrive", new TuneDrive());
         autoChooser.addOption("2 Note Arm 0 Auto", new PathPlannerAuto("2 Note Arm 0 Auto"));
        autoChooser.addOption("Copy of 2 Note Arm 0 Auto", new PathPlannerAuto("Copy of 2 Note Arm 0 Auto"));
-        autoChooser.addOption("Test", new PathPlannerAuto("Full Field Test"));
-        autoChooser.addOption("1Note Move Auto", new PathPlannerAuto("Left Edge 1"));
+        autoChooser.addOption("Test", new PathPlannerAuto("Test Auto - 6 feet"));
+        autoChooser.addOption("1Note Move Auto", new PathPlannerAuto("1Note Move Auto"));
 //        autoChooser.addOption("2 Note Arm0 Auto", new PathPlannerAuto("2 Note ARM0 Auto"));
-//        autoChooser.addOption("2 Note Auto W3", new PathPlannerAuto("2 Note Auto W3"));
+        autoChooser.addOption("B 2 Note W2 Center", new PathPlannerAuto("B 2 Note W2 Center"));
+        autoChooser.addOption("R 2 Note W2 Center", new PathPlannerAuto("R 2 Note W2 Center"));
+        autoChooser.addOption("B 3 Note W2 C1 Center", new PathPlannerAuto("B 3 Note W2 C1 Center"));
+        autoChooser.addOption("Left Side 3 Note C4C5 Auto", new PathPlannerAuto("Left Side 3 Note C4C5 Auto"));
+        autoChooser.addOption("B P2 W3 W2 W1 Auto", new PathPlannerAuto("B P2 W3 W2 W1 Auto"));
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
 

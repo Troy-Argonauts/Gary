@@ -18,9 +18,9 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 2.0
+            "name": "WaitUntilArmDown"
           }
         },
         {
@@ -36,12 +36,6 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -49,6 +43,37 @@
                 "type": "path",
                 "data": {
                   "pathName": "1Note Move Path"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "WaitUntilNoteReady"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shooting Sequence W2"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Floor Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "B W2 C1"
                 }
               },
               {

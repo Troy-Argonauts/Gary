@@ -140,6 +140,11 @@ public class Shooter extends SubsystemBase {
          * Shooter off Shooter RPM
          */
         OFF(0, 0),
+
+        /**
+         * Shooter Ramp Up RPM
+         */
+        RAMPUP(700, 700),
         /**
          * Shooter Idle RPM
          */
@@ -148,17 +153,22 @@ public class Shooter extends SubsystemBase {
         /**
          * Amp scoring Shooter RPM
          */
-        WING(4000, 4000),
+        WING_LINE(4000, 4000),
 
         /**
          * Stage scoring Shooter RPM
          */
-        STAGE(3100, 3100),
+        STAGE(3500, 3500),
+
+        /**
+         * Stage scoring Shooter RPM
+         */
+        WING_NOTE(3000, 3000),
 
         /**
          * Subwoofer scoring Shooter RPM
          */
-        SUBWOOFER(2000, 2000),
+        SUBWOOFER(1750, 1750),
         /**
          * ThrowUp Shooter RPM
          */
