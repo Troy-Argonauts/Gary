@@ -5,6 +5,10 @@
 package org.troyargonauts.robot;
 
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.VideoSink;
+import edu.wpi.first.cscore.VideoSource;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -59,6 +63,10 @@ public class Robot extends TimedRobot {
     private DoubleLogEntry drivetrainBLDVoltageLog;
     private DoubleLogEntry drivetrainBLTVoltageLog;
 
+//    UsbCamera camera1;
+//    UsbCamera camera2;
+//    VideoSink server;
+
 
     /**
      * This method is the first that is run when the robot is powered on. Only runs once.
@@ -75,6 +83,11 @@ public class Robot extends TimedRobot {
         shooter = new Shooter();
       
         robotContainer = new RobotContainer();
+
+//        camera1 = CameraServer.startAutomaticCapture(1);
+//        camera2 = CameraServer.startAutomaticCapture(2);
+//        server = CameraServer.getServer();
+
 
         autoChooser = AutoBuilder.buildAutoChooser();
         autoChooser.addOption("ShootInPlace", new SubwooferShoot());
@@ -248,6 +261,14 @@ public class Robot extends TimedRobot {
             robotContainer.getDriver().getHID().setRumble(GenericHID.RumbleType.kBothRumble,0);
 
         }
+//        if(robotContainer.getDriverDPadDown()) {
+//            System.out.println("Setting Camera 2");
+//            server.setSource(camera2);
+//        } else if (robotContainer.getDriverDPadUp()) {
+//            System.out.println("Setting Camera 1");
+//            server.setSource(camera1);
+//        }
+
     }
 
     /**

@@ -267,6 +267,14 @@ public class RobotContainer {
     public CommandXboxController getDriver(){
         return driver;
     }
+
+    public boolean getDriverDPadDown() {
+        return driver.povDown().getAsBoolean();
+    }
+
+    public boolean getDriverDPadUp() {
+        return driver.povUp().getAsBoolean();
+    }
 }
 
 
