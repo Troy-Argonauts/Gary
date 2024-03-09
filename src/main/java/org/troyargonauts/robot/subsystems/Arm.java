@@ -36,8 +36,7 @@ public class Arm extends SubsystemBase {
     private DoubleLogEntry armRightOutputCurrentLog;
     private DoubleLogEntry armLeftMotorVoltage;
     private DoubleLogEntry armRightMotorVoltage;
-    private DoubleLogEntry armTargetLog;
-    private DoubleLogEntry armAvgEncoderLog;
+
     private final PositionVoltage positionVoltage = new PositionVoltage(0).withSlot(0);
     public final Slot0Configs upConfig = new Slot0Configs();
     public final Slot1Configs downConfig = new Slot1Configs();
@@ -89,14 +88,11 @@ public class Arm extends SubsystemBase {
 
         DataLog log = DataLogManager.getLog();
 
-//        armLeftEncoderLog = new DoubleLogEntry(log, "Arm Left Encoder Values");
-//        armRightEncoderLog = new DoubleLogEntry(log, "Arm Right Encoder Values");
         armLeftOutputCurrentLog = new DoubleLogEntry(log, "Arm Left Motor Output Current ");
         armRightOutputCurrentLog = new DoubleLogEntry(log, "Arm Right Motor Output Current ");
         armLeftMotorVoltage = new DoubleLogEntry(log, "Arm Left Motor Bus Voltage");
         armRightMotorVoltage = new DoubleLogEntry(log, "Arm Right Motor Bus Voltage");
-//        armTargetLog = new DoubleLogEntry(log, "Arm Target Log");
-        armAvgEncoderLog = new DoubleLogEntry(log, "Arm Average Encoder Values");
+
     }
 
     /**
@@ -118,14 +114,11 @@ public class Arm extends SubsystemBase {
 //            positionVoltage.Slot = 0;
         }
 
-//        armLeftEncoderLog.append(leftArmEncoder);
-//        armRightEncoderLog.append(rightArmEncoder);
         armLeftOutputCurrentLog.append(leftArmMotor.getStatorCurrent().getValue());
         armRightOutputCurrentLog.append(rightArmMotor.getStatorCurrent().getValue());
         armLeftMotorVoltage.append(leftArmMotor.getMotorVoltage().getValue());
         armRightMotorVoltage.append(rightArmMotor.getMotorVoltage().getValue());
-        //armTargetLog.append(armTarget);
-        //armAvgEncoderLog.append((leftArmEncoder+rightArmEncoder)/2);
+
     }
 
     /**

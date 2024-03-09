@@ -28,10 +28,10 @@ public class Shooter extends SubsystemBase {
     private double topTarget, bottomTarget = 0.0;
     private double topEncoderRPM, bottomEncoderRPM;
 
-    private DoubleLogEntry shooterTopEncoderLog;
+
     private DoubleLogEntry shooterTopMotorVoltage;
     private DoubleLogEntry shooterTopOutputCurrentLog;
-    private DoubleLogEntry shooterBottomEncoderLog;
+
     private DoubleLogEntry shooterBottomMotorVoltage;
     private DoubleLogEntry shooterBottomOutputCurrentLog;
 
@@ -63,9 +63,7 @@ public class Shooter extends SubsystemBase {
 
 
         DataLog log = DataLogManager.getLog();
-//
-//        shooterTopEncoderLog = new DoubleLogEntry((log), "Top Shooter Encoder Values");
-//        shooterBottomEncoderLog = new DoubleLogEntry((log), "Bottom Shooter Encoder Values");
+
         shooterTopOutputCurrentLog = new DoubleLogEntry((log), "Top Shooter Motor Output Current ");
         shooterBottomOutputCurrentLog = new DoubleLogEntry((log), "Bottom Shooter Motor Output Current ");
         shooterTopMotorVoltage = new DoubleLogEntry((log), "Top Shooter Motor Voltage");
@@ -78,8 +76,7 @@ public class Shooter extends SubsystemBase {
      */
     @Override
     public void periodic() {
-//        shooterTopEncoderLog.append(topMotor.getPosition().getValue());
-//        shooterBottomEncoderLog.append(bottomMotor.getPosition().getValue());
+
         shooterTopOutputCurrentLog.append(topMotor.getStatorCurrent().getValue());
         shooterTopMotorVoltage.append(bottomMotor.getMotorVoltage().getValue());
         shooterBottomOutputCurrentLog.append(topMotor.getStatorCurrent().getValue());

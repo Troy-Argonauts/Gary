@@ -27,11 +27,11 @@ public class Climber extends SubsystemBase {
     private Rev2mDistanceSensor distanceSensor;
     private double distanceSensorOutput;
 
-    private DoubleLogEntry climberEncoderLog;
+
     private DoubleLogEntry climberOutputCurrentLog;
     private DoubleLogEntry climberMotorVoltage;
-    private DoubleLogEntry climberTargetLog;
-    private DoubleLogEntry climberDistanceEncoder;
+
+
 
     private final PositionVoltage positionVoltage = new PositionVoltage(0).withSlot(0);
 
@@ -46,11 +46,10 @@ public class Climber extends SubsystemBase {
 
         DataLog log = DataLogManager.getLog();
 //
-//        climberDistanceEncoder = new DoubleLogEntry((log), "Distance Encoder Values");
-//        climberTargetLog = new DoubleLogEntry((log), "Climber Target Values");
+
         climberMotorVoltage = new DoubleLogEntry((log), "Climber Motor Voltage");
         climberOutputCurrentLog = new DoubleLogEntry((log), "Climber Current Output Values");
-//        climberEncoderLog = new DoubleLogEntry((log), "Climber Encoder Values");
+
 
 //       // distanceSensor = new Rev2mDistanceSensor(Rev2mDistanceSensor.Port.kOnboard);
 //        distanceSensor.setAutomaticMode(true);
@@ -93,11 +92,10 @@ public class Climber extends SubsystemBase {
      */
     @Override
     public void periodic() {
-//        climberEncoderLog.append(motorEncoder);
+
         climberOutputCurrentLog.append(motor.getStatorCurrent().getValue());
         climberMotorVoltage.append(motor.getMotorVoltage().getValue());
-//        climberTargetLog.append(motorEncoder);
-     //   climberDistanceEncoder.append(distanceSensorOutput);
+
 
         motorEncoder = motor.getPosition().getValueAsDouble();
 
