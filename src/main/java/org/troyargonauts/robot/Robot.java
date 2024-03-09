@@ -254,13 +254,14 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         if(!robotContainer.getOperatorRightBumper() && Robot.getIntake().isNoteReady() && !robotContainer.getOperatorRightTrigger()){
             Robot.getIntake().setState(Intake.IntakeStates.OFF);
-            robotContainer.getOperator().getHID().setRumble(GenericHID.RumbleType.kBothRumble,0.5);
-            robotContainer.getDriver().getHID().setRumble(GenericHID.RumbleType.kBothRumble,0.5);
-        } else{
-            robotContainer.getOperator().getHID().setRumble(GenericHID.RumbleType.kBothRumble,0);
-            robotContainer.getDriver().getHID().setRumble(GenericHID.RumbleType.kBothRumble,0);
-
+//            robotContainer.getOperator().getHID().setRumble(GenericHID.RumbleType.kBothRumble,0.5);
+//            robotContainer.getDriver().getHID().setRumble(GenericHID.RumbleType.kBothRumble,0.5);
         }
+//        else{
+////            robotContainer.getOperator().getHID().setRumble(GenericHID.RumbleType.kBothRumble,0);
+////            robotContainer.getDriver().getHID().setRumble(GenericHID.RumbleType.kBothRumble,0);
+//
+//        }
 //        if(robotContainer.getDriverDPadDown()) {
 //            System.out.println("Setting Camera 2");
 //            server.setSource(camera2);
