@@ -87,12 +87,14 @@ public class Limelight extends SubsystemBase {
 
     public double getDistanceFromAprilTagInches()  {
         double angle = Math.toRadians(Constants.Limelight.MOUNTING_ANGLE) + getTy();
-        if (angle < 1 || angle > 89)
+        if (angle < 1 || angle > 89) {
             return 0;
+        }
         double tan = Math.tan(Math.toRadians(angle));
-        return (Limelight.getAprilTagHeight(0) - Constants.Limelight.LIMELIGHT_HEIGHT) / tan;
+        return ((Limelight.getAprilTagHeight(0) - Constants.Limelight.LIMELIGHT_HEIGHT) / tan)/2.54;
 
     }
+
 
 
     /**
