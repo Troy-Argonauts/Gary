@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.troyargonauts.common.math.OMath;
 import org.troyargonauts.common.streams.IStream;
 import org.troyargonauts.robot.commands.*;
@@ -36,6 +37,7 @@ public class RobotContainer {
     private final InstantCommand intakeIn = new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.IN));
     private final InstantCommand intakeOff = new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF));
 
+    public Trigger noteReady;
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain;
     public Pose2d pose = drivetrain.getState().Pose;// My drivetrain
 
@@ -98,6 +100,10 @@ public class RobotContainer {
                     Robot.getArm().adjustSetpoint(-armSpeed);
                 }, Robot.getArm()
             )
+        );
+
+        noteReady.onTrue(
+                new Rumble()
         );
 
         operator.a().onTrue(
@@ -179,10 +185,11 @@ public class RobotContainer {
      * Runs configureBindings() method and registers Pathplanner NamedCommands
      */
     public RobotContainer() {
+        noteReady = new Trigger(Robot.getIntake().noteReady);
         NamedCommands.registerCommand("Starting Sequence", new StartingSequence());
 
         NamedCommands.registerCommand("Shooting Sequence Subwoofer",
-        new SubwooferShoot()
+            new SubwooferShoot()
 //            new InstantCommand(() -> Robot.getShooter().setState(Shooter.ShooterStates.SUBWOOFER), Robot.getShooter())
 //                    .until(() -> Robot.getShooter().isTopPidFinished()).;
 ////                    .andThen(new ShootingSequence())
@@ -267,6 +274,16 @@ public class RobotContainer {
     public CommandXboxController getDriver(){
         return driver;
     }
+
+    public boolean getDriverDPadDown() {
+        return driver.povDown().getAsBoolean();
+    }
+
+    public boolean getDriverDPadUp() {
+        return driver.povUp().getAsBoolean();
+    }
+
+
 }
 
 

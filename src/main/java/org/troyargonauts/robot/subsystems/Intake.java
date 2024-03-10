@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import java.util.function.BooleanSupplier;
+
 import static org.troyargonauts.robot.Constants.Intake.*;
 
 /**
@@ -27,6 +29,7 @@ public class Intake extends SubsystemBase {
     private DoubleLogEntry intakeOutputRightCurrentLog;
     private DoubleLogEntry intakeMotorRightVoltage;
     private DoubleLogEntry intakeOutputLeftCurrentLog;
+    public BooleanSupplier noteReady;
 
     /**
      * Instantiates motor controllers and sensors; creates data logs
@@ -54,6 +57,7 @@ public class Intake extends SubsystemBase {
         return !noteSensor.get();
     }
 
+
     /**
      * Append values to each data log periodically and output Note Sensor value to SmartDashboard
      */
@@ -64,6 +68,7 @@ public class Intake extends SubsystemBase {
         intakeMotorRightVoltage.append(motorRight.getMotorVoltage().getValue());
         intakeOutputLeftCurrentLog.append(motorLeft.getStatorCurrent().getValue());
         intakeMotorLeftVoltage.append(motorLeft.getMotorVoltage().getValue());
+        noteReady = this::isNoteReady;
     }
 
     /**

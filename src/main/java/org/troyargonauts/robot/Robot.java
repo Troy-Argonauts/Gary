@@ -9,6 +9,12 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
+
+import edu.wpi.first.cscore.VideoSink;
+import edu.wpi.first.cscore.VideoSource;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -43,6 +49,29 @@ public class Robot extends TimedRobot {
 
     private boolean armLimitPressed;
 
+    private DoubleLogEntry drivetrainFRDCurrentLog;
+    private DoubleLogEntry drivetrainFRTCurrentLog;
+    private DoubleLogEntry drivetrainBRDCurrentLog;
+    private DoubleLogEntry drivetrainBRTCurrentLog;
+    private DoubleLogEntry drivetrainFLDCurrentLog;
+    private DoubleLogEntry drivetrainFLTCurrentLog;
+    private DoubleLogEntry drivetrainBLDCurrentLog;
+    private DoubleLogEntry drivetrainBLTCurrentLog;
+
+    private DoubleLogEntry drivetrainFRDVoltageLog;
+    private DoubleLogEntry drivetrainFRTVoltageLog;
+    private DoubleLogEntry drivetrainBRDVoltageLog;
+    private DoubleLogEntry drivetrainBRTVoltageLog;
+    private DoubleLogEntry drivetrainFLDVoltageLog;
+    private DoubleLogEntry drivetrainFLTVoltageLog;
+    private DoubleLogEntry drivetrainBLDVoltageLog;
+    private DoubleLogEntry drivetrainBLTVoltageLog;
+
+//    UsbCamera camera1;
+//    UsbCamera camera2;
+//    VideoSink server;
+
+
     /**
      * This method is the first that is run when the robot is powered on. Only runs once.
      * Used to instantiate all subsystems, creates a thread for all PID control loops, sets up all available autonomous routines, and the autonomous chooser.
@@ -50,6 +79,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         DataLogManager.start();
+        DataLog log = DataLogManager.getLog();
 
 
         arm = new Arm();
@@ -65,6 +95,10 @@ public class Robot extends TimedRobot {
         robotContainer.getDrivetrain().getModule(1).getSteerMotor().getConfigurator().apply(configs);
         robotContainer.getDrivetrain().getModule(2).getSteerMotor().getConfigurator().apply(configs);
         robotContainer.getDrivetrain().getModule(3).getSteerMotor().getConfigurator().apply(configs);
+//        camera1 = CameraServer.startAutomaticCapture(1);
+//        camera2 = CameraServer.startAutomaticCapture(2);
+//        server = CameraServer.getServer();
+
 
         autoChooser = AutoBuilder.buildAutoChooser();
         autoChooser.addOption("ShootInPlace", new SubwooferShoot());
@@ -103,6 +137,27 @@ public class Robot extends TimedRobot {
 
             //climber.run();
         }, 100, 10, TimeUnit.MILLISECONDS);
+
+        drivetrainFRDCurrentLog = new DoubleLogEntry((log), "Front Right Drive Motor Current");
+        drivetrainFRTCurrentLog = new DoubleLogEntry((log), "Front Right Turn Motor Current");
+        drivetrainBRDCurrentLog = new DoubleLogEntry((log), "Back Right Drive Motor Current");
+        drivetrainBRTCurrentLog = new DoubleLogEntry((log), "Front Right Turn Motor Current");
+        drivetrainFLDCurrentLog = new DoubleLogEntry((log), "Front Left Drive Motor Current");
+        drivetrainFLTCurrentLog = new DoubleLogEntry((log), "Front Left Turn Motor Current");
+        drivetrainBLDCurrentLog =  new DoubleLogEntry((log), "Back Left Drive Motor Current");
+        drivetrainBLTCurrentLog =  new DoubleLogEntry((log), "Back Left Turn Motor Current");
+
+        drivetrainFRDVoltageLog =  new DoubleLogEntry((log), "Front Right Drive Motor Voltage");
+        drivetrainFRTVoltageLog =  new DoubleLogEntry((log), "Front Right Turn Motor Voltage");
+        drivetrainBRDVoltageLog =  new DoubleLogEntry((log), "Back Right Drive Motor Voltage");
+        drivetrainBRTVoltageLog =  new DoubleLogEntry((log), "Back Right Turn Motor Voltage");
+        drivetrainFLDVoltageLog =  new DoubleLogEntry((log), "Front Left Drive Motor Voltage");
+        drivetrainFLTVoltageLog =  new DoubleLogEntry((log), "Front Left Turn Motor Voltage");
+        drivetrainBLDVoltageLog =  new DoubleLogEntry((log), "Back Left Drive Motor Voltage");
+        drivetrainBLTVoltageLog =  new DoubleLogEntry((log), "Back Left Turn Motor Voltage");
+
+
+
     }
 
     /**
@@ -119,6 +174,32 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("pose x", robotContainer.drivetrain.getState().Pose.getX());
         SmartDashboard.putNumber("pose y", robotContainer.drivetrain.getState().Pose.getY());
         SmartDashboard.putNumber("pose r", robotContainer.drivetrain.getState().Pose.getRotation().getDegrees());
+
+
+       drivetrainFRDCurrentLog.append(robotContainer.getDrivetrain().getModule(1).getDriveMotor().getStatorCurrent().getValueAsDouble());
+       drivetrainFRDVoltageLog.append(robotContainer.getDrivetrain().getModule(1).getDriveMotor().getMotorVoltage().getValueAsDouble());
+
+       drivetrainFRTCurrentLog.append(robotContainer.getDrivetrain().getModule(1).getSteerMotor().getStatorCurrent().getValueAsDouble());
+       drivetrainFRTVoltageLog.append(robotContainer.getDrivetrain().getModule(1).getSteerMotor().getMotorVoltage().getValueAsDouble());
+
+       drivetrainBRDCurrentLog.append(robotContainer.getDrivetrain().getModule(2).getDriveMotor().getStatorCurrent().getValueAsDouble());
+       drivetrainBRDVoltageLog.append(robotContainer.getDrivetrain().getModule(2).getDriveMotor().getMotorVoltage().getValueAsDouble());
+
+       drivetrainBRTCurrentLog.append(robotContainer.getDrivetrain().getModule(2).getSteerMotor().getStatorCurrent().getValueAsDouble());
+       drivetrainBRTVoltageLog.append(robotContainer.getDrivetrain().getModule(2).getSteerMotor().getMotorVoltage().getValueAsDouble());
+
+       drivetrainFLDCurrentLog.append(robotContainer.getDrivetrain().getModule(3).getDriveMotor().getStatorCurrent().getValueAsDouble());
+       drivetrainFLDVoltageLog.append(robotContainer.getDrivetrain().getModule(3).getDriveMotor().getMotorVoltage().getValueAsDouble());
+
+       drivetrainFLTCurrentLog.append(robotContainer.getDrivetrain().getModule(3).getSteerMotor().getStatorCurrent().getValueAsDouble());
+       drivetrainFLTVoltageLog.append(robotContainer.getDrivetrain().getModule(3).getSteerMotor().getMotorVoltage().getValueAsDouble());
+
+       drivetrainBLDCurrentLog.append(robotContainer.getDrivetrain().getModule(4).getDriveMotor().getStatorCurrent().getValueAsDouble());
+       drivetrainBLDVoltageLog.append(robotContainer.getDrivetrain().getModule(4).getDriveMotor().getMotorVoltage().getValueAsDouble());
+
+       drivetrainBLTCurrentLog.append(robotContainer.getDrivetrain().getModule(4).getSteerMotor().getStatorCurrent().getValueAsDouble());
+       drivetrainBLTVoltageLog.append(robotContainer.getDrivetrain().getModule(4).getSteerMotor().getMotorVoltage().getValueAsDouble());
+
     }
 
     /**
@@ -185,13 +266,22 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         if(!robotContainer.getOperatorRightBumper() && Robot.getIntake().isNoteReady() && !robotContainer.getOperatorRightTrigger()){
             Robot.getIntake().setState(Intake.IntakeStates.OFF);
-            robotContainer.getOperator().getHID().setRumble(GenericHID.RumbleType.kBothRumble,0.5);
-            robotContainer.getDriver().getHID().setRumble(GenericHID.RumbleType.kBothRumble,0.5);
-        } else{
-            robotContainer.getOperator().getHID().setRumble(GenericHID.RumbleType.kBothRumble,0);
-            robotContainer.getDriver().getHID().setRumble(GenericHID.RumbleType.kBothRumble,0);
-
+//            robotContainer.getOperator().getHID().setRumble(GenericHID.RumbleType.kBothRumble,0.5);
+//            robotContainer.getDriver().getHID().setRumble(GenericHID.RumbleType.kBothRumble,0.5);
         }
+//        else{
+////            robotContainer.getOperator().getHID().setRumble(GenericHID.RumbleType.kBothRumble,0);
+////            robotContainer.getDriver().getHID().setRumble(GenericHID.RumbleType.kBothRumble,0);
+//
+//        }
+//        if(robotContainer.getDriverDPadDown()) {
+//            System.out.println("Setting Camera 2");
+//            server.setSource(camera2);
+//        } else if (robotContainer.getDriverDPadUp()) {
+//            System.out.println("Setting Camera 1");
+//            server.setSource(camera1);
+//        }
+
     }
 
     /**
