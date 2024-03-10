@@ -4,7 +4,11 @@
 
 package org.troyargonauts.robot;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -47,12 +51,20 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         DataLogManager.start();
 
+
         arm = new Arm();
         climber = new Climber();
         intake = new Intake();
         shooter = new Shooter();
       
         robotContainer = new RobotContainer();
+
+        CurrentLimitsConfigs configs = new CurrentLimitsConfigs();
+        configs.withStatorCurrentLimit(30);
+        robotContainer.getDrivetrain().getModule(0).getSteerMotor().getConfigurator().apply(configs);
+        robotContainer.getDrivetrain().getModule(1).getSteerMotor().getConfigurator().apply(configs);
+        robotContainer.getDrivetrain().getModule(2).getSteerMotor().getConfigurator().apply(configs);
+        robotContainer.getDrivetrain().getModule(3).getSteerMotor().getConfigurator().apply(configs);
 
         autoChooser = AutoBuilder.buildAutoChooser();
         autoChooser.addOption("ShootInPlace", new SubwooferShoot());
@@ -71,6 +83,7 @@ public class Robot extends TimedRobot {
         autoChooser.addOption("B P2 W3 W2 W1 Auto", new PathPlannerAuto("B P2 W3 W2 W1 Auto"));
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
+
 
         scheduledExecutorService.scheduleAtFixedRate(() -> {
             if (Robot.getArm().getLimitSwitch()) {
