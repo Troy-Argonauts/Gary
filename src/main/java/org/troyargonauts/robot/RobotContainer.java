@@ -37,7 +37,7 @@ public class RobotContainer {
     private final InstantCommand intakeIn = new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.IN));
     private final InstantCommand intakeOff = new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF));
 
-    public Trigger noteReady;
+  //  public Trigger noteReady;
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain;
     public Pose2d pose = drivetrain.getState().Pose;// My drivetrain
 
@@ -102,9 +102,9 @@ public class RobotContainer {
             )
         );
 
-        noteReady.onTrue(
-                new Rumble()
-        );
+//        noteReady.onTrue(
+//                new Rumble()
+//        );
 
         operator.a().onTrue(
             new ParallelCommandGroup(
@@ -185,7 +185,7 @@ public class RobotContainer {
      * Runs configureBindings() method and registers Pathplanner NamedCommands
      */
     public RobotContainer() {
-        noteReady = new Trigger(Robot.getIntake().noteReady);
+//        noteReady = new Trigger(Robot.getIntake().noteReady);
         NamedCommands.registerCommand("Starting Sequence", new StartingSequence());
 
         NamedCommands.registerCommand("Shooting Sequence Subwoofer",
