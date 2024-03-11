@@ -176,6 +176,23 @@ public class Limelight extends SubsystemBase {
     }
 
     /**
+     * Calculates arm setpoint based on limelights input.
+     * @return arm setpoint.
+     */
+    public double calculateArmSetpoint(double distance){
+        return
+    }
+
+    /**
+     * Calculates shooter setpoint based on limelights input.
+     * @return arm setpoint.
+     */
+    public double calculateShooterSetpoint(double distance){
+        return 
+    }
+
+
+    /**
      * This method displays the April Tag Distance,  getDistanceFromAprilTagInches,
      * methods respectively. Get pipeline displays current Pipeline;
      */
