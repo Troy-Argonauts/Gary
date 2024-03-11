@@ -35,6 +35,7 @@ public class Robot extends TimedRobot {
     private static Climber climber;
     private static Intake intake;
     private static Shooter shooter;
+    private static Limelight limelight;
     private static RobotContainer robotContainer;
 
     private boolean armLimitPressed;
@@ -51,6 +52,7 @@ public class Robot extends TimedRobot {
         climber = new Climber();
         intake = new Intake();
         shooter = new Shooter();
+        limelight = new Limelight();
       
         robotContainer = new RobotContainer();
 
@@ -235,6 +237,17 @@ public class Robot extends TimedRobot {
     public static Arm getArm() {
         if (arm == null) arm = new Arm();
         return arm;
+    }
+
+
+    /**
+     * Gets the created Limelight subsystem. If a Limelight subsystem has not been created, creates one.
+     *
+     * @return Limelight Subsystem
+     */
+    public static Limelight getLimelight(){
+        if (limelight == null) limelight = new Limelight();
+        return limelight;
     }
     public static RobotContainer getRobotContainer(){
         return robotContainer;
