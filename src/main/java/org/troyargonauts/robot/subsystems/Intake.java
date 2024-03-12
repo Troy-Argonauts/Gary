@@ -19,33 +19,33 @@ import static org.troyargonauts.robot.Constants.Intake.*;
  * @author firearcher2012, SavageCabbage360, JJCgits, firelite2023
  */
 public class Intake extends SubsystemBase {
-    private TalonFX motorLeft;
+    private TalonFX motorTop;
 
-    private TalonFX motorRight;
+    private TalonFX motorBottom;
 
     private DigitalInput noteSensor;
 
-    private DoubleLogEntry intakeMotorLeftVoltage;
-    private DoubleLogEntry intakeOutputRightCurrentLog;
-    private DoubleLogEntry intakeMotorRightVoltage;
-    private DoubleLogEntry intakeOutputLeftCurrentLog;
+    private DoubleLogEntry intakeMotorTopVoltage;
+    private DoubleLogEntry intakeOutputBottomCurrentLog;
+    private DoubleLogEntry intakeMotorBottomVoltage;
+    private DoubleLogEntry intakeOutputTopCurrentLog;
     public BooleanSupplier noteReady;
 
     /**
      * Instantiates motor controllers and sensors; creates data logs
      */
     public Intake() {
-        motorLeft = new TalonFX(LEFT_MOTOR_CAN_ID, CANBUS_NAME);
-        motorRight = new TalonFX(RIGHT_MOTOR_CAN_ID, CANBUS_NAME);
+        motorTop = new TalonFX(TOP_MOTOR_CAN_ID, CANBUS_NAME);
+        motorBottom = new TalonFX(BOTTOM_MOTOR_CAN_ID, CANBUS_NAME);
 
         noteSensor = new DigitalInput(NOTE_SENSOR_SLOT);
 
         DataLog log = DataLogManager.getLog();
 //
-        intakeMotorLeftVoltage =  new DoubleLogEntry(log, "Intake Left Motor Bus Voltage log");
-        intakeOutputRightCurrentLog =  new DoubleLogEntry(log, "Intake Right Motor Output Current log");
-        intakeMotorRightVoltage =  new DoubleLogEntry(log, "Intake Right Motor Bus Voltage log");
-        intakeOutputLeftCurrentLog =  new DoubleLogEntry(log, "Intake Left Motor Output Current log");
+        intakeMotorTopVoltage =  new DoubleLogEntry(log, "Intake Left Motor Bus Voltage log");
+        intakeOutputBottomCurrentLog =  new DoubleLogEntry(log, "Intake Right Motor Output Current log");
+        intakeMotorBottomVoltage =  new DoubleLogEntry(log, "Intake Right Motor Bus Voltage log");
+        intakeOutputTopCurrentLog =  new DoubleLogEntry(log, "Intake Left Motor Output Current log");
     }
 
     /**
@@ -64,10 +64,10 @@ public class Intake extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("Note_Readiness",isNoteReady());
-        intakeOutputRightCurrentLog.append(motorRight.getStatorCurrent().getValue());
-        intakeMotorRightVoltage.append(motorRight.getMotorVoltage().getValue());
-        intakeOutputLeftCurrentLog.append(motorLeft.getStatorCurrent().getValue());
-        intakeMotorLeftVoltage.append(motorLeft.getMotorVoltage().getValue());
+        intakeOutputBottomCurrentLog.append(motorBottom.getStatorCurrent().getValue());
+        intakeMotorBottomVoltage.append(motorBottom.getMotorVoltage().getValue());
+        intakeOutputTopCurrentLog.append(motorTop.getStatorCurrent().getValue());
+        intakeMotorTopVoltage.append(motorTop.getMotorVoltage().getValue());
         noteReady = this::isNoteReady;
     }
 
@@ -100,16 +100,16 @@ public class Intake extends SubsystemBase {
     public void setState(IntakeStates state) {
         switch (state){
             case IN:
-                motorRight.set(0.4);;
-                motorLeft.set(0.4);;
+                motorBottom.set(0.4);;
+                motorTop.set(-0.6);;
                 break;
             case OFF:
-                motorRight.set(0);
-                motorLeft.set(0);
+                motorBottom.set(0);
+                motorTop.set(0);
                 break;
             case OUT:
-                motorRight.set(-0.4);
-                motorLeft.set(-0.4);
+                motorBottom.set(-0.4);
+                motorTop.set(0.6);
                 break;
         }
     }

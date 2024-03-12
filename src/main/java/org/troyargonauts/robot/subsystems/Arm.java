@@ -210,7 +210,7 @@ public class Arm extends SubsystemBase {
         /**
          * Amp scoring Arm position
          */
-        AMP(24.4),
+        AMP(20.0), //24.4
 
         /**
          * Stage scoring Arm position

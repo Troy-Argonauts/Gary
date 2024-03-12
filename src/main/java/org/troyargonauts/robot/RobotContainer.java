@@ -4,6 +4,7 @@
 
 package org.troyargonauts.robot;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -185,6 +186,8 @@ public class RobotContainer {
      * Runs configureBindings() method and registers Pathplanner NamedCommands
      */
     public RobotContainer() {
+//        CurrentLimitsConfigs configs = new CurrentLimitsConfigs();
+//        configs.withStatorCurrentLimit(40);
 //        noteReady = new Trigger(Robot.getIntake().noteReady);
         NamedCommands.registerCommand("Starting Sequence", new StartingSequence());
 
@@ -247,6 +250,11 @@ public class RobotContainer {
                 new FloorIntake()
             );
         configureBindings();
+//        drivetrain.getModule(0).getSteerMotor().getConfigurator().apply(configs);
+//        drivetrain.getModule(1).getSteerMotor().getConfigurator().apply(configs);
+//        drivetrain.getModule(2).getSteerMotor().getConfigurator().apply(configs);
+//        drivetrain.getModule(3).getSteerMotor().getConfigurator().apply(configs);
+
     }
     /**
      * Gets boolean value of Operator controller RightBumper. Used to regulate intake when beam break is activated.
