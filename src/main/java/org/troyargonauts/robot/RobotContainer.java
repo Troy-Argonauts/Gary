@@ -7,6 +7,7 @@ package org.troyargonauts.robot;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -83,13 +84,15 @@ public class RobotContainer {
         Robot.getClimber().setDefaultCommand(
                 new RunCommand(
                         () -> {
-                            double climberSpeed = IStream.create(driver::getLeftTriggerAxis)
+                            double climberSpeed = 0.08 * IStream.create(driver::getLeftTriggerAxis)
                                     .filtered(x -> OMath.deadband(x, DEADBAND))
                                     .get();
                             Robot.getClimber().setRawPower(climberSpeed);
                         }, Robot.getClimber()
                 )
         );
+
+
 
         // operator controller commands
         Robot.getArm().setDefaultCommand(
@@ -155,7 +158,10 @@ public class RobotContainer {
                     new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OUT), Robot.getIntake())
             )
         ).whileFalse(
-                new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF), Robot.getIntake())
+                new ParallelCommandGroup(
+                new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF), Robot.getIntake()),
+                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.OFF), Robot.getShooter())
+        )
         );
 
         operator.leftBumper().whileTrue(
@@ -236,6 +242,10 @@ public class RobotContainer {
 
                 new SH2Shoot()
 
+        );
+
+        NamedCommands.registerCommand("Shooter OFF",
+                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.OFF), Robot.getShooter())
         );
 
         NamedCommands.registerCommand("WaitUntilNoteReady",

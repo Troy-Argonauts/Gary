@@ -165,7 +165,7 @@ public class Shooter extends SubsystemBase {
         /**
          * Subwoofer scoring Shooter RPM
          */
-        SUBWOOFER(1750, 1750),
+        SUBWOOFER(2000, 2000),
         /**
          * ThrowUp Shooter RPM
          */
@@ -196,7 +196,7 @@ public class Shooter extends SubsystemBase {
      * @return Whether the PID is finished
      */
     public boolean isTopPidFinished() {
-        return (Math.abs(topTarget - topEncoderRPM) <= 100);
+        return (Math.abs(topTarget - topEncoderRPM) <= 50);
     }
 
     /**

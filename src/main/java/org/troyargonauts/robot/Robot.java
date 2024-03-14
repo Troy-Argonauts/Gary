@@ -89,8 +89,8 @@ public class Robot extends TimedRobot {
       
         robotContainer = new RobotContainer();
 
-//        CurrentLimitsConfigs configs = new CurrentLimitsConfigs();
-//        configs.withStatorCurrentLimit(30);
+        CurrentLimitsConfigs configs = new CurrentLimitsConfigs();
+        configs.withStatorCurrentLimit(30);
 
 //        camera1 = CameraServer.startAutomaticCapture(1);
 //        camera2 = CameraServer.startAutomaticCapture(2);
@@ -226,7 +226,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousInit() {
-        m_autonomousCommand = autoChooser.getSelected();
+        m_autonomousCommand = autoChooser.getSelected().withTimeout(15);
 
         if (m_autonomousCommand != null) {
             m_autonomousCommand.schedule();

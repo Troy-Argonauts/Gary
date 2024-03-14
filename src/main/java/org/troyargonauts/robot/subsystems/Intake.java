@@ -1,5 +1,6 @@
 package org.troyargonauts.robot.subsystems;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.util.datalog.DataLog;
@@ -30,7 +31,7 @@ public class Intake extends SubsystemBase {
     private DoubleLogEntry intakeMotorBottomVoltage;
     private DoubleLogEntry intakeOutputTopCurrentLog;
     public BooleanSupplier noteReady;
-
+    public CurrentLimitsConfigs intakeConfigs;
     /**
      * Instantiates motor controllers and sensors; creates data logs
      */
@@ -41,6 +42,10 @@ public class Intake extends SubsystemBase {
         noteSensor = new DigitalInput(NOTE_SENSOR_SLOT);
 
         DataLog log = DataLogManager.getLog();
+
+       intakeConfigs = new CurrentLimitsConfigs();
+//       intakeConfigs.withStatorCurrentLimit(40);
+
 //
         intakeMotorTopVoltage =  new DoubleLogEntry(log, "Intake Left Motor Bus Voltage log");
         intakeOutputBottomCurrentLog =  new DoubleLogEntry(log, "Intake Right Motor Output Current log");
@@ -64,9 +69,11 @@ public class Intake extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("Note_Readiness",isNoteReady());
-        intakeOutputBottomCurrentLog.append(motorBottom.getStatorCurrent().getValue());
+        intakeOutputBottomCurrentLog.append(motorBottom.getTorqueCurrent().getValue());
+  //      intakeOutputBottomCurrentLog.append(motorBottom.getStatorCurrent().getValue());
         intakeMotorBottomVoltage.append(motorBottom.getMotorVoltage().getValue());
-        intakeOutputTopCurrentLog.append(motorTop.getStatorCurrent().getValue());
+        intakeOutputTopCurrentLog.append(motorTop.getTorqueCurrent().getValue());
+ //       intakeOutputTopCurrentLog.append(motorTop.getStatorCurrent().getValue());
         intakeMotorTopVoltage.append(motorTop.getMotorVoltage().getValue());
         noteReady = this::isNoteReady;
     }
@@ -100,16 +107,16 @@ public class Intake extends SubsystemBase {
     public void setState(IntakeStates state) {
         switch (state){
             case IN:
-                motorBottom.set(0.4);;
-                motorTop.set(-0.6);;
+                motorBottom.set(0.2);
+                motorTop.set(-0.55);
                 break;
             case OFF:
                 motorBottom.set(0);
                 motorTop.set(0);
                 break;
             case OUT:
-                motorBottom.set(-0.4);
-                motorTop.set(0.6);
+                motorBottom.set(-0.2);
+                motorTop.set(0.55);
                 break;
         }
     }

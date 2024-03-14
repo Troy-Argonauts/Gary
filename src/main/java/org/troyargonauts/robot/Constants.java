@@ -36,8 +36,8 @@ public final class Constants {
 
         int LIMIT_SWITCH_SLOT = 1;
 
-        double UP_P = 0.85; //0.83
-        double UP_I = 0.4;
+        double UP_P = 0.83; //0.83
+        double UP_I = 0.3;
         double UP_D = 0.0045;
         double DOWN_P = 0.2; //0.25
         double DOWN_I = 0;
@@ -67,8 +67,8 @@ public final class Constants {
         int TOP_MOTOR_ID = 24;
         int BOTTOM_MOTOR_ID = 25;
 
-        double P = 0.67;
-        double I = 0.43;
+        double P = 0.42;
+        double I = 1.7;
         double D = 0.002;
 
 //        double P = 0.457;

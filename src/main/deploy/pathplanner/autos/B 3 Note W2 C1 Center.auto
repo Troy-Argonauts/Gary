@@ -61,15 +61,15 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Floor Intake"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Floor Intake"
-                }
-              },
               {
                 "type": "path",
                 "data": {
@@ -83,6 +83,18 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "C1 SH1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shooting Sequence SH2"
           }
         }
       ]

@@ -1,6 +1,8 @@
 package org.troyargonauts.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.FollowerType;
 import com.ctre.phoenix6.configs.*;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -60,8 +62,9 @@ public class Arm extends SubsystemBase {
         zeroConfig.kD = ZERO;
 
         TalonFXConfiguration allConfigs = new TalonFXConfiguration().withSlot0(upConfig).withSlot1(downConfig).withSlot2(zeroConfig);
-        allConfigs.Voltage.PeakForwardVoltage = 3;
-        allConfigs.Voltage.PeakReverseVoltage = -3;
+        allConfigs.Voltage.PeakForwardVoltage = 4;
+        allConfigs.MotorOutput.PeakForwardDutyCycle = 0.3;
+        allConfigs.Voltage.PeakReverseVoltage = -4;
 //       allConfigs.MotorOutput.PeakForwardDutyCycle = 0.3;
 //       allConfigs.MotorOutput.PeakReverseDutyCycle = -0.3;
 
@@ -77,7 +80,8 @@ public class Arm extends SubsystemBase {
         leftArmMotor.getConfigurator().apply(allConfigs);
         rightArmMotor.getConfigurator().apply(allConfigs);
 
-        leftArmMotor.setInverted(false);
+        leftArmMotor.setControl(new Follower(rightArmMotor.getDeviceID(), true));
+
         rightArmMotor.setInverted(true);
 
 
@@ -107,6 +111,9 @@ public class Arm extends SubsystemBase {
         SmartDashboard.putNumber("Average Arm Encoder: ", (leftArmEncoder+rightArmEncoder)/2);
         SmartDashboard.putBoolean("Arm Limit: ", getLimitSwitch());
         SmartDashboard.putNumber("Voltage Cap", leftArmMotor.getMotorVoltage().getValueAsDouble());
+        SmartDashboard.putBoolean("ARMPIDState", isPIDFinished());
+        SmartDashboard.putNumber("current", rightArmMotor.getStatorCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("ARM sPEED", rightArmMotor.getDutyCycle().getValueAsDouble());
         if (getLimitSwitch()){
             leftArmMotor.getConfigurator().apply(new Slot0Configs().withKP(UP_P).withKI(UP_I).withKD(UP_D));
             rightArmMotor.getConfigurator().apply(new Slot0Configs().withKP(UP_P).withKI(UP_I).withKD(UP_D));
@@ -136,7 +143,6 @@ public class Arm extends SubsystemBase {
      * @param power desired power (value between -1 and 1)
      */
     public void setPower(double power) {
-        leftArmMotor.set(power);
         rightArmMotor.set(power);
     }
 
@@ -170,9 +176,6 @@ public class Arm extends SubsystemBase {
             positionVoltage.Slot = 0; //up
         }
 
-
-
-        leftArmMotor.setControl(positionVoltage.withPosition(armTarget));
         rightArmMotor.setControl(positionVoltage.withPosition(armTarget));
 
     }
@@ -183,7 +186,7 @@ public class Arm extends SubsystemBase {
      * @return Whether the PIDs are finished
      */
     public boolean isPIDFinished() {
-        return (Math.abs(armTarget - rightArmMotor.getPosition().getValueAsDouble()) <= 1);
+        return (Math.abs(armTarget - rightArmMotor.getPosition().getValueAsDouble()) <= 0.2);
 
     }
 
@@ -194,7 +197,7 @@ public class Arm extends SubsystemBase {
      */
     public void adjustSetpoint(double joystickValue) {
         if (!limitSwitch.get() || joystickValue != 0) {
-            armTarget += (joystickValue * 0.06);
+            armTarget += (joystickValue * 0.2);
         }
     }
 
@@ -225,14 +228,12 @@ public class Arm extends SubsystemBase {
         /**
          * Wing scoring Arm position
          */
-        WING_LINE(10.6),
+        WING_LINE(8.55),
 
         /**
          * Wing scoring Arm position
          */
-        WING_NOTE(7.4),
-        
-
+        WING_NOTE(5.2),
 
         /**
          * Climbing Arm position

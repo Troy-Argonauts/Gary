@@ -84,6 +84,25 @@
               }
             ]
           }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "C4 SH2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Shooter OFF"
+                }
+              }
+            ]
+          }
         }
       ]
     }
