@@ -62,9 +62,9 @@ public class Arm extends SubsystemBase {
         zeroConfig.kD = ZERO;
 
         TalonFXConfiguration allConfigs = new TalonFXConfiguration().withSlot0(upConfig).withSlot1(downConfig).withSlot2(zeroConfig);
-        allConfigs.Voltage.PeakForwardVoltage = 4;
-        allConfigs.MotorOutput.PeakForwardDutyCycle = 0.3;
-        allConfigs.Voltage.PeakReverseVoltage = -4;
+//        allConfigs.Voltage.PeakForwardVoltage = 4;
+//        allConfigs.MotorOutput.PeakForwardDutyCycle = 0.3;
+//        allConfigs.Voltage.PeakReverseVoltage = -4;
 //       allConfigs.MotorOutput.PeakForwardDutyCycle = 0.3;
 //       allConfigs.MotorOutput.PeakReverseDutyCycle = -0.3;
 
