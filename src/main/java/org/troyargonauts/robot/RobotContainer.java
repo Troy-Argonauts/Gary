@@ -88,6 +88,7 @@ public class RobotContainer {
                                     .filtered(x -> OMath.deadband(x, DEADBAND))
                                     .get();
                             Robot.getClimber().setRawPower(climberSpeed);
+                            //Robot.getArm().adjustSetpoint(climberSpeed);
                         }, Robot.getClimber()
                 )
         );
