@@ -89,8 +89,8 @@ public class Robot extends TimedRobot {
       
         robotContainer = new RobotContainer();
 
-        CurrentLimitsConfigs configs = new CurrentLimitsConfigs();
-        configs.withStatorCurrentLimit(30);
+//        CurrentLimitsConfigs configs = new CurrentLimitsConfigs();
+//        configs.withStatorCurrentLimit(30);
 
 //        camera1 = CameraServer.startAutomaticCapture(1);
 //        camera2 = CameraServer.startAutomaticCapture(2);
@@ -167,6 +167,7 @@ public class Robot extends TimedRobot {
      */
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
+        SmartDashboard.putNumber("current", robotContainer.drivetrain.getModule(0).getDriveMotor().getStatorCurrent().getValueAsDouble());
 //        SmartDashboard.putNumber("0", robotContainer.drivetrain.getModule(0).getDriveMotor().getVelocity().getValueAsDouble() * 2 * Math.PI * 0.0508);
 //        SmartDashboard.putNumber("1", robotContainer.drivetrain.getModule(1).getDriveMotor().getVelocity().getValueAsDouble() * 2 * Math.PI * 0.0508);
 //        SmartDashboard.putNumber("2", robotContainer.drivetrain.getModule(2).getDriveMotor().getVelocity().getValueAsDouble() * 2 * Math.PI * 0.0508);
