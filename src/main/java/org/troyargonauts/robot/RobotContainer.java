@@ -110,6 +110,9 @@ public class RobotContainer {
 //        noteReady.onTrue(
 //                new Rumble()
 //        );
+        driver.b().onTrue(
+                new InstantCommand(() -> drivetrain.getPigeon2().reset(), drivetrain)
+        );
 
         operator.a().onTrue(
             new ParallelCommandGroup(

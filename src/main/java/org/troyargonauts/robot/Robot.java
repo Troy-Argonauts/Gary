@@ -16,11 +16,13 @@ import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
+import org.troyargonauts.robot.commands.ShootInPlaceAuton;
 import org.troyargonauts.robot.commands.SubwooferShoot;
 import org.troyargonauts.robot.commands.StartingSequence;
 import org.troyargonauts.robot.commands.TuneDrive;
@@ -89,6 +91,11 @@ public class Robot extends TimedRobot {
       
         robotContainer = new RobotContainer();
 
+//        robotContainer.drivetrain.getPigeon2().setYaw(0);
+//        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+//            robotContainer.drivetrain.getPigeon2().setYaw(0);
+//        }
+
 //        CurrentLimitsConfigs configs = new CurrentLimitsConfigs();
 //        configs.withStatorCurrentLimit(30);
 
@@ -98,17 +105,16 @@ public class Robot extends TimedRobot {
 
 
         autoChooser = AutoBuilder.buildAutoChooser();
-        autoChooser.addOption("ShootInPlace", new SubwooferShoot());
+        autoChooser.addOption("ShootInPlace", new ShootInPlaceAuton());
         autoChooser.addOption("Nothing", new WaitCommand(5));
-        autoChooser.addOption("StartingSequence", new StartingSequence());
-        autoChooser.addOption("TuneDrive", new TuneDrive());
-        autoChooser.addOption("2 Note Arm 0 Auto", new PathPlannerAuto("2 Note Arm 0 Auto"));
-       autoChooser.addOption("Copy of 2 Note Arm 0 Auto", new PathPlannerAuto("Copy of 2 Note Arm 0 Auto"));
-        autoChooser.addOption("Test", new PathPlannerAuto("Test Auto - 6 feet"));
-        autoChooser.addOption("1Note Move Auto", new PathPlannerAuto("1Note Move Auto"));
+//        autoChooser.addOption("StartingSequence", new StartingSequence());
+//        autoChooser.addOption("TuneDrive", new TuneDrive());
+//        autoChooser.addOption("2 Note Arm 0 Auto", new PathPlannerAuto("2 Note Arm 0 Auto"));
+//       autoChooser.addOption("Copy of 2 Note Arm 0 Auto", new PathPlannerAuto("Copy of 2 Note Arm 0 Auto"));
+//        autoChooser.addOption("Test", new PathPlannerAuto("Test Auto - 6 feet"));
+//        autoChooser.addOption("1Note Move Auto", new PathPlannerAuto("1Note Move Auto"));
 //        autoChooser.addOption("2 Note Arm0 Auto", new PathPlannerAuto("2 Note ARM0 Auto"));
         autoChooser.addOption("B 2 Note W2 Center", new PathPlannerAuto("B 2 Note W2 Center"));
-        autoChooser.addOption("R 2 Note W2 Center", new PathPlannerAuto("R 2 Note W2 Center"));
         autoChooser.addOption("B 3 Note W2 C1 Center", new PathPlannerAuto("B 3 Note W2 C1 Center"));
         autoChooser.addOption("Left Side 3 Note C4C5 Auto", new PathPlannerAuto("Left Side 3 Note C4C5 Auto"));
         autoChooser.addOption("B P2 W3 W2 W1 Auto", new PathPlannerAuto("B P2 W3 W2 W1 Auto"));
@@ -168,6 +174,7 @@ public class Robot extends TimedRobot {
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
         SmartDashboard.putNumber("current", robotContainer.drivetrain.getModule(0).getDriveMotor().getStatorCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("gyro", robotContainer.drivetrain.getPigeon2().getAngle());
 //        SmartDashboard.putNumber("0", robotContainer.drivetrain.getModule(0).getDriveMotor().getVelocity().getValueAsDouble() * 2 * Math.PI * 0.0508);
 //        SmartDashboard.putNumber("1", robotContainer.drivetrain.getModule(1).getDriveMotor().getVelocity().getValueAsDouble() * 2 * Math.PI * 0.0508);
 //        SmartDashboard.putNumber("2", robotContainer.drivetrain.getModule(2).getDriveMotor().getVelocity().getValueAsDouble() * 2 * Math.PI * 0.0508);
