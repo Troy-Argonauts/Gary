@@ -12,7 +12,8 @@ public class W2Shoot extends SequentialCommandGroup {
         super(
                 new InstantCommand(() -> Robot.getShooter().setState(Shooter.ShooterStates.WING_NOTE), Robot.getShooter()),
                 new InstantCommand(() -> Robot.getArm().setState(Arm.ArmStates.WING_NOTE)),
-                new WaitUntilCommand(Robot.getArm()::isPIDFinished),
+                new WaitUntilCommand(Robot.getArm()::checkWNState),
+//                new WaitUntilCommand(Robot.getArm()::isPIDFinished),
                 new WaitUntilCommand(Robot.getShooter()::isTopPidFinished),
                 new ShootingSequence()
         );

@@ -106,11 +106,12 @@ public class Robot extends TimedRobot {
 
         autoChooser = AutoBuilder.buildAutoChooser();
         autoChooser.addOption("ShootInPlace", new ShootInPlaceAuton());
-        autoChooser.addOption("Nothing", new WaitCommand(5));
-//        autoChooser.addOption("StartingSequence", new StartingSequence());
+        autoChooser.addOption("Nothing", new WaitCommand(15));
+
+        autoChooser.addOption("StartingSequence", new StartingSequence());
 //        autoChooser.addOption("TuneDrive", new TuneDrive());
 //        autoChooser.addOption("2 Note Arm 0 Auto", new PathPlannerAuto("2 Note Arm 0 Auto"));
-//       autoChooser.addOption("Copy of 2 Note Arm 0 Auto", new PathPlannerAuto("Copy of 2 Note Arm 0 Auto"));
+//       autoChooser.addOption("Copy of 2 Note Arm f0 Auto", new PathPlannerAuto("Copy of 2 Note Arm 0 Auto"));
 //        autoChooser.addOption("Test", new PathPlannerAuto("Test Auto - 6 feet"));
 //        autoChooser.addOption("1Note Move Auto", new PathPlannerAuto("1Note Move Auto"));
 //        autoChooser.addOption("2 Note Arm0 Auto", new PathPlannerAuto("2 Note ARM0 Auto"));
@@ -175,41 +176,8 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().run();
         SmartDashboard.putNumber("current", robotContainer.drivetrain.getModule(0).getDriveMotor().getStatorCurrent().getValueAsDouble());
         SmartDashboard.putNumber("gyro", robotContainer.drivetrain.getPigeon2().getAngle());
-//        SmartDashboard.putNumber("0", robotContainer.drivetrain.getModule(0).getDriveMotor().getVelocity().getValueAsDouble() * 2 * Math.PI * 0.0508);
-//        SmartDashboard.putNumber("1", robotContainer.drivetrain.getModule(1).getDriveMotor().getVelocity().getValueAsDouble() * 2 * Math.PI * 0.0508);
-//        SmartDashboard.putNumber("2", robotContainer.drivetrain.getModule(2).getDriveMotor().getVelocity().getValueAsDouble() * 2 * Math.PI * 0.0508);
-//        SmartDashboard.putNumber("3", robotContainer.drivetrain.getModule(3).getDriveMotor().getVelocity().getValueAsDouble() * 2 * Math.PI * 0.0508);
-//        SmartDashboard.putNumber("3Pos", robotContainer.drivetrain.getModule(3).getDriveMotor().getPosition().getValueAsDouble() * 2 * Math.PI * 0.0508);
-//
-//        SmartDashboard.putNumber("pose x", robotContainer.drivetrain.getState().Pose.getX());
-//        SmartDashboard.putNumber("pose y", robotContainer.drivetrain.getState().Pose.getY());
-//        SmartDashboard.putNumber("pose r", robotContainer.drivetrain.getState().Pose.getRotation().getDegrees());
-//
-//
-//       drivetrainFRDCurrentLog.append(robotContainer.getDrivetrain().getModule(1).getDriveMotor().getStatorCurrent().getValueAsDouble());
-//       drivetrainFRDVoltageLog.append(robotContainer.getDrivetrain().getModule(1).getDriveMotor().getMotorVoltage().getValueAsDouble());
-//
-//       drivetrainFRTCurrentLog.append(robotContainer.getDrivetrain().getModule(1).getSteerMotor().getStatorCurrent().getValueAsDouble());
-//       drivetrainFRTVoltageLog.append(robotContainer.getDrivetrain().getModule(1).getSteerMotor().getMotorVoltage().getValueAsDouble());
-//
-//       drivetrainBRDCurrentLog.append(robotContainer.getDrivetrain().getModule(2).getDriveMotor().getStatorCurrent().getValueAsDouble());
-//       drivetrainBRDVoltageLog.append(robotContainer.getDrivetrain().getModule(2).getDriveMotor().getMotorVoltage().getValueAsDouble());
-//
-//       drivetrainBRTCurrentLog.append(robotContainer.getDrivetrain().getModule(2).getSteerMotor().getStatorCurrent().getValueAsDouble());
-//       drivetrainBRTVoltageLog.append(robotContainer.getDrivetrain().getModule(2).getSteerMotor().getMotorVoltage().getValueAsDouble());
-//
-//       drivetrainFLDCurrentLog.append(robotContainer.getDrivetrain().getModule(3).getDriveMotor().getStatorCurrent().getValueAsDouble());
-//       drivetrainFLDVoltageLog.append(robotContainer.getDrivetrain().getModule(3).getDriveMotor().getMotorVoltage().getValueAsDouble());
-//
-//       drivetrainFLTCurrentLog.append(robotContainer.getDrivetrain().getModule(3).getSteerMotor().getStatorCurrent().getValueAsDouble());
-//       drivetrainFLTVoltageLog.append(robotContainer.getDrivetrain().getModule(3).getSteerMotor().getMotorVoltage().getValueAsDouble());
-//
-//       drivetrainBLDCurrentLog.append(robotContainer.getDrivetrain().getModule(4).getDriveMotor().getStatorCurrent().getValueAsDouble());
-//       drivetrainBLDVoltageLog.append(robotContainer.getDrivetrain().getModule(4).getDriveMotor().getMotorVoltage().getValueAsDouble());
-//
-//       drivetrainBLTCurrentLog.append(robotContainer.getDrivetrain().getModule(4).getSteerMotor().getStatorCurrent().getValueAsDouble());
-//       drivetrainBLTVoltageLog.append(robotContainer.getDrivetrain().getModule(4).getSteerMotor().getMotorVoltage().getValueAsDouble());
-
+        SmartDashboard.putString("Alliance Side", DriverStation.getAlliance().get().toString());
+        SmartDashboard.putNumber(" Arm Target", Robot.getArm().getCurrentTarget());
     }
 
     /**
@@ -261,6 +229,10 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             m_autonomousCommand.cancel();
         }
+
+//        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+////            robotContainer.drivetrain.getPigeon2().setYaw(robotContainer.drivetrain.getPigeon2().getAngle() + 180);
+//        }
     }
 
     /**
@@ -282,7 +254,6 @@ public class Robot extends TimedRobot {
         else{
             robotContainer.getOperator().getHID().setRumble(GenericHID.RumbleType.kBothRumble,0);
             robotContainer.getDriver().getHID().setRumble(GenericHID.RumbleType.kBothRumble,0);
-
         }
 //        if(robotContainer.getDriverDPadDown()) {
 //            System.out.println("Setting Camera 2");

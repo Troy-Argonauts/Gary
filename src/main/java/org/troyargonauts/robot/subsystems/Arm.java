@@ -213,7 +213,7 @@ public class Arm extends SubsystemBase {
         /**
          * Amp scoring Arm position
          */
-        AMP(20.0), //24.4
+        AMP(21.6), //24.4
 
         /**
          * Stage scoring Arm position
@@ -228,12 +228,12 @@ public class Arm extends SubsystemBase {
         /**
          * Wing scoring Arm position
          */
-        WING_LINE(8.55),
+        WING_LINE(9.25),
 
         /**
          * Wing scoring Arm position
          */
-        WING_NOTE(5.2),
+        WING_NOTE(7.6), // possibly 6.5
 
         /**
          * Climbing Arm position
@@ -281,6 +281,15 @@ public class Arm extends SubsystemBase {
     public void setState(ArmStates state) {
         oldTarget = armTarget;
         armTarget = state.armPosition;
+    }
+
+    public boolean checkWNState(){
+        if(leftArmEncoder == 7.0){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     /**

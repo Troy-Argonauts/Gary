@@ -108,7 +108,7 @@ public class Intake extends SubsystemBase {
         switch (state){
             case IN:
                 motorBottom.set(0.2);
-                motorTop.set(-0.55);
+                motorTop.set(-0.45);
                 break;
             case OFF:
                 motorBottom.set(0);
@@ -116,7 +116,7 @@ public class Intake extends SubsystemBase {
                 break;
             case OUT:
                 motorBottom.set(-0.2);
-                motorTop.set(0.55);
+                motorTop.set(0.45);
                 break;
         }
     }

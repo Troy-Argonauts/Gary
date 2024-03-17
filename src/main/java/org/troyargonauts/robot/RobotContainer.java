@@ -111,7 +111,7 @@ public class RobotContainer {
 //                new Rumble()
 //        );
         driver.b().onTrue(
-                new InstantCommand(() -> drivetrain.getPigeon2().reset(), drivetrain)
+                new InstantCommand(() -> drivetrain.getPigeon2().setYaw(180 + drivetrain.getPigeon2().getAngle()), drivetrain)
         );
 
         operator.a().onTrue(
