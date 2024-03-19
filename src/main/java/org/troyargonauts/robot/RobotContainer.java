@@ -84,7 +84,7 @@ public class RobotContainer {
         Robot.getClimber().setDefaultCommand(
                 new RunCommand(
                         () -> {
-                            double climberSpeed = 0.08 * IStream.create(driver::getLeftTriggerAxis)
+                            double climberSpeed = 0.12 * IStream.create(driver::getLeftTriggerAxis)
                                     .filtered(x -> OMath.deadband(x, DEADBAND))
                                     .get();
                             Robot.getClimber().setRawPower(climberSpeed);
@@ -112,6 +112,9 @@ public class RobotContainer {
 //        );
         driver.b().onTrue(
                 new InstantCommand(() -> drivetrain.getPigeon2().setYaw(180 + drivetrain.getPigeon2().getAngle()), drivetrain)
+        );
+        driver.povLeft().onTrue(
+                new InstantCommand(() -> drivetrain.getPigeon2().setYaw(0   ), drivetrain)
         );
 
         operator.a().onTrue(

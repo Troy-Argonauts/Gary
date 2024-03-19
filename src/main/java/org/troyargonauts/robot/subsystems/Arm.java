@@ -38,6 +38,7 @@ public class Arm extends SubsystemBase {
     private DoubleLogEntry armRightOutputCurrentLog;
     private DoubleLogEntry armLeftMotorVoltage;
     private DoubleLogEntry armRightMotorVoltage;
+//    public Double armLimitPressed = new Double(0);
 
     private final PositionVoltage positionVoltage = new PositionVoltage(0).withSlot(0);
     public final Slot0Configs upConfig = new Slot0Configs();
@@ -228,7 +229,7 @@ public class Arm extends SubsystemBase {
         /**
          * Wing scoring Arm position
          */
-        WING_LINE(9.25),
+        WING_LINE(9.8),
 
         /**
          * Wing scoring Arm position
@@ -238,7 +239,8 @@ public class Arm extends SubsystemBase {
         /**
          * Climbing Arm position
          */
-        CLIMBER(0);
+        CLIMBER(0),
+        START(0);
 
         final double armPosition;
 
@@ -284,7 +286,7 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean checkWNState(){
-        if(leftArmEncoder == 7.0){
+        if(leftArmEncoder >= 7.0){
             return true;
         }
         else{

@@ -33,6 +33,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Class representing the entire robot - CommandBasedRobot framework
@@ -108,7 +109,7 @@ public class Robot extends TimedRobot {
         autoChooser.addOption("ShootInPlace", new ShootInPlaceAuton());
         autoChooser.addOption("Nothing", new WaitCommand(15));
 
-        autoChooser.addOption("StartingSequence", new StartingSequence());
+//        autoChooser.addOption("StartingSequence", new StartingSequence());
 //        autoChooser.addOption("TuneDrive", new TuneDrive());
 //        autoChooser.addOption("2 Note Arm 0 Auto", new PathPlannerAuto("2 Note Arm 0 Auto"));
 //       autoChooser.addOption("Copy of 2 Note Arm f0 Auto", new PathPlannerAuto("Copy of 2 Note Arm 0 Auto"));
@@ -122,7 +123,24 @@ public class Robot extends TimedRobot {
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
+        // CSA pbonnen 2024-03-16 for your reference
+        /*scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                if (Robot.getArm().getLimitSwitch()) {
+                    innerArmLimitPressed = true;
+                    Robot.getArm().resetEncoders();
+                }
 
+                if (innerArmLimitPressed) {
+                    arm.run();
+                }
+
+                shooter.run();
+            }
+
+            private boolean innerArmLimitPressed = false;
+        }, 100, 10, TimeUnit.MILLISECONDS);*/
         scheduledExecutorService.scheduleAtFixedRate(() -> {
             if (Robot.getArm().getLimitSwitch()) {
                 armLimitPressed = true;
@@ -178,6 +196,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("gyro", robotContainer.drivetrain.getPigeon2().getAngle());
         SmartDashboard.putString("Alliance Side", DriverStation.getAlliance().get().toString());
         SmartDashboard.putNumber(" Arm Target", Robot.getArm().getCurrentTarget());
+
     }
 
     /**
@@ -213,7 +232,9 @@ public class Robot extends TimedRobot {
      * This method runs periodically during Autonomous mode
      */
     @Override
-    public void autonomousPeriodic() {}
+    public void autonomousPeriodic() {
+
+    }
 
     /**
      * This method runs once when exiting Autonomous mode.
