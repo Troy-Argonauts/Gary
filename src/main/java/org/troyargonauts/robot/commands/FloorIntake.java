@@ -10,7 +10,7 @@ public class FloorIntake extends SequentialCommandGroup {
     public FloorIntake(){
         super(
                 new InstantCommand(() -> Robot.getArm().setState(Arm.ArmStates.FLOOR_INTAKE), Robot.getArm()),
-                new InstantCommand(() -> Robot.getShooter().setState(Shooter.ShooterStates.OFF), Robot.getShooter()),
+//                new InstantCommand(() -> Robot.getShooter().setState(Shooter.ShooterStates.OFF), Robot.getShooter()),
                 new WaitUntilCommand(() -> Robot.getArm().isPIDFinished()),
                 new InstantCommand(() -> Robot.getIntake().setState(Intake.IntakeStates.IN), Robot.getIntake())
             );

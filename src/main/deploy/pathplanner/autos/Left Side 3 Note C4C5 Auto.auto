@@ -1,0 +1,112 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.68,
+      "y": 4.4600922416554205
+    },
+    "rotation": -60.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Starting Sequence"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shooting Sequence Subwoofer"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Floor Intake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "B P3 C5"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "WaitUntilNoteReady"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "C5 SH2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shooting Sequence SH2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Floor Intake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SH2 C4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "WaitUntilNoteReady"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "C4 SH2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Shooter OFF"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

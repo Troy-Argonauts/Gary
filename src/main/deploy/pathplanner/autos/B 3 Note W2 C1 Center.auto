@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.1418995079983048,
-      "y": 4.888572719019697
+      "x": 1.34,
+      "y": 5.570246205735591
     },
-    "rotation": -38.219963943758884
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -18,9 +18,9 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 2.0
+            "name": "WaitUntilArmDown"
           }
         },
         {
@@ -36,19 +36,13 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Left 1"
+                  "pathName": "1Note Move Path"
                 }
               },
               {
@@ -58,6 +52,49 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shooting Sequence W2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Floor Intake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "B W2 C1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "WaitUntilNoteReady"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "C1 SH1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shooting Sequence SH2"
           }
         }
       ]

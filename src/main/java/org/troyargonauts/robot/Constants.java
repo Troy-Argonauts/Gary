@@ -8,9 +8,9 @@ public final class Constants {
      * Constants for the Intake subsystem
      */
     public interface Intake {
-        int LEFT_MOTOR_CAN_ID = 22;
+        int TOP_MOTOR_CAN_ID = 22;
 
-        int RIGHT_MOTOR_CAN_ID = 26;
+        int BOTTOM_MOTOR_CAN_ID = 26;
 
         int NOTE_SENSOR_SLOT = 0;
 
@@ -36,13 +36,16 @@ public final class Constants {
 
         int LIMIT_SWITCH_SLOT = 1;
 
-        double UP_P = 0.6; //0.83
-        double UP_I = 0;
-        double UP_D = 0;
+        double UP_P = 0.5; //0.83 //0.5
+        double UP_I = 0.1; //0.3
+        double UP_D = 0.005;
         double DOWN_P = 0.2; //0.25
         double DOWN_I = 0;
         double DOWN_D = 0;
         double ZERO = 0.0;
+
+        double CRUISE_VELOCITY = 0;
+        double ACCELERATION = 0;
 
         String CANBUS_NAME = "roborio";
     }
@@ -67,9 +70,13 @@ public final class Constants {
         int TOP_MOTOR_ID = 24;
         int BOTTOM_MOTOR_ID = 25;
 
-        double P = 0.457;
-        double I = 0.217;
-        double D = 0.0018;
+        double P = 0.42;
+        double I = 1.7;
+        double D = 0.002;
+
+//        double P = 0.457;
+//        double I = 0.217;
+//        double D = 0.0018;
 
 
         String CANBUS_NAME = "roborio";

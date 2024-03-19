@@ -3,7 +3,10 @@ package org.troyargonauts.robot.commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import org.troyargonauts.robot.Robot;
+import org.troyargonauts.robot.subsystems.Arm;
+import org.troyargonauts.robot.subsystems.Shooter;
 
 /**
  * Class representing the command group for the robot's Starting Sequence to ensure Arm encoder values are reset at the start of match
@@ -17,8 +20,12 @@ public class StartingSequence extends SequentialCommandGroup {
         super(
                 new InstantCommand(() -> Robot.getArm().setPower(0.08), Robot.getArm()),
                 new WaitCommand(0.3),
-                new InstantCommand(() -> Robot.getArm().setPower(-0.08), Robot.getArm()).until(() -> Robot.getArm().getLimitSwitch()),
-                new InstantCommand(() -> Robot.getArm().setDesiredTarget(0), Robot.getArm())
+                new InstantCommand(() -> Robot.getShooter().setState(Shooter.ShooterStates.RAMPUP), Robot.getShooter()),
+                new InstantCommand(() -> Robot.getArm().setPower(-0.08), Robot.getArm()).until(() -> Robot.getArm().getLimitSwitch())
+//                new InstantCommand(() -> Robot.getArm().setState(Arm.ArmStates.START), Robot.getArm()),
+//                new WaitUntilCommand(Robot.getArm()::isPIDFinished),
+//                new InstantCommand(() -> Robot.getShooter().setState(Shooter.ShooterStates.RAMPUP), Robot.getShooter()),
+//                new InstantCommand(() -> Robot.getArm().setState(Arm.ArmStates.SUBWOOFER), Robot.getArm())
         );
     }
 }

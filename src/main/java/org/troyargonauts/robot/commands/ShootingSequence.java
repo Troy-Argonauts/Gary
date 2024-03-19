@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import org.troyargonauts.robot.Robot;
+import org.troyargonauts.robot.subsystems.Arm;
 import org.troyargonauts.robot.subsystems.Intake.IntakeStates;
 import org.troyargonauts.robot.subsystems.Shooter;
 
@@ -17,9 +18,10 @@ public class ShootingSequence extends SequentialCommandGroup {
     public ShootingSequence() {
         super(
             new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.IN), Robot.getIntake()),
-            new WaitCommand(1),
-            new InstantCommand(() -> Robot.getShooter().setState(Shooter.ShooterStates.OFF)),
-            new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF), Robot.getIntake())
+            new WaitCommand(0.5),
+            new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF), Robot.getIntake()),
+            new InstantCommand(() -> Robot.getArm().setState(Arm.ArmStates.FLOOR_INTAKE), Robot.getArm()),
+            new InstantCommand(() -> Robot.getShooter().setState(Shooter.ShooterStates.SUBWOOFER), Robot.getShooter())
         );
     }
 }

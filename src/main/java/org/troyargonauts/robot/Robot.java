@@ -4,13 +4,25 @@
 
 package org.troyargonauts.robot;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+
+import edu.wpi.first.cscore.VideoSink;
+import edu.wpi.first.cscore.VideoSource;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
+import org.troyargonauts.robot.commands.ShootInPlaceAuton;
 import org.troyargonauts.robot.commands.SubwooferShoot;
 import org.troyargonauts.robot.commands.StartingSequence;
 import org.troyargonauts.robot.commands.TuneDrive;
@@ -21,6 +33,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Class representing the entire robot - CommandBasedRobot framework
@@ -39,6 +52,29 @@ public class Robot extends TimedRobot {
 
     private boolean armLimitPressed;
 
+    private DoubleLogEntry drivetrainFRDCurrentLog;
+    private DoubleLogEntry drivetrainFRTCurrentLog;
+    private DoubleLogEntry drivetrainBRDCurrentLog;
+    private DoubleLogEntry drivetrainBRTCurrentLog;
+    private DoubleLogEntry drivetrainFLDCurrentLog;
+    private DoubleLogEntry drivetrainFLTCurrentLog;
+    private DoubleLogEntry drivetrainBLDCurrentLog;
+    private DoubleLogEntry drivetrainBLTCurrentLog;
+
+    private DoubleLogEntry drivetrainFRDVoltageLog;
+    private DoubleLogEntry drivetrainFRTVoltageLog;
+    private DoubleLogEntry drivetrainBRDVoltageLog;
+    private DoubleLogEntry drivetrainBRTVoltageLog;
+    private DoubleLogEntry drivetrainFLDVoltageLog;
+    private DoubleLogEntry drivetrainFLTVoltageLog;
+    private DoubleLogEntry drivetrainBLDVoltageLog;
+    private DoubleLogEntry drivetrainBLTVoltageLog;
+
+//    UsbCamera camera1;
+//    UsbCamera camera2;
+//    VideoSink server;
+
+
     /**
      * This method is the first that is run when the robot is powered on. Only runs once.
      * Used to instantiate all subsystems, creates a thread for all PID control loops, sets up all available autonomous routines, and the autonomous chooser.
@@ -46,6 +82,8 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         DataLogManager.start();
+        DataLog log = DataLogManager.getLog();
+
 
         arm = new Arm();
         climber = new Climber();
@@ -54,20 +92,55 @@ public class Robot extends TimedRobot {
       
         robotContainer = new RobotContainer();
 
+//        robotContainer.drivetrain.getPigeon2().setYaw(0);
+//        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+//            robotContainer.drivetrain.getPigeon2().setYaw(0);
+//        }
+
+//        CurrentLimitsConfigs configs = new CurrentLimitsConfigs();
+//        configs.withStatorCurrentLimit(30);
+
+//        camera1 = CameraServer.startAutomaticCapture(1);
+//        camera2 = CameraServer.startAutomaticCapture(2);
+//        server = CameraServer.getServer();
+
+
         autoChooser = AutoBuilder.buildAutoChooser();
-        autoChooser.addOption("ShootInPlace", new SubwooferShoot());
-        autoChooser.addOption("Nothing", new WaitCommand(5));
-        autoChooser.addOption("StartingSequence", new StartingSequence());
-        autoChooser.addOption("TuneDrive", new TuneDrive());
-        autoChooser.addOption("2 Note Arm 0 Auto", new PathPlannerAuto("2 Note Arm 0 Auto"));
-       autoChooser.addOption("Copy of 2 Note Arm 0 Auto", new PathPlannerAuto("Copy of 2 Note Arm 0 Auto"));
-        autoChooser.addOption("Test", new PathPlannerAuto("Full Field Test"));
-        autoChooser.addOption("1Note Move Auto", new PathPlannerAuto("Left Edge 1"));
+        autoChooser.addOption("ShootInPlace", new ShootInPlaceAuton());
+        autoChooser.addOption("Nothing", new WaitCommand(15));
+
+//        autoChooser.addOption("StartingSequence", new StartingSequence());
+//        autoChooser.addOption("TuneDrive", new TuneDrive());
+//        autoChooser.addOption("2 Note Arm 0 Auto", new PathPlannerAuto("2 Note Arm 0 Auto"));
+//       autoChooser.addOption("Copy of 2 Note Arm f0 Auto", new PathPlannerAuto("Copy of 2 Note Arm 0 Auto"));
+//        autoChooser.addOption("Test", new PathPlannerAuto("Test Auto - 6 feet"));
+//        autoChooser.addOption("1Note Move Auto", new PathPlannerAuto("1Note Move Auto"));
 //        autoChooser.addOption("2 Note Arm0 Auto", new PathPlannerAuto("2 Note ARM0 Auto"));
-//        autoChooser.addOption("2 Note Auto W3", new PathPlannerAuto("2 Note Auto W3"));
+        autoChooser.addOption("B 2 Note W2 Center", new PathPlannerAuto("B 2 Note W2 Center"));
+        autoChooser.addOption("B 3 Note W2 C1 Center", new PathPlannerAuto("B 3 Note W2 C1 Center"));
+        autoChooser.addOption("Left Side 3 Note C4C5 Auto", new PathPlannerAuto("Left Side 3 Note C4C5 Auto"));
+        autoChooser.addOption("B P2 W3 W2 W1 Auto", new PathPlannerAuto("B P2 W3 W2 W1 Auto"));
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
+        // CSA pbonnen 2024-03-16 for your reference
+        /*scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                if (Robot.getArm().getLimitSwitch()) {
+                    innerArmLimitPressed = true;
+                    Robot.getArm().resetEncoders();
+                }
+
+                if (innerArmLimitPressed) {
+                    arm.run();
+                }
+
+                shooter.run();
+            }
+
+            private boolean innerArmLimitPressed = false;
+        }, 100, 10, TimeUnit.MILLISECONDS);*/
         scheduledExecutorService.scheduleAtFixedRate(() -> {
             if (Robot.getArm().getLimitSwitch()) {
                 armLimitPressed = true;
@@ -86,6 +159,32 @@ public class Robot extends TimedRobot {
 
             //climber.run();
         }, 100, 10, TimeUnit.MILLISECONDS);
+
+//        robotContainer.getDrivetrain().getModule(0).getSteerMotor().getConfigurator().apply(configs);
+//        robotContainer.getDrivetrain().getModule(1).getSteerMotor().getConfigurator().apply(configs);
+//        robotContainer.getDrivetrain().getModule(2).getSteerMotor().getConfigurator().apply(configs);
+//        robotContainer.getDrivetrain().getModule(3).getSteerMotor().getConfigurator().apply(configs);
+
+//        drivetrainFRDCurrentLog = new DoubleLogEntry((log), "Front Right Drive Motor Current");
+//        drivetrainFRTCurrentLog = new DoubleLogEntry((log), "Front Right Turn Motor Current");
+//        drivetrainBRDCurrentLog = new DoubleLogEntry((log), "Back Right Drive Motor Current");
+//        drivetrainBRTCurrentLog = new DoubleLogEntry((log), "Front Right Turn Motor Current");
+//        drivetrainFLDCurrentLog = new DoubleLogEntry((log), "Front Left Drive Motor Current");
+//        drivetrainFLTCurrentLog = new DoubleLogEntry((log), "Front Left Turn Motor Current");
+//        drivetrainBLDCurrentLog =  new DoubleLogEntry((log), "Back Left Drive Motor Current");
+//        drivetrainBLTCurrentLog =  new DoubleLogEntry((log), "Back Left Turn Motor Current");
+
+//        drivetrainFRDVoltageLog =  new DoubleLogEntry((log), "Front Right Drive Motor Voltage");
+//        drivetrainFRTVoltageLog =  new DoubleLogEntry((log), "Front Right Turn Motor Voltage");
+//        drivetrainBRDVoltageLog =  new DoubleLogEntry((log), "Back Right Drive Motor Voltage");
+//        drivetrainBRTVoltageLog =  new DoubleLogEntry((log), "Back Right Turn Motor Voltage");
+//        drivetrainFLDVoltageLog =  new DoubleLogEntry((log), "Front Left Drive Motor Voltage");
+//        drivetrainFLTVoltageLog =  new DoubleLogEntry((log), "Front Left Turn Motor Voltage");
+//        drivetrainBLDVoltageLog =  new DoubleLogEntry((log), "Back Left Drive Motor Voltage");
+//        drivetrainBLTVoltageLog =  new DoubleLogEntry((log), "Back Left Turn Motor Voltage");
+
+
+
     }
 
     /**
@@ -93,15 +192,11 @@ public class Robot extends TimedRobot {
      */
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
-        SmartDashboard.putNumber("0", robotContainer.drivetrain.getModule(0).getDriveMotor().getVelocity().getValueAsDouble() * 2 * Math.PI * 0.0508);
-        SmartDashboard.putNumber("1", robotContainer.drivetrain.getModule(1).getDriveMotor().getVelocity().getValueAsDouble() * 2 * Math.PI * 0.0508);
-        SmartDashboard.putNumber("2", robotContainer.drivetrain.getModule(2).getDriveMotor().getVelocity().getValueAsDouble() * 2 * Math.PI * 0.0508);
-        SmartDashboard.putNumber("3", robotContainer.drivetrain.getModule(3).getDriveMotor().getVelocity().getValueAsDouble() * 2 * Math.PI * 0.0508);
-        SmartDashboard.putNumber("3Pos", robotContainer.drivetrain.getModule(3).getDriveMotor().getPosition().getValueAsDouble() * 2 * Math.PI * 0.0508);
+        SmartDashboard.putNumber("current", robotContainer.drivetrain.getModule(0).getDriveMotor().getStatorCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("gyro", robotContainer.drivetrain.getPigeon2().getAngle());
+        SmartDashboard.putString("Alliance Side", DriverStation.getAlliance().get().toString());
+        SmartDashboard.putNumber(" Arm Target", Robot.getArm().getCurrentTarget());
 
-        SmartDashboard.putNumber("pose x", robotContainer.drivetrain.getState().Pose.getX());
-        SmartDashboard.putNumber("pose y", robotContainer.drivetrain.getState().Pose.getY());
-        SmartDashboard.putNumber("pose r", robotContainer.drivetrain.getState().Pose.getRotation().getDegrees());
     }
 
     /**
@@ -126,7 +221,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousInit() {
-        m_autonomousCommand = autoChooser.getSelected();
+        m_autonomousCommand = autoChooser.getSelected().withTimeout(15);
 
         if (m_autonomousCommand != null) {
             m_autonomousCommand.schedule();
@@ -137,7 +232,9 @@ public class Robot extends TimedRobot {
      * This method runs periodically during Autonomous mode
      */
     @Override
-    public void autonomousPeriodic() {}
+    public void autonomousPeriodic() {
+
+    }
 
     /**
      * This method runs once when exiting Autonomous mode.
@@ -153,6 +250,10 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             m_autonomousCommand.cancel();
         }
+
+//        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+////            robotContainer.drivetrain.getPigeon2().setYaw(robotContainer.drivetrain.getPigeon2().getAngle() + 180);
+//        }
     }
 
     /**
@@ -170,11 +271,19 @@ public class Robot extends TimedRobot {
             Robot.getIntake().setState(Intake.IntakeStates.OFF);
             robotContainer.getOperator().getHID().setRumble(GenericHID.RumbleType.kBothRumble,0.5);
             robotContainer.getDriver().getHID().setRumble(GenericHID.RumbleType.kBothRumble,0.5);
-        } else{
+        }
+        else{
             robotContainer.getOperator().getHID().setRumble(GenericHID.RumbleType.kBothRumble,0);
             robotContainer.getDriver().getHID().setRumble(GenericHID.RumbleType.kBothRumble,0);
-
         }
+//        if(robotContainer.getDriverDPadDown()) {
+//            System.out.println("Setting Camera 2");
+//            server.setSource(camera2);
+//        } else if (robotContainer.getDriverDPadUp()) {
+//            System.out.println("Setting Camera 1");
+//            server.setSource(camera1);
+//        }
+
     }
 
     /**

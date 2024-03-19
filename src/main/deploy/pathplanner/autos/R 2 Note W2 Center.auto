@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3366633613457033,
+      "x": 15.32,
       "y": 5.570246205735591
     },
-    "rotation": 0
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
@@ -15,6 +15,12 @@
           "type": "named",
           "data": {
             "name": "Starting Sequence"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "WaitUntilArmDown"
           }
         },
         {
@@ -30,39 +36,28 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Path 1A"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "R 1Note Move Path"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "WaitUntilNoteReady"
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Shooting Sequence W2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Floor Intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Path 1B"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Path 1C"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shooting Sequence SH1"
           }
         }
       ]

@@ -4,14 +4,17 @@
 
 package org.troyargonauts.robot;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.troyargonauts.common.math.OMath;
 import org.troyargonauts.common.streams.IStream;
 import org.troyargonauts.robot.commands.*;
@@ -36,6 +39,7 @@ public class RobotContainer {
     private final InstantCommand intakeIn = new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.IN));
     private final InstantCommand intakeOff = new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF));
 
+  //  public Trigger noteReady;
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain;
     public Pose2d pose = drivetrain.getState().Pose;// My drivetrain
 
@@ -75,20 +79,21 @@ public class RobotContainer {
             new InstantCommand(Robot.getClimber()::setTarget)
         );
 
-        driver.b().onTrue(
-                new InstantCommand(() -> System.out.println("Here"), Robot.getIntake())
-        );
+
 
         Robot.getClimber().setDefaultCommand(
                 new RunCommand(
                         () -> {
-                            double climberSpeed = IStream.create(driver::getLeftTriggerAxis)
+                            double climberSpeed = 0.12 * IStream.create(driver::getLeftTriggerAxis)
                                     .filtered(x -> OMath.deadband(x, DEADBAND))
                                     .get();
                             Robot.getClimber().setRawPower(climberSpeed);
+                            //Robot.getArm().adjustSetpoint(climberSpeed);
                         }, Robot.getClimber()
                 )
         );
+
+
 
         // operator controller commands
         Robot.getArm().setDefaultCommand(
@@ -100,6 +105,16 @@ public class RobotContainer {
                     Robot.getArm().adjustSetpoint(-armSpeed);
                 }, Robot.getArm()
             )
+        );
+
+//        noteReady.onTrue(
+//                new Rumble()
+//        );
+        driver.b().onTrue(
+                new InstantCommand(() -> drivetrain.getPigeon2().setYaw(180 + drivetrain.getPigeon2().getAngle()), drivetrain)
+        );
+        driver.povLeft().onTrue(
+                new InstantCommand(() -> drivetrain.getPigeon2().setYaw(0   ), drivetrain)
         );
 
         operator.a().onTrue(
@@ -123,8 +138,10 @@ public class RobotContainer {
 
         operator.y().onTrue(
             new ParallelCommandGroup(
-                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.STAGE), Robot.getShooter()),
-                new InstantCommand(() -> Robot.getArm().setState(ArmStates.STAGE), Robot.getArm())
+                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.WING_NOTE), Robot.getShooter()),
+                new InstantCommand(() -> Robot.getArm().setState(ArmStates.WING_NOTE), Robot.getArm())
+//                    new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.WING), Robot.getShooter()),
+//                    new InstantCommand(() -> Robot.getArm().setState(ArmStates.WING), Robot.getArm())
             )
         );
 
@@ -135,13 +152,23 @@ public class RobotContainer {
             )
         );
 
+        operator.povRight().onTrue(
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.WING_LINE), Robot.getShooter()),
+                        new InstantCommand(() -> Robot.getArm().setState(ArmStates.WING_LINE), Robot.getArm())
+                )
+        );
+
         operator.rightBumper().whileTrue(
             new ParallelCommandGroup(
                     new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.THROWOUT), Robot.getShooter()),
                     new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OUT), Robot.getIntake())
             )
         ).whileFalse(
-                new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF), Robot.getIntake())
+                new ParallelCommandGroup(
+                new InstantCommand(() -> Robot.getIntake().setState(IntakeStates.OFF), Robot.getIntake()),
+                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.OFF), Robot.getShooter())
+        )
         );
 
         operator.leftBumper().whileTrue(
@@ -172,10 +199,13 @@ public class RobotContainer {
      * Runs configureBindings() method and registers Pathplanner NamedCommands
      */
     public RobotContainer() {
+//        CurrentLimitsConfigs configs = new CurrentLimitsConfigs();
+//        configs.withStatorCurrentLimit(40);
+//        noteReady = new Trigger(Robot.getIntake().noteReady);
         NamedCommands.registerCommand("Starting Sequence", new StartingSequence());
 
         NamedCommands.registerCommand("Shooting Sequence Subwoofer",
-        new SubwooferShoot()
+            new SubwooferShoot()
 //            new InstantCommand(() -> Robot.getShooter().setState(Shooter.ShooterStates.SUBWOOFER), Robot.getShooter())
 //                    .until(() -> Robot.getShooter().isTopPidFinished()).;
 ////                    .andThen(new ShootingSequence())
@@ -189,12 +219,7 @@ public class RobotContainer {
         );
 
         NamedCommands.registerCommand("Shooting Sequence W2", 
-            new InstantCommand(() -> Robot.getShooter().setDesiredTarget(100, 100), Robot.getShooter())
-                .until(() -> Robot.getShooter().isTopPidFinished() && Robot.getShooter().isBottomPidFinished())
-            .alongWith(new InstantCommand(() -> Robot.getArm().setDesiredTarget(100), Robot.getArm()))
-                .until(() -> Robot.getArm().isPIDFinished())
-            .andThen(new ShootingSequence())
-            .andThen(new InstantCommand(() -> Robot.getShooter().setDesiredTarget(10, 10), Robot.getShooter()))
+            new W2Shoot()
         );
 
         NamedCommands.registerCommand("Shooting Sequence W3",
@@ -215,22 +240,38 @@ public class RobotContainer {
         );
 
         NamedCommands.registerCommand("Shooting Sequence SH2", 
-            new InstantCommand(() -> Robot.getShooter().setDesiredTarget(100, 100), Robot.getShooter())
-                .until(() -> Robot.getShooter().isTopPidFinished() && Robot.getShooter().isBottomPidFinished())
-            .alongWith(new InstantCommand(() -> Robot.getArm().setDesiredTarget(100), Robot.getArm()))
-                .until(() -> Robot.getArm().isPIDFinished())
-            .andThen(new ShootingSequence())
-            .andThen(new InstantCommand(() -> Robot.getShooter().setDesiredTarget(10, 10), Robot.getShooter()))
+//            new InstantCommand(() -> Robot.getShooter().setState(100, 100), Robot.getShooter())
+//                .until(() -> Robot.getShooter().isTopPidFinished() && Robot.getShooter().isBottomPidFinished())
+//            .alongWith(new InstantCommand(() -> Robot.getArm().setDesiredTarget(100), Robot.getArm()))
+//                .until(() -> Robot.getArm().isPIDFinished())
+//            .andThen(new ShootingSequence())
+//            .andThen(new InstantCommand(() -> Robot.getShooter().setDesiredTarget(10, 10), Robot.getShooter()))
+
+                new SH2Shoot()
+
+        );
+
+        NamedCommands.registerCommand("Shooter OFF",
+                new InstantCommand(() -> Robot.getShooter().setState(ShooterStates.OFF), Robot.getShooter())
         );
 
         NamedCommands.registerCommand("WaitUntilNoteReady",
                 new WaitUntilNoteReady()
         );
 
+        NamedCommands.registerCommand("WaitUntilArmDown",
+                new WaitUntilCommand(() -> Robot.getArm().getLimitSwitch())
+        );
+
         NamedCommands.registerCommand("Floor Intake",
                 new FloorIntake()
             );
         configureBindings();
+//        drivetrain.getModule(0).getSteerMotor().getConfigurator().apply(configs);
+//        drivetrain.getModule(1).getSteerMotor().getConfigurator().apply(configs);
+//        drivetrain.getModule(2).getSteerMotor().getConfigurator().apply(configs);
+//        drivetrain.getModule(3).getSteerMotor().getConfigurator().apply(configs);
+
     }
     /**
      * Gets boolean value of Operator controller RightBumper. Used to regulate intake when beam break is activated.
@@ -258,6 +299,16 @@ public class RobotContainer {
     public CommandXboxController getDriver(){
         return driver;
     }
+
+    public boolean getDriverDPadDown() {
+        return driver.povDown().getAsBoolean();
+    }
+
+    public boolean getDriverDPadUp() {
+        return driver.povUp().getAsBoolean();
+    }
+
+
 }
 
 
