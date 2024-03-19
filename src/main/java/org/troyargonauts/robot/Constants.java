@@ -44,6 +44,9 @@ public final class Constants {
         double DOWN_D = 0;
         double ZERO = 0.0;
 
+        double CRUISE_VELOCITY = 0;
+        double ACCELERATION = 0;
+
         String CANBUS_NAME = "roborio";
     }
 
